@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERION — Time Redefined</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#fdfdfd',
+                        'bg-alt': '#f5f5f7',
+                        gold: '#af8c42',
+                        'gold-light': '#c6a86c',
+                        'gold-dark': '#8a6e32',
+                        cream: '#1d1d1f',
+                        muted: '#86868b',
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #fdfdfd;
+            --bg-alt: #f5f5f7;
+            --gold: #af8c42;
+            --gold-light: #c6a86c;
+            --gold-dark: #8a6e32;
+            --cream: #1d1d1f;
+            --muted: #86868b;
+            --glass: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--cream);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(175, 140, 66, 0.25);
+            border-radius: 3px;
+        }
+
+        /* Ambient Glow Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(175, 140, 66, .02) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(175, 140, 66, .03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: ambientShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambientShift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-3%, 2%) scale(1.05); }
+            100% { transform: translate(2%, -1%) scale(1); }
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px
+        }
+
+        .preloader-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--teal), var(--gold), transparent);
+            animation: pLine 1.8s ease-in-out forwards
+        }
+
+        .preloader-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            letter-spacing: .6em;
+            color: var(--gold);
+            opacity: 0;
+            animation: pText 1.8s ease-in-out forwards
+        }
+
+        @keyframes pLine {
+            0% {
+                width: 0;
+                opacity: 0
+            }
+
+            40% {
+                width: 180px;
+                opacity: 1
+            }
+
+            100% {
+                width: 260px;
+                opacity: 0
+            }
+        }
+
+        @keyframes pText {
+            0% {
+                opacity: 0;
+                letter-spacing: 1em
+            }
+
+            40% {
+                opacity: 1;
+                letter-spacing: .6em
+            }
+
+            100% {
+                opacity: 0;
+                letter-spacing: .4em
+            }
+        }
+
+        /* Glass */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.02);
+        }
+
+        /* Gold Button — now with animated gradient */
+        .btn-gold {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--teal));
+            background-size: 300% 300%;
+            animation: btnGlow 4s ease infinite;
+            color: #0a0a0a;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: .72rem;
+            padding: 1rem 2.8rem;
+            border: none;
+            cursor: pointer;
+            transition: all .5s cubic-bezier(.23, 1, .32, 1)
+        }
+
+        @keyframes btnGlow {
+
+            0%,
+            100% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 0 40px rgba(224, 146, 108, .3), 0 0 80px rgba(78, 232, 208, .15);
+            transform: translateY(-2px)
+        }
+
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255, 255, 255, .2), transparent);
+            transform: rotate(45deg) translateY(-100%);
+            transition: transform .6s
+        }
+
+        .btn-gold:hover::after {
+            transform: rotate(45deg) translateY(100%)
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(224, 146, 108, .3);
+            background: transparent;
+            color: var(--gold);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            font-size: .7rem;
+            padding: .85rem 2rem;
+            cursor: pointer;
+            transition: all .4s
+        }
+
+        .btn-outline:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            background: rgba(78, 232, 208, .06);
+            box-shadow: 0 0 25px rgba(78, 232, 208, .08)
+        }
+
+        /* Light Streaks — now multi-color */
+        .streak {
+            position: absolute;
+            width: 160%;
+            height: 1px;
+            pointer-events: none
+        }
+
+        .streak-1 {
+            top: 25%;
+            background: linear-gradient(90deg, transparent, rgba(224, 146, 108, .15), rgba(78, 232, 208, .2), rgba(224, 146, 108, .15), transparent);
+            animation: streakAnim 9s ease-in-out infinite
+        }
+
+        .streak-2 {
+            top: 55%;
+            background: linear-gradient(90deg, transparent, rgba(78, 232, 208, .12), rgba(120, 80, 200, .18), rgba(78, 232, 208, .12), transparent);
+            animation: streakAnim 11s ease-in-out infinite -4s
+        }
+
+        .streak-3 {
+            top: 75%;
+            background: linear-gradient(90deg, transparent, rgba(120, 80, 200, .1), rgba(224, 146, 108, .2), rgba(120, 80, 200, .1), transparent);
+            animation: streakAnim 13s ease-in-out infinite -7s
+        }
+
+        @keyframes streakAnim {
+
+            0%,
+            100% {
+                transform: translateX(-35%) rotate(-12deg);
+                opacity: 0
+            }
+
+            15% {
+                opacity: 1
+            }
+
+            85% {
+                opacity: 1
+            }
+
+            50% {
+                transform: translateX(35%) rotate(-12deg)
+            }
+        }
+
+        /* Nav link */
+        .nav-link {
+            position: relative;
+            transition: color .3s
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--teal));
+            transition: width .3s
+        }
+
+        .nav-link:hover {
+            color: var(--teal)
+        }
+
+        .nav-link:hover::after {
+            width: 100%
+        }
+
+        /* Product Card */
+        .product-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all .6s cubic-bezier(.23, 1, .32, 1);
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 16px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(224, 146, 108, .2), rgba(78, 232, 208, .15), rgba(120, 80, 200, .1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity .5s
+        }
+
+        .product-card:hover::before {
+            opacity: 1
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .5), 0 0 60px rgba(224, 146, 108, .08), 0 0 40px rgba(78, 232, 208, .05)
+        }
+
+        .product-card .watch-wrap {
+            transition: transform .8s cubic-bezier(.23, 1, .32, 1)
+        }
+
+        .product-card:hover .watch-wrap {
+            transform: scale(1.08) rotateY(5deg)
+        }
+
+        .product-card .qv-btn {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all .4s
+        }
+
+        .product-card:hover .qv-btn {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .product-card .reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(78, 232, 208, .04), transparent);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .5s
+        }
+
+        .product-card:hover .reflection {
+            opacity: 1
+        }
+
+        /* Cart Panel */
+        .cart-panel {
+            position: fixed;
+            top: 0;
+            right: -440px;
+            width: 420px;
+            max-width: 92vw;
+            height: 100vh;
+            z-index: 1100;
+            transition: right .55s cubic-bezier(.23, 1, .32, 1);
+            overflow-y: auto
+        }
+
+        .cart-panel.open {
+            right: 0
+        }
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(4px);
+            z-index: 1050;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s
+        }
+
+        .cart-overlay.open {
+            opacity: 1;
+            pointer-events: auto
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, .88);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto
+        }
+
+        .modal-box {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.15);
+            transform: scale(.92) translateY(20px);
+            transition: transform .55s cubic-bezier(.23, 1, .32, 1);
+            max-height: 90vh;
+            overflow-y: auto
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: scale(1) translateY(0)
+        }
+
+        /* Toast */
+        .toast-wrap {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .toast {
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-size: .82rem;
+            transform: translateX(130%);
+            transition: transform .45s cubic-bezier(.23, 1, .32, 1);
+            border: 1px solid var(--border)
+        }
+
+        .toast.show {
+            transform: translateX(0)
+        }
+
+        /* Watch 3D container */
+        .watch-3d {
+            perspective: 800px
+        }
+
+        .watch-3d-inner {
+            transform-style: preserve-3d;
+            transition: transform .15s ease-out
+        }
+
+        /* Divider */
+        .gold-line {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--teal), transparent);
+            border-radius: 1px
+        }
+
+        /* Feature card hover */
+        .feat-card {
+            transition: all .5s cubic-bezier(.23, 1, .32, 1);
+            border-radius: 16px
+        }
+
+        .feat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(78, 232, 208, .2);
+            box-shadow: 0 0 40px rgba(78, 232, 208, .08), 0 0 80px rgba(224, 146, 108, .05)
+        }
+
+        /* Wishlist heart */
+        .heart-btn {
+            transition: all .3s
+        }
+
+        .heart-btn.active {
+            color: #e04040
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.15)
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            background: rgba(8, 8, 12, .97);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s
+        }
+
+        .mobile-menu.open {
+            opacity: 1;
+            pointer-events: auto
+        }
+
+        /* Filter tab */
+        .filter-tab {
+            transition: all .3s;
+            cursor: pointer
+        }
+
+        .filter-tab.active {
+            color: var(--gold);
+            border-color: var(--gold)
+        }
+
+        /* Auth tab */
+        .auth-tab {
+            transition: all .3s;
+            cursor: pointer;
+            padding-bottom: 8px;
+            border-bottom: 2px solid transparent
+        }
+
+        .auth-tab.active {
+            color: var(--gold);
+            border-color: var(--gold)
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important
+            }
+        }
+
+        @media(max-width:768px) {
+            .hero-watch-size {
+                width: 260px !important;
+                height: 260px !important;
+            }
+
+            .streak {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-body">
+
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-line"></div>
+        <div class="preloader-text">AERION</div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particles" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#hero" class="font-display text-2xl text-white hover:text-gold transition"
+            onclick="closeMobile()">Home</a>
+        <a href="#collection" class="font-display text-2xl text-white hover:text-gold transition"
+            onclick="closeMobile()">Collection</a>
+        <a href="#craft" class="font-display text-2xl text-white hover:text-gold transition"
+            onclick="closeMobile()">Craftsmanship</a>
+        <a href="#newsletter" class="font-display text-2xl text-white hover:text-gold transition"
+            onclick="closeMobile()">Contact</a>
+        <button class="btn-outline mt-4 !text-white !border-white/30" onclick="closeMobile();openAuth()">Sign In</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="mainNav">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <a href="#hero" class="font-display text-xl tracking-[.3em] text-gold font-semibold">AERION</a>
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#philosophy" class="nav-link text-sm text-muted tracking-wider">Philosophy</a>
+                <a href="#collection" class="nav-link text-sm text-muted tracking-wider">Collection</a>
+                <a href="#craft" class="nav-link text-sm text-muted tracking-wider">Craftsmanship</a>
+                <a href="#newsletter" class="nav-link text-sm text-muted tracking-wider">Contact</a>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="#collection" class="hidden sm:block btn-gold !py-2 !px-5 !text-[10px]" id="shopNowBtn"><span>Shop
+                        Now</span></a>
+                <button class="text-muted hover:text-gold transition text-sm" onclick="openAuth()"
+                    aria-label="Account"><i class="fa-regular fa-user"></i></button>
+                <button class="text-muted hover:text-gold transition text-sm" onclick="openWishlist()"
+                    aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span id="wishCount"
+                        class="hidden ml-1 text-xs text-gold">0</span></button>
+                <button class="text-muted hover:text-gold transition text-sm relative" onclick="openCart()"
+                    aria-label="Cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cartCount"
+                        class="hidden absolute -top-2 -right-2 w-4 h-4 bg-gold text-bg text-[10px] font-semibold rounded-full flex items-center justify-center">0</span>
+                </button>
+                <button class="md:hidden text-muted hover:text-gold transition" onclick="openMobile()"
+                    aria-label="Menu"><i class="fa-solid fa-bars text-lg"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+            style="z-index:2">
+            <!-- Video Background -->
+            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto"
+                poster="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.jpg">
+                <source
+                    src="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/vc_h264/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.mp4"
+                    type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-white/30 z-10"></div> <!-- Lighter overlay for light mode -->
+
+            <div class="relative flex flex-col items-center px-6 z-20">
+                <div class="watch-3d mb-8 hero-el opacity-0">
+                    <div class="watch-3d-inner hero-watch-size" id="heroWatch" style="width:380px;height:380px"></div>
+                </div>
+            </div>
+
+            <div
+                class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 hero-el opacity-0">
+                <span class="text-muted text-[10px] tracking-[.3em] uppercase">Scroll</span>
+                <div class="w-px h-10 bg-gradient-to-b from-gold/50 to-transparent"></div>
+            </div>
+        </section>
+
+
+
+        <!-- Philosophy Section -->
+        <section id="philosophy" class="relative py-40 px-6 overflow-hidden" style="z-index:2">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="gold-line mx-auto mb-10 phil-el opacity-0"></div>
+                <p class="phil-el font-display text-3xl md:text-5xl leading-tight text-cream font-light opacity-0">
+                    Every second is a statement.<br>
+                    <span class="text-gold italic">Every watch, a legacy.</span>
+                </p>
+                <p class="phil-el text-muted text-sm md:text-base leading-relaxed mt-10 max-w-2xl mx-auto opacity-0">
+                    Born in the ateliers of Geneva, each AERION timepiece is the culmination of centuries-old tradition
+                    and uncompromising modern engineering. We do not make watches. We make heirs.
+                </p>
+                <div class="grid grid-cols-3 gap-8 mt-20">
+                    <div class="phil-el opacity-0">
+                        <p class="font-display text-4xl md:text-5xl text-gold font-light">177</p>
+                        <p class="text-muted text-xs tracking-[.2em] uppercase mt-2">Years of Heritage</p>
+                    </div>
+                    <div class="phil-el opacity-0">
+                        <p class="font-display text-4xl md:text-5xl text-gold font-light">312</p>
+                        <p class="text-muted text-xs tracking-[.2em] uppercase mt-2">Parts Per Movement</p>
+                    </div>
+                    <div class="phil-el opacity-0">
+                        <p class="font-display text-4xl md:text-5xl text-gold font-light">0.01</p>
+                        <p class="text-muted text-xs tracking-[.2em] uppercase mt-2">Seconds Precision</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Collection Section -->
+        <section id="collection" class="relative py-32 px-6" style="z-index:2">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <p class="coll-el text-gold text-xs tracking-[.5em] uppercase opacity-0">The Portfolio</p>
+                    <h2 class="coll-el font-display text-4xl md:text-6xl text-cream font-light mt-3 opacity-0">The
+                        Collection</h2>
+                    <div class="gold-line mx-auto mt-6 coll-el opacity-0"></div>
+                </div>
+                <!-- Filter Tabs -->
+                <div class="flex justify-center gap-8 mb-14 coll-el opacity-0">
+                    <button
+                        class="filter-tab active text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-gold"
+                        data-filter="all">All</button>
+                    <button
+                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                        data-filter="mens">Mens Watch</button>
+                    <button
+                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                        data-filter="ladies">Ladies Watch</button>
+                </div>
+                <!-- Product Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="productGrid"></div>
+            </div>
+        </section>
+
+        <!-- Craftsmanship Section -->
+        <section id="craft" class="relative py-32 px-6 overflow-hidden" style="z-index:2">
+            <div
+                class="absolute inset-0 bg-gradient-to-b from-transparent via-bg-alt/30 to-transparent pointer-events-none">
+            </div>
+            <div class="max-w-7xl mx-auto relative">
+                <div class="text-center mb-20">
+                    <p class="craft-el text-gold text-xs tracking-[.5em] uppercase opacity-0">The Art of Time</p>
+                    <h2 class="craft-el font-display text-4xl md:text-6xl text-cream font-light mt-3 opacity-0">
+                        Craftsmanship</h2>
+                    <div class="gold-line mx-auto mt-6 craft-el opacity-0"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="feat-card glass rounded-xl p-8 text-center craft-el opacity-0">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border border-gold/20 flex items-center justify-center">
+                            <i class="fa-regular fa-gem text-gold text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl text-cream mb-3">Sapphire Crystal</h3>
+                        <p class="text-muted text-sm leading-relaxed">Double-domed sapphire with anti-reflective coating
+                            on both sides. Virtually scratchproof.</p>
+                    </div>
+                    <div class="feat-card glass rounded-xl p-8 text-center craft-el opacity-0">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border border-gold/20 flex items-center justify-center">
+                            <i class="fa-solid fa-droplet text-gold text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl text-cream mb-3">Water Resistant</h3>
+                        <p class="text-muted text-sm leading-relaxed">Tested to 300 meters. Screw-down crown and case
+                            back ensure absolute sealed integrity.</p>
+                    </div>
+                    <div class="feat-card glass rounded-xl p-8 text-center craft-el opacity-0">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border border-gold/20 flex items-center justify-center">
+                            <i class="fa-solid fa-shield-halved text-gold text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl text-cream mb-3">Premium Steel</h3>
+                        <p class="text-muted text-sm leading-relaxed">904L Oystersteel. The same grade used in
+                            aerospace. Corrosion-resistant and mirror-polished.</p>
+                    </div>
+                    <div class="feat-card glass rounded-xl p-8 text-center craft-el opacity-0">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border border-gold/20 flex items-center justify-center">
+                            <i class="fa-solid fa-gears text-gold text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl text-cream mb-3">Swiss Movement</h3>
+                        <p class="text-muted text-sm leading-relaxed">In-house calibre with 72-hour power reserve.
+                            COSC-certified chronometer precision.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section id="newsletter" class="relative py-32 px-6" style="z-index:2">
+            <div class="max-w-xl mx-auto text-center">
+                <p class="nl-el text-gold text-xs tracking-[.5em] uppercase opacity-0">Exclusive Access</p>
+                <h2 class="nl-el font-display text-3xl md:text-5xl text-cream font-light mt-3 opacity-0">Join the Inner
+                    Circle</h2>
+                <p class="nl-el text-muted text-sm mt-4 opacity-0">Be the first to discover new collections, private
+                    events, and limited editions.</p>
+                <div class="nl-el glass rounded-xl p-2 mt-10 flex gap-2 opacity-0">
+                    <input type="email" id="emailInput" placeholder="Your email address"
+                        class="flex-1 bg-transparent px-5 py-3 text-cream text-sm outline-none placeholder:text-muted/50"
+                        aria-label="Email address">
+                    <button class="btn-gold px-6" onclick="subscribeEmail()"><span>Subscribe</span></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-gold/10 py-16 px-6" style="z-index:2">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div>
+                <p class="font-display text-lg tracking-[.3em] text-gold font-semibold mb-4">AERION</p>
+                <p class="text-muted text-sm leading-relaxed">Haute horlogerie since 1847. Each piece a testament to the
+                    art of timekeeping.</p>
+            </div>
+            <div>
+                <p class="text-cream text-xs tracking-[.2em] uppercase mb-4">Collections</p>
+                <ul class="space-y-2 text-muted text-sm">
+                    <li><a href="#collection" class="hover:text-gold transition">Mens Watch</a></li>
+                    <li><a href="#collection" class="hover:text-gold transition">Ladies Watch</a></li>
+                    <li><a href="#collection" class="hover:text-gold transition">Special Editions</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="text-cream text-xs tracking-[.2em] uppercase mb-4">Maison</p>
+                <ul class="space-y-2 text-muted text-sm">
+                    <li><a href="#philosophy" class="hover:text-gold transition">Our Story</a></li>
+                    <li><a href="#craft" class="hover:text-gold transition">Craftsmanship</a></li>
+                    <li><a href="#" class="hover:text-gold transition">Boutiques</a></li>
+                    <li><a href="#" class="hover:text-gold transition">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="text-cream text-xs tracking-[.2em] uppercase mb-4">Connect</p>
+                <div class="flex gap-5 text-muted">
+                    <a href="#" class="hover:text-gold transition" aria-label="Instagram"><i
+                            class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-gold transition" aria-label="Facebook"><i
+                            class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-gold transition" aria-label="YouTube"><i
+                            class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="hover:text-gold transition" aria-label="Pinterest"><i
+                            class="fa-brands fa-pinterest-p"></i></a>
+                </div>
+                <p class="text-muted text-xs mt-6">contact@chronos.com</p>
+            </div>
+        </div>
+        <div
+            class="max-w-7xl mx-auto mt-12 pt-8 border-t border-gold/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-muted text-xs">&copy; 2024 AERION. All rights reserved.</p>
+            <div class="flex gap-6 text-muted text-xs">
+                <a href="#" class="hover:text-gold transition">Privacy</a>
+                <a href="#" class="hover:text-gold transition">Terms</a>
+                <a href="#" class="hover:text-gold transition">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <!-- Cart Panel -->
+    <div class="cart-panel glass" id="cartPanel" style="background:rgba(253,253,253,.98);backdrop-filter:blur(30px)">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="font-display text-2xl text-cream tracking-wider">Your Bag</h3>
+                <button onclick="closeCart()" class="text-muted hover:text-cream transition text-lg"
+                    aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="cartItems" class="space-y-6"></div>
+            <div id="cartEmpty" class="text-center py-16">
+                <i class="fa-solid fa-bag-shopping text-3xl text-muted/30 mb-4"></i>
+                <p class="text-muted text-sm">Your bag is empty</p>
+            </div>
+            <div id="cartFooter" class="hidden border-t border-gold/10 mt-8 pt-8">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-muted text-sm">Total</span>
+                    <span class="font-display text-2xl text-gold" id="cartTotal">$0</span>
+                </div>
+                <button class="btn-gold w-full" onclick="checkout()"><span>Proceed to Checkout</span></button>
+                <p class="text-muted text-[10px] text-center mt-4 tracking-wider">COMPLIMENTARY SHIPPING &middot; SECURE
+                    PAYMENT</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="qvModal">
+        <div class="modal-box glass rounded-2xl max-w-4xl w-full mx-4"
+            style="background:rgba(12,12,20,.96);backdrop-filter:blur(30px)">
+            <div class="p-8 md:p-12">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <p class="text-gold text-xs tracking-[.3em] uppercase" id="qvCategory">ROLEX</p>
+                        <h3 class="font-display text-3xl md:text-4xl text-cream mt-1" id="qvName">Sovereign</h3>
+                    </div>
+                    <button onclick="closeQV()" class="text-muted hover:text-cream transition text-lg"
+                        aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center">
+                        <div class="watch-3d" style="width:320px;height:320px;cursor:grab" id="qvWatchContainer">
+                            <div id="qvWatch" style="width:100%;height:100%"></div>
+                        </div>
+                        <p class="text-muted text-[10px] tracking-wider text-center mt-4 w-full">DRAG TO ROTATE 360&deg;
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
+                        <p class="text-muted text-sm leading-relaxed mb-8" id="qvDesc">Description</p>
+                        <div class="space-y-3 mb-10" id="qvFeatures"></div>
+                        <div class="flex gap-3">
+                            <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
+                            <button class="btn-outline px-4" id="qvWishBtn" onclick="toggleWishFromQV()"
+                                aria-label="Wishlist"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box glass rounded-2xl max-w-md w-full mx-4"
+            style="background:rgba(12,12,20,.96);backdrop-filter:blur(30px)">
+            <div class="p-10">
+                <div class="flex justify-between items-center mb-10">
+                    <h3 class="font-display text-2xl text-cream tracking-wider">Account</h3>
+                    <button onclick="closeAuth()" class="text-muted hover:text-cream transition" aria-label="Close"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="flex gap-8 mb-8">
+                    <button class="auth-tab active text-sm tracking-wider text-gold" data-tab="login"
+                        onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="auth-tab text-sm tracking-wider text-muted" data-tab="signup"
+                        onclick="switchAuthTab('signup')">Register</button>
+                </div>
+                <div id="loginForm">
+                    <div class="space-y-5">
+                        <div>
+                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
+                            <input type="email"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                                placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
+                            <input type="password"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                                placeholder="Enter password">
+                        </div>
+                        <button class="btn-gold w-full mt-2" onclick="handleLogin()"><span>Sign In</span></button>
+                    </div>
+                </div>
+                <div id="signupForm" class="hidden">
+                    <div class="space-y-5">
+                        <div>
+                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Full Name</label>
+                            <input type="text"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                                placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
+                            <input type="email"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                                placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
+                            <input type="password"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                                placeholder="Create password">
+                        </div>
+                        <button class="btn-gold w-full mt-2" onclick="handleSignup()"><span>Create
+                                Account</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script>
+        /* ===================== DATA ===================== */
+        const products = [
+            { id: 1, name: 'Sovereign', price: 12500, category: 'mens', description: 'Hand-assembled with 312 individual components, the Sovereign embodies three generations of horological mastery. Its sunburst dial catches light like liquid gold.', features: ['Sapphire Crystal', '100m Water Resistant', '904L Steel', '72h Power Reserve'], dial: '#0a0a15', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
+            { id: 2, name: 'Eclipse', price: 18900, category: 'mens', description: 'Engineered for depth. The Eclipse features a unidirectional ceramic bezel and Super-LumiNova indices for extreme readability in any condition.', features: ['Sapphire Crystal', '300m Water Resistant', 'Titanium Case', 'Chronograph'], dial: '#060d18', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: true, secColor: '#4a8ecc' },
+            { id: 3, name: 'Monarch', price: 24500, category: 'mens', description: 'A statement of absolute authority. Rose gold accents on a deep midnight dial, finished with hand-engraved guilloché patterns visible under magnification.', features: ['Sapphire Crystal', '50m Water Resistant', 'Rose Gold', 'Guilloché Dial'], dial: '#100808', accent: '#c89060', accentDark: '#8a5a30', accentLight: '#e8c0a0', hasDate: true, hasSubdials: false, secColor: '#c89060' },
+            { id: 4, name: 'Phantom', price: 15800, category: 'mens', description: 'Absolute stealth. Every surface blackened with DLC coating, every edge sharpened. The Phantom is invisible until it demands attention.', features: ['Sapphire Crystal', '100m Water Resistant', 'DLC Coated', 'Skeleton Movement'], dial: '#080808', accent: '#666666', accentDark: '#444444', accentLight: '#999999', hasDate: false, hasSubdials: false, secColor: '#cc3333' },
+            { id: 5, name: 'Vanguard', price: 21000, category: 'mens', description: 'Two time zones, one perspective. The Vanguard GMT tracks your journey across meridians with a dedicated 24-hour hand and ceramic bezel.', features: ['Sapphire Crystal', '200m Water Resistant', 'Ceramic Bezel', 'GMT Function'], dial: '#0a0a12', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
+            { id: 6, name: 'Heritage', price: 32000, category: 'mens', description: 'Our magnum opus. Four years in development, the Heritage features a minute repeater, perpetual calendar, and moonphase complication in 18k gold.', features: ['Sapphire Crystal', '30m Water Resistant', '18k Gold', 'Perpetual Calendar'], dial: '#0f0a05', accent: '#d4af37', accentDark: '#a08020', accentLight: '#f0d870', hasDate: true, hasSubdials: true, secColor: '#d4af37' },
+            { id: 7, name: 'Submariner', price: 9100, category: 'mens', description: 'The quintessential divers’ watch. Robust and functional, it is the reference in its category.', features: ['Ceramic Bezel', '300m Water Resistant', 'Oystersteel', '70h Power Reserve'], dial: '#000000', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
+            { id: 8, name: 'Cosmograph Daytona', price: 15100, category: 'mens', description: 'A watch born to race. Designed for professional racing drivers, it remains in a class of its own.', features: ['Tachymetric Scale', 'Chronograph', 'Oystersteel', '72h Power Reserve'], dial: '#ffffff', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: false, hasSubdials: true, secColor: '#ff0000' },
+            { id: 9, name: 'Datejust', price: 7500, category: 'ladies', description: 'The classic watch of reference. The first self-winding waterproof chronometer to display the date.', features: ['Cyclops Lens', 'Jubilee Bracelet', 'White Gold Bezel', '70h Power Reserve'], dial: '#333333', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
+            { id: 10, name: 'GMT-Master II', price: 10700, category: 'mens', description: 'The cosmopolitan watch. Designed to show the time in two different time zones simultaneously.', features: ['Two-color Bezel', 'GMT Function', 'Oystersteel', '70h Power Reserve'], dial: '#000000', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#00ff00' },
+            { id: 11, name: 'Oyster Perpetual', price: 6400, category: 'ladies', description: 'The purest expression of the Oyster concept. A watch that stands for style and precision.', features: ['Sunray Finish', 'Waterproof', 'Oystersteel', '70h Power Reserve'], dial: '#4a8ecc', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: false, hasSubdials: false, secColor: '#af8c42' },
+            { id: 12, name: 'Pearlmaster', price: 34000, category: 'ladies', description: 'The peak of jewelry watchmaking. Adorned with precious gems and finished in 18k Everose gold.', features: ['Diamond Set', '18k Everose Gold', 'Sapphire Crystal', '70h Power Reserve'], dial: '#f8f0e8', accent: '#d4af37', accentDark: '#a08020', accentLight: '#f0d870', hasDate: true, hasSubdials: false, secColor: '#d4af37' },
+            { id: 13, name: 'Yacht-Master', price: 11500, category: 'mens', description: 'The watch of the open seas. Combining character and performance, the Yacht-Master is at home on deck.', features: ['Bidirectional Bezel', 'Oystersteel', 'Waterproof', '72h Power Reserve'], dial: '#1a1a2a', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: false, secColor: '#4a8ecc' },
+            { id: 14, name: 'Lady-Datejust 28', price: 8200, category: 'ladies', description: 'The classic timepiece for women. A smaller, elegant version of the Datejust with timeless appeal.', features: ['28mm Case', 'Fluted Bezel', 'Oystersteel', '55h Power Reserve'], dial: '#e8d5a3', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' }
+        ];
+
+        let cart = [];
+        let wishlist = new Set();
+        let currentQV = null;
+
+        /* ===================== WATCH SVG GENERATOR ===================== */
+        function generateWatch(p, size) {
+            size = size || 300;
+            const s = size;
+            const cx = s / 2, cy = s / 2;
+            const oR = Math.max(1, s * .45);
+            const bR = Math.max(1, s * .43);
+            const dR = Math.max(1, s * .39);
+            const uid = 'w' + p.id;
+            let svg = `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">`;
+            svg += `<defs>`;
+            /* Case gradient */
+            svg += `<linearGradient id="c${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a3a3a"/><stop offset="30%" stop-color="#1a1a1a"/><stop offset="55%" stop-color="#4a4a4a"/><stop offset="75%" stop-color="#252525"/><stop offset="100%" stop-color="#353535"/></linearGradient>`;
+            /* Gold/accent gradient */
+            svg += `<linearGradient id="g${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${p.accentLight}"/><stop offset="35%" stop-color="${p.accent}"/><stop offset="55%" stop-color="${p.accentLight}"/><stop offset="75%" stop-color="${p.accentDark}"/><stop offset="100%" stop-color="${p.accent}"/></linearGradient>`;
+            /* Dial radial gradient */
+            svg += `<radialGradient id="d${uid}" cx="45%" cy="38%" r="65%"><stop offset="0%" stop-color="${p.dial}" stop-opacity=".7"/><stop offset="100%" stop-color="${p.dial}"/></radialGradient>`;
+            /* Light sweep gradient */
+            svg += `<linearGradient id="s${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="42%" stop-color="transparent"/><stop offset="50%" stop-color="rgba(255,255,255,0.18)"/><stop offset="58%" stop-color="transparent"/><stop offset="100%" stop-color="transparent"/></linearGradient>`;
+            /* Shadow */
+            svg += `<filter id="sh${uid}" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity=".45"/></filter>`;
+            svg += `</defs>`;
+            /* Case shadow */
+            svg += `<circle cx="${cx}" cy="${cy + 5}" r="${oR}" fill="rgba(0,0,0,0.35)" filter="url(#sh${uid})"/>`;
+            /* Case outer */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${oR}" fill="url(#c${uid})" stroke="rgba(255,255,255,0.04)" stroke-width=".5"/>`;
+            /* Bezel ring */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${bR}" fill="url(#c${uid})"/>`;
+            svg += `<circle cx="${cx}" cy="${cy}" r="${bR}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width=".3"/>`;
+            /* Crown */
+            const crownW = Math.max(1, s * .035), crownH = Math.max(1, s * .05);
+            svg += `<rect x="${cx + oR - 1}" y="${cy - crownH / 2}" width="${crownW}" height="${crownH}" rx="2" fill="url(#c${uid})" stroke="rgba(255,255,255,0.06)" stroke-width=".3"/>`;
+            /* Dial */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${dR}" fill="url(#d${uid})"/>`;
+            /* Chapter ring */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${dR - 3}" fill="none" stroke="${p.accent}11" stroke-width=".4"/>`;
+            /* Hour markers */
+            for (let i = 0; i < 12; i++) {
+                const a = (i * 30 - 90) * Math.PI / 180;
+                const main = i % 3 === 0;
+                const oE = dR - 7, iE = main ? dR - 22 : dR - 15;
+                const w = main ? 2.8 : 1.2;
+                svg += `<line x1="${cx + Math.cos(a) * iE}" y1="${cy + Math.sin(a) * iE}" x2="${cx + Math.cos(a) * oE}" y2="${cy + Math.sin(a) * oE}" stroke="url(#g${uid})" stroke-width="${w}" stroke-linecap="round"/>`;
+            }
+            /* Minute dots */
+            for (let i = 0; i < 60; i++) {
+                if (i % 5 === 0) continue;
+                const a = (i * 6 - 90) * Math.PI / 180;
+                const r = dR - 7;
+                svg += `<circle cx="${cx + Math.cos(a) * r}" cy="${cy + Math.sin(a) * r}" r=".5" fill="${p.accent}44"/>`;
+            }
+            /* Brand text */
+            svg += `<text x="${cx}" y="${cy - dR * .45}" text-anchor="middle" fill="url(#g${uid})" font-family="Cormorant Garamond,serif" font-size="${s * .038}" font-weight="600" letter-spacing="${s * .018}">AERION</text>`;
+            svg += `<text x="${cx}" y="${cy - dR * .35}" text-anchor="middle" fill="${p.accent}77" font-family="Outfit,sans-serif" font-size="${s * .02}" letter-spacing="${s * .012}">AUTOMATIC</text>`;
+            /* Sub-dials */
+            if (p.hasSubdials) {
+                const sr = Math.max(1, dR * .17);
+                svg += `<circle cx="${cx - dR * .3}" cy="${cy + dR * .05}" r="${sr}" fill="none" stroke="${p.accent}22" stroke-width=".4"/>`;
+                svg += `<circle cx="${cx - dR * .3}" cy="${cy + dR * .05}" r="${sr * .08}" fill="${p.accent}55"/>`;
+                for (let i = 0; i < 12; i++) { const a2 = (i * 30) * Math.PI / 180; svg += `<line x1="${cx - dR * .3 + Math.cos(a2) * sr * .7}" y1="${cy + dR * .05 + Math.sin(a2) * sr * .7}" x2="${cx - dR * .3 + Math.cos(a2) * sr * .88}" y2="${cy + dR * .05 + Math.sin(a2) * sr * .88}" stroke="${p.accent}33" stroke-width=".4"/>` }
+                svg += `<circle cx="${cx + dR * .3}" cy="${cy - dR * .15}" r="${sr}" fill="none" stroke="${p.accent}22" stroke-width=".4"/>`;
+                svg += `<circle cx="${cx + dR * .3}" cy="${cy - dR * .15}" r="${sr * .08}" fill="${p.accent}55"/>`;
+            }
+            /* Date window */
+            if (p.hasDate) {
+                const dx = cx + dR * .45, dy = cy, dw = s * .055, dh = s * .038;
+                svg += `<rect x="${dx - dw / 2}" y="${dy - dh / 2}" width="${dw}" height="${dh}" rx="1.5" fill="#0c0c18" stroke="${p.accent}33" stroke-width=".4"/>`;
+                svg += `<text x="${dx}" y="${dy + s * .011}" text-anchor="middle" fill="${p.accent}" font-family="Outfit,sans-serif" font-size="${s * .024}" font-weight="500">28</text>`;
+            }
+            /* Hour hand (10:10 position) */
+            const hLen = dR * .5, hTail = dR * .1;
+            svg += `<polygon points="${cx - 2.5},${cy - hTail} ${cx + 2.5},${cy - hTail} ${cx + 1},${cy + hLen} ${cx - 1},${cy + hLen}" fill="url(#g${uid})" transform="rotate(150 ${cx} ${cy})" opacity=".9"/>`;
+            /* Minute hand */
+            const mLen = dR * .72, mTail = dR * .12;
+            svg += `<polygon points="${cx - 1.8},${cy - mTail} ${cx + 1.8},${cy - mTail} ${cx + .6},${cy + mLen} ${cx - .6},${cy + mLen}" fill="url(#g${uid})" transform="rotate(60 ${cx} ${cy})" opacity=".9"/>`;
+            /* Second hand */
+            const sLen = dR * .76, sTail = dR * .18;
+            svg += `<line x1="${cx}" y1="${cy - sTail}" x2="${cx}" y2="${cy + sLen}" stroke="${p.secColor}" stroke-width=".7" stroke-linecap="round" transform="rotate(180 ${cx} ${cy})"/>`;
+            svg += `<circle cx="${cx}" cy="${cy - sTail + dR * .04}" r="1.5" fill="${p.secColor}"/>`;
+            /* Center cap */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${Math.max(1, s * .017)}" fill="url(#g${uid})"/>`;
+            svg += `<circle cx="${cx}" cy="${cy}" r="${Math.max(.5, s * .007)}" fill="${p.dial}"/>`;
+            /* Animated light sweep */
+            svg += `<circle cx="${cx}" cy="${cy}" r="${dR}" fill="url(#s${uid})" opacity="0"><animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.22;0" dur="7s" repeatCount="indefinite"/></circle>`;
+            svg += `</svg>`;
+            return svg;
+        }
+
+        /* ===================== PARTICLES ===================== */
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            let W, H;
+            const particles = [];
+            const COUNT = 65;
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            for (let i = 0; i < COUNT; i++) {
+                particles.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    r: Math.random() * 1.5 + .3,
+                    vx: (Math.random() - .5) * .15,
+                    vy: (Math.random() - .5) * .1 - .05,
+                    o: Math.random() * .3 + .05,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                const t = Date.now() * .001;
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < -10) p.x = W + 10;
+                    if (p.x > W + 10) p.x = -10;
+                    if (p.y < -10) p.y = H + 10;
+                    if (p.y > H + 10) p.y = -10;
+                    const flicker = .5 + .5 * Math.sin(t * 1.5 + p.phase);
+                    const alpha = p.o * flicker;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, Math.max(.1, p.r), 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200,165,92,${alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        /* ===================== RENDER PRODUCTS ===================== */
+        function renderProducts(filter) {
+            const grid = document.getElementById('productGrid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            grid.innerHTML = '';
+            filtered.forEach((p, i) => {
+                const isWished = wishlist.has(p.id);
+                const card = document.createElement('div');
+                card.className = 'product-card p-6 pb-8';
+                card.setAttribute('data-category', p.category);
+                card.innerHTML = `
+                <div class="reflection"></div>
+                <div class="flex justify-between items-start mb-4 relative" style="z-index:2">
+                    <span class="text-gold/50 text-[10px] tracking-[.25em] uppercase">${p.category}</span>
+                    <button class="heart-btn text-sm ${isWished ? 'active text-red-400' : 'text-muted/40'}" onclick="event.stopPropagation();toggleWish(${p.id},this)" aria-label="Add to wishlist"><i class="fa-${isWished ? 'solid' : 'regular'} fa-heart"></i></button>
+                </div>
+                <div class="watch-wrap flex justify-center py-6" style="perspective:600px">
+                    <div style="width:200px;height:200px">${generateWatch(p, 200)}</div>
+                </div>
+                <div class="relative" style="z-index:2">
+                    <h3 class="font-display text-xl text-cream tracking-wider">${p.name}</h3>
+                    <p class="text-gold text-sm mt-1 font-light">$${p.price.toLocaleString()}</p>
+                    <button class="qv-btn btn-outline w-full mt-5 text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
+                </div>
+            `;
+                card.addEventListener('click', () => openQV(p.id));
+                grid.appendChild(card);
+                /* Stagger animation */
+                gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out' });
+            });
+        }
+
+        /* ===================== FILTER TABS ===================== */
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => { t.classList.remove('active', 'text-gold'); t.classList.add('text-muted') });
+                this.classList.add('active', 'text-gold');
+                this.classList.remove('text-muted');
+                renderProducts(this.dataset.filter);
+            });
+        });
+
+        /* ===================== QUICK VIEW ===================== */
+        function openQV(id) {
+            currentQV = products.find(p => p.id === id);
+            if (!currentQV) return;
+            document.getElementById('qvCategory').textContent = currentQV.category === 'mens' ? 'MENS WATCH' : 'LADIES WATCH';
+            document.getElementById('qvName').textContent = currentQV.name;
+            document.getElementById('qvPrice').textContent = '$' + currentQV.price.toLocaleString();
+            document.getElementById('qvDesc').textContent = currentQV.description;
+            document.getElementById('qvWatch').innerHTML = generateWatch(currentQV, 320);
+            const isW = wishlist.has(id);
+            const wb = document.getElementById('qvWishBtn');
+            wb.innerHTML = `<i class="fa-${isW ? 'solid' : 'regular'} fa-heart"></i>`;
+            wb.className = `btn-outline px-4 ${isW ? 'text-red-400 border-red-400/30' : ''}`;
+            const featDiv = document.getElementById('qvFeatures');
+            featDiv.innerHTML = currentQV.features.map(f => `
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-gold/60"></div>
+                <span class="text-cream/80 text-sm">${f}</span>
+            </div>
+        `).join('');
+            document.getElementById('qvModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            /* Reset rotation */
+            qvRotation = 0;
+            document.getElementById('qvWatchContainer').querySelector('div').style.transform = '';
+        }
+        function closeQV() {
+            document.getElementById('qvModal').classList.remove('open');
+            document.body.style.overflow = '';
+            currentQV = null;
+        }
+        let qvRotation = 0, qvDragging = false, qvStartX = 0;
+        (function () {
+            const container = document.getElementById('qvWatchContainer');
+            container.addEventListener('mousedown', e => { qvDragging = true; qvStartX = e.clientX; e.preventDefault() });
+            container.addEventListener('touchstart', e => { qvDragging = true; qvStartX = e.touches[0].clientX }, { passive: true });
+            window.addEventListener('mousemove', e => { if (!qvDragging) return; const dx = e.clientX - qvStartX; qvRotation += dx * .5; qvStartX = e.clientX; container.querySelector('div').style.transform = `rotateY(${qvRotation}deg)` });
+            window.addEventListener('touchmove', e => { if (!qvDragging) return; const dx = e.touches[0].clientX - qvStartX; qvRotation += dx * .5; qvStartX = e.touches[0].clientX; container.querySelector('div').style.transform = `rotateY(${qvRotation}deg)` }, { passive: true });
+            window.addEventListener('mouseup', () => qvDragging = false);
+            window.addEventListener('touchend', () => qvDragging = false);
+        })();
+
+        function addToCartFromQV() {
+            if (!currentQV) return;
+            addToCart(currentQV.id);
+            closeQV();
+        }
+        function toggleWishFromQV() {
+            if (!currentQV) return;
+            toggleWish(currentQV.id, document.getElementById('qvWishBtn'));
+        }
+
+        /* ===================== CART ===================== */
+        function addToCart(id) {
+            const existing = cart.find(c => c.id === id);
+            if (existing) { existing.qty++ }
+            else { cart.push({ id, qty: 1 }) }
+            updateCartUI();
+            const p = products.find(x => x.id === id);
+            showToast(`${p.name} added to bag`, 'success');
+        }
+        function removeFromCart(id) {
+            cart = cart.filter(c => c.id !== id);
+            updateCartUI();
+        }
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) removeFromCart(id);
+            else updateCartUI();
+        }
+        function updateCartUI() {
+            const countEl = document.getElementById('cartCount');
+            const total = cart.reduce((s, c) => s + c.qty, 0);
+            if (total > 0) { countEl.textContent = total; countEl.classList.remove('hidden'); countEl.classList.add('flex') }
+            else { countEl.classList.add('hidden'); countEl.classList.remove('flex') }
+            const itemsEl = document.getElementById('cartItems');
+            const emptyEl = document.getElementById('cartEmpty');
+            const footerEl = document.getElementById('cartFooter');
+            if (cart.length === 0) {
+                itemsEl.innerHTML = ''; emptyEl.classList.remove('hidden'); footerEl.classList.add('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden'); footerEl.classList.remove('hidden');
+            let sum = 0;
+            itemsEl.innerHTML = cart.map(c => {
+                const p = products.find(x => x.id === c.id);
+                sum += p.price * c.qty;
+                return `<div class="flex gap-4 items-center">
+                <div style="width:70px;height:70px;flex-shrink:0">${generateWatch(p, 70)}</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display text-cream text-sm tracking-wider">${p.name}</p>
+                    <p class="text-gold text-xs mt-1">$${p.price.toLocaleString()}</p>
+                    <div class="flex items-center gap-3 mt-2">
+                        <button onclick="changeQty(${p.id},-1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">-</button>
+                        <span class="text-cream text-xs">${c.qty}</span>
+                        <button onclick="changeQty(${p.id},1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">+</button>
+                    </div>
+                </div>
+                <button onclick="removeFromCart(${p.id})" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
+            </div>`;
+            }).join('');
+            document.getElementById('cartTotal').textContent = '$' + sum.toLocaleString();
+        }
+        function openCart() {
+            document.getElementById('cartPanel').classList.add('open');
+            document.getElementById('cartOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCart() {
+            document.getElementById('cartPanel').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function checkout() {
+            if (cart.length === 0) return;
+            const sum = cart.reduce((s, c) => { const p = products.find(x => x.id === c.id); return s + p.price * c.qty }, 0);
+            showToast(`Order placed — $${sum.toLocaleString()}. Thank you.`, 'success');
+            cart = []; updateCartUI(); closeCart();
+        }
+
+        /* ===================== WISHLIST ===================== */
+        function toggleWish(id, btnEl) {
+            if (wishlist.has(id)) {
+                wishlist.delete(id);
+                if (btnEl) { btnEl.classList.remove('active', 'text-red-400'); btnEl.classList.add('text-muted/40'); btnEl.innerHTML = '<i class="fa-regular fa-heart"></i>' }
+                showToast('Removed from wishlist', 'info');
+            } else {
+                wishlist.add(id);
+                if (btnEl) { btnEl.classList.add('active', 'text-red-400'); btnEl.classList.remove('text-muted/40'); btnEl.innerHTML = '<i class="fa-solid fa-heart"></i>' }
+                const p = products.find(x => x.id === id);
+                showToast(`${p.name} added to wishlist`, 'success');
+            }
+            const wc = document.getElementById('wishCount');
+            if (wishlist.size > 0) { wc.textContent = wishlist.size; wc.classList.remove('hidden') }
+            else { wc.classList.add('hidden') }
+            /* Sync product card hearts */
+            document.querySelectorAll('.product-card .heart-btn').forEach(btn => {
+                const card = btn.closest('.product-card');
+                const pid = products.find(pp => pp.name === card.querySelector('h3').textContent)?.id;
+                if (pid !== undefined) {
+                    if (wishlist.has(pid)) { btn.classList.add('active', 'text-red-400'); btn.classList.remove('text-muted/40'); btn.innerHTML = '<i class="fa-solid fa-heart"></i>' }
+                    else { btn.classList.remove('active', 'text-red-400'); btn.classList.add('text-muted/40'); btn.innerHTML = '<i class="fa-regular fa-heart"></i>' }
+                }
+            });
+        }
+        function openWishlist() {
+            if (wishlist.size === 0) { showToast('Your wishlist is empty', 'info'); return }
+            const names = [...wishlist].map(id => products.find(p => p.id === id)?.name).filter(Boolean).join(', ');
+            showToast('Wishlist: ' + names, 'info');
+        }
+
+        /* ===================== AUTH ===================== */
+        function openAuth() { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden' }
+        function closeAuth() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = '' }
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => { t.classList.remove('active', 'text-gold'); t.classList.add('text-muted') });
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active', 'text-gold');
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.remove('text-muted');
+            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
+        }
+        function handleLogin() { showToast('Welcome back to AERION', 'success'); closeAuth() }
+        function handleSignup() { showToast('Account created — welcome to AERION', 'success'); closeAuth() }
+
+        /* ===================== MOBILE MENU ===================== */
+        function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow = 'hidden' }
+        function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow = '' }
+
+        /* ===================== TOAST ===================== */
+        function showToast(msg, type) {
+            const wrap = document.getElementById('toastWrap');
+            const t = document.createElement('div');
+            const bg = type === 'success' ? 'rgba(200,165,92,.12)' : 'rgba(255,255,255,.06)';
+            const border = type === 'success' ? 'rgba(200,165,92,.25)' : 'rgba(255,255,255,.1)';
+            t.className = 'toast glass';
+            t.style.background = bg;
+            t.style.borderColor = border;
+            t.innerHTML = `<span class="text-cream/90">${msg}</span>`;
+            wrap.appendChild(t);
+            requestAnimationFrame(() => t.classList.add('show'));
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 500) }, 3000);
+        }
+
+        /* ===================== NEWSLETTER ===================== */
+        function subscribeEmail() {
+            const input = document.getElementById('emailInput');
+            if (!input.value || !input.value.includes('@')) { showToast('Please enter a valid email', 'info'); return }
+            showToast('Welcome to the Inner Circle', 'success');
+            input.value = '';
+        }
+
+        /* ===================== GSAP ANIMATIONS ===================== */
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            /* Preloader out */
+            gsap.to('#preloader', { opacity: 0, duration: .6, delay: 1.8, ease: 'power2.inOut', onComplete: () => { document.getElementById('preloader').style.display = 'none'; startHeroAnim() } });
+
+            /* Hero entrance */
+            function startHeroAnim() {
+                const els = document.querySelectorAll('.hero-el');
+                gsap.to(els, { opacity: 1, duration: 1, stagger: .15, ease: 'power2.out' });
+            }
+
+            /* Hero watch rotation on scroll */
+            gsap.to('#heroWatch', {
+                rotation: 90,
+                scale: .85,
+                y: -60,
+                ease: 'none',
+                scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+            });
+
+            /* Hero parallax text */
+            gsap.to('.hero-el', { y: -80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '#hero', start: '60% top', end: 'bottom top', scrub: 1 } });
+
+            /* Nav background on scroll */
+            ScrollTrigger.create({
+                trigger: '#hero',
+                start: '80% top',
+                onEnter: () => document.getElementById('mainNav').classList.add('glass'),
+                onLeaveBack: () => document.getElementById('mainNav').classList.remove('glass')
+            });
+
+            /* Philosophy section */
+            gsap.utils.toArray('.phil-el').forEach((el, i) => {
+                gsap.to(el, { opacity: 1, y: 0, duration: .8, delay: i * .12, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                gsap.set(el, { opacity: 0, y: 30 });
+            });
+
+            /* Collection section */
+            gsap.utils.toArray('.coll-el').forEach((el, i) => {
+                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                gsap.set(el, { opacity: 0, y: 30 });
+            });
+
+            /* Craftsmanship section */
+            gsap.utils.toArray('.craft-el').forEach((el, i) => {
+                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                gsap.set(el, { opacity: 0, y: 30 });
+            });
+
+            /* Newsletter section */
+            gsap.utils.toArray('.nl-el').forEach((el, i) => {
+                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                gsap.set(el, { opacity: 0, y: 25 });
+            });
+        }
+
+        /* ===================== HERO WATCH MOUSE TILT ===================== */
+        (function () {
+            const heroWatch = document.getElementById('heroWatch');
+            const heroSection = document.getElementById('hero');
+            heroSection.addEventListener('mousemove', e => {
+                const rect = heroSection.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - .5;
+                const y = (e.clientY - rect.top) / rect.height - .5;
+                heroWatch.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg)`;
+            });
+            heroSection.addEventListener('mouseleave', () => {
+                heroWatch.style.transform = '';
+            });
+        })();
+
+        /* ===================== CLOSE MODALS ON ESC ===================== */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { closeQV(); closeAuth(); closeCart(); closeMobile() }
+        });
+
+        /* ===================== INIT ===================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            renderProducts('all');
+            initAnimations();
+        });
+    </script>
+</body>
+
+</html>
