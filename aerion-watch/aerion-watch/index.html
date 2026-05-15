@@ -595,15 +595,15 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="#hero" class="font-display text-2xl text-cream hover:text-gold transition"
+        <a href="#hero" class="font-display text-2xl text-white hover:text-gold transition"
             onclick="closeMobile()">Home</a>
-        <a href="#collection" class="font-display text-2xl text-cream hover:text-gold transition"
+        <a href="#collection" class="font-display text-2xl text-white hover:text-gold transition"
             onclick="closeMobile()">Collection</a>
-        <a href="#craft" class="font-display text-2xl text-cream hover:text-gold transition"
+        <a href="#craft" class="font-display text-2xl text-white hover:text-gold transition"
             onclick="closeMobile()">Craftsmanship</a>
-        <a href="#newsletter" class="font-display text-2xl text-cream hover:text-gold transition"
+        <a href="#newsletter" class="font-display text-2xl text-white hover:text-gold transition"
             onclick="closeMobile()">Contact</a>
-        <button class="btn-outline mt-4" onclick="closeMobile();openAuth()">Sign In</button>
+        <button class="btn-outline mt-4 !text-white !border-white/30" onclick="closeMobile();openAuth()">Sign In</button>
     </div>
 
     <!-- Navigation -->
@@ -617,7 +617,7 @@
                 <a href="#newsletter" class="nav-link text-sm text-muted tracking-wider">Contact</a>
             </div>
             <div class="flex items-center gap-5">
-                <a href="#" class="hidden sm:block btn-gold !py-2 !px-5 !text-[10px]" id="shopNowBtn"><span>Shop
+                <a href="#collection" class="hidden sm:block btn-gold !py-2 !px-5 !text-[10px]" id="shopNowBtn"><span>Shop
                         Now</span></a>
                 <button class="text-muted hover:text-gold transition text-sm" onclick="openAuth()"
                     aria-label="Account"><i class="fa-regular fa-user"></i></button>
@@ -641,10 +641,10 @@
         <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
             style="z-index:2">
             <!-- Video Background -->
-            <video class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline preload="auto"
-                poster="https://media.rolex.com/video/upload/c_limit,q_auto:best,w_1080/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.jpg">
+            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto"
+                poster="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.jpg">
                 <source
-                    src="https://media.rolex.com/video/upload/c_limit,q_auto:best,w_1080/vc_h264/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.mp4"
+                    src="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/vc_h264/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.mp4"
                     type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-white/30 z-10"></div> <!-- Lighter overlay for light mode -->
