@@ -669,9 +669,7 @@
             <div class="absolute inset-0 bg-black/40 z-10"></div>
             
             <div class="relative flex flex-col items-center px-6 z-20">
-                <div class="watch-3d mb-8 hero-el opacity-0">
-                    <div class="watch-3d-inner hero-watch-size" id="heroWatch" style="width:380px;height:380px"></div>
-                </div>
+                <!-- Watch removed as requested -->
             </div>
 
             <div
@@ -1402,20 +1400,9 @@
 
             /* Hero entrance */
             function startHeroAnim() {
-                const hw = document.getElementById('heroWatch');
-                if (hw) hw.innerHTML = generateWatch(products[0], 380);
                 const els = document.querySelectorAll('.hero-el');
                 gsap.to(els, { opacity: 1, duration: 1, stagger: .15, ease: 'power2.out' });
             }
-
-            /* Hero watch rotation on scroll */
-            gsap.to('#heroWatch', {
-                rotation: 90,
-                scale: .85,
-                y: -60,
-                ease: 'none',
-                scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
-            });
 
             /* Hero parallax text */
             gsap.to('.hero-el', { y: -80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '#hero', start: '60% top', end: 'bottom top', scrub: 1 } });
@@ -1453,20 +1440,7 @@
             });
         }
 
-        /* ===================== HERO WATCH MOUSE TILT ===================== */
-        (function () {
-            const heroWatch = document.getElementById('heroWatch');
-            const heroSection = document.getElementById('hero');
-            heroSection.addEventListener('mousemove', e => {
-                const rect = heroSection.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - .5;
-                const y = (e.clientY - rect.top) / rect.height - .5;
-                heroWatch.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg)`;
-            });
-            heroSection.addEventListener('mouseleave', () => {
-                heroWatch.style.transform = '';
-            });
-        })();
+        /* ===================== HERO WATCH MOUSE TILT REMOVED ===================== */
 
         /* ===================== CLOSE MODALS ON ESC ===================== */
         document.addEventListener('keydown', e => {
