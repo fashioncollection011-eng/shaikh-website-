@@ -1011,9 +1011,14 @@
             { id: 14, name: 'Lady-Datejust 28', price: 8200, category: 'ladies', description: 'The classic timepiece for women. A smaller, elegant version of the Datejust with timeless appeal.', features: ['28mm Case', 'Fluted Bezel', 'Oystersteel', '55h Power Reserve'], dial: '#e8d5a3', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' }
         ];
 
-        let cart = [];
-        let wishlist = new Set();
+        let cart = JSON.parse(localStorage.getItem('aerion_cart')) || [];
+        let wishlist = new Set(JSON.parse(localStorage.getItem('aerion_wishlist')) || []);
         let currentQV = null;
+
+        function saveState() {
+            localStorage.setItem('aerion_cart', JSON.stringify(cart));
+            localStorage.setItem('aerion_wishlist', JSON.stringify([...wishlist]));
+        }
 
         /* ===================== WATCH SVG GENERATOR ===================== */
         function generateWatch(p, size) {
@@ -1162,6 +1167,7 @@
                 const card = document.createElement('div');
                 card.className = 'product-card p-6 pb-8';
                 card.setAttribute('data-category', p.category);
+                card.setAttribute('data-id', p.id);
                 card.innerHTML = `
                 <div class="reflection"></div>
                 <div class="flex justify-between items-start mb-4 relative" style="z-index:2">
@@ -1252,19 +1258,21 @@
             if (existing) { existing.qty++ }
             else { cart.push({ id, qty: 1 }) }
             updateCartUI();
+            saveState();
             const p = products.find(x => x.id === id);
             showToast(`${p.name} added to bag`, 'success');
         }
         function removeFromCart(id) {
             cart = cart.filter(c => c.id !== id);
             updateCartUI();
+            saveState();
         }
         function changeQty(id, delta) {
             const item = cart.find(c => c.id === id);
             if (!item) return;
             item.qty += delta;
             if (item.qty <= 0) removeFromCart(id);
-            else updateCartUI();
+            else { updateCartUI(); saveState(); }
         }
         function updateCartUI() {
             const countEl = document.getElementById('cartCount');
@@ -1331,11 +1339,12 @@
             const wc = document.getElementById('wishCount');
             if (wishlist.size > 0) { wc.textContent = wishlist.size; wc.classList.remove('hidden') }
             else { wc.classList.add('hidden') }
+            saveState();
             /* Sync product card hearts */
-            document.querySelectorAll('.product-card .heart-btn').forEach(btn => {
-                const card = btn.closest('.product-card');
-                const pid = products.find(pp => pp.name === card.querySelector('h3').textContent)?.id;
-                if (pid !== undefined) {
+            document.querySelectorAll('.product-card').forEach(card => {
+                const pid = parseInt(card.getAttribute('data-id'));
+                const btn = card.querySelector('.heart-btn');
+                if (pid && btn) {
                     if (wishlist.has(pid)) { btn.classList.add('active', 'text-red-400'); btn.classList.remove('text-muted/40'); btn.innerHTML = '<i class="fa-solid fa-heart"></i>' }
                     else { btn.classList.remove('active', 'text-red-400'); btn.classList.add('text-muted/40'); btn.innerHTML = '<i class="fa-regular fa-heart"></i>' }
                 }
@@ -1506,6 +1515,10 @@
 
             initParticles();
             renderProducts('all');
+            updateCartUI();
+            /* Initial wishlist count sync */
+            const wc = document.getElementById('wishCount');
+            if (wishlist.size > 0) { wc.textContent = wishlist.size; wc.classList.remove('hidden') }
             initAnimations();
         });
     </script>
