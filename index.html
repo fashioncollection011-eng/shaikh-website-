@@ -661,19 +661,15 @@
     <main>
         <!-- Hero Section -->
         <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-            style="z-index:2">
-            <!-- Video Background -->
-            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto"
-                poster="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.jpg">
-                <source
-                    src="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/vc_h264/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.mp4"
-                    type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-white/30 z-10"></div> <!-- Lighter overlay for light mode -->
+            style="z-index:2; background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);">
+            <!-- Background Glow -->
+            <div class="absolute w-[600px] h-[600px] bg-gold/10 rounded-full blur-[120px] opacity-50"></div>
 
             <div class="relative flex flex-col items-center px-6 z-20">
                 <div class="watch-3d mb-8 hero-el opacity-0">
-                    <div class="watch-3d-inner hero-watch-size" id="heroWatch" style="width:380px;height:380px"></div>
+                    <div class="watch-3d-inner hero-watch-size flex items-center justify-center" id="heroWatch" style="width:380px;height:480px">
+                        <img src="assets/hero-watch-img.png" alt="AERION Masterpiece" class="w-full h-full object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.6)]">
+                    </div>
                 </div>
             </div>
 
@@ -1410,10 +1406,10 @@
             }
 
             /* Hero watch rotation on scroll */
-            gsap.to('#heroWatch', {
-                rotation: 90,
-                scale: .85,
-                y: -60,
+            gsap.to('#heroWatch img', {
+                rotation: 15,
+                scale: 0.9,
+                y: -40,
                 ease: 'none',
                 scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
             });
