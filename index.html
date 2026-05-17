@@ -949,7 +949,10 @@
                                 placeholder="your@email.com">
                         </div>
                         <div>
-                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-muted text-xs tracking-wider uppercase">Password</label>
+                                <button class="text-muted/60 hover:text-gold text-[10px] tracking-wider uppercase transition" onclick="handleForgotPassword()">Forgot Password?</button>
+                            </div>
                             <input type="password" id="loginPassword"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="Enter password">
@@ -1378,6 +1381,12 @@
             if(window.firebaseLogin) window.firebaseLogin(email, pass);
             else showToast('Firebase not configured. Please add config in index.html.', 'error');
         }
+        function handleForgotPassword() {
+            const email = document.getElementById('loginEmail').value;
+            if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if(window.firebaseResetPassword) window.firebaseResetPassword(email);
+            else showToast('Firebase not configured.', 'error');
+        }
         function handleSignup() { 
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
@@ -1522,7 +1531,7 @@
     <!-- ===================== FIREBASE INTEGRATION ===================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
         // =========================================================================
         // 🔴 TODO: PASTE YOUR FIREBASE CONFIG OBJECT HERE TO ENABLE AUTHENTICATION
@@ -1583,6 +1592,16 @@
             window.firebaseSignout = async () => {
                 await signOut(auth);
                 window.showToast('Signed out successfully', 'info');
+            };
+
+            // Forgot Password function
+            window.firebaseResetPassword = async (email) => {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    window.showToast('Password reset link sent to your email', 'success');
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
             };
         }
     </script>
