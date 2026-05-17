@@ -641,8 +641,8 @@
             <div class="flex items-center gap-5">
                 <a href="#collection" class="hidden sm:block btn-gold !py-2 !px-5 !text-[10px]" id="shopNowBtn"><span>Shop
                         Now</span></a>
-                <button class="text-muted hover:text-gold transition text-sm" onclick="openAuth()"
-                    aria-label="Account"><i class="fa-regular fa-user"></i></button>
+                <button class="text-muted hover:text-gold transition text-sm" onclick="handleNavAccount()"
+                    aria-label="Account" id="navAccountBtn"><i class="fa-regular fa-user"></i></button>
                 <button class="text-muted hover:text-gold transition text-sm" onclick="openWishlist()"
                     aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span id="wishCount"
                         class="hidden ml-1 text-xs text-gold">0</span></button>
@@ -943,13 +943,13 @@
                     <div class="space-y-5">
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
-                            <input type="email"
+                            <input type="email" id="loginEmail"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="your@email.com">
                         </div>
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
-                            <input type="password"
+                            <input type="password" id="loginPassword"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="Enter password">
                         </div>
@@ -960,19 +960,19 @@
                     <div class="space-y-5">
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Full Name</label>
-                            <input type="text"
+                            <input type="text" id="signupName"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="John Doe">
                         </div>
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
-                            <input type="email"
+                            <input type="email" id="signupEmail"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="your@email.com">
                         </div>
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
-                            <input type="password"
+                            <input type="password" id="signupPassword"
                                 class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="Create password">
                         </div>
@@ -1361,8 +1361,30 @@
             document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
             document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
         }
-        function handleLogin() { showToast('Welcome back to AERION', 'success'); closeAuth() }
-        function handleSignup() { showToast('Account created — welcome to AERION', 'success'); closeAuth() }
+        function handleNavAccount() {
+            if (window.currentUser) {
+                if (confirm('Do you want to sign out?')) {
+                    if (window.firebaseSignout) window.firebaseSignout();
+                }
+            } else {
+                openAuth();
+            }
+        }
+        function handleLogin() { 
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if(window.firebaseLogin) window.firebaseLogin(email, pass);
+            else showToast('Firebase not configured. Please add config in index.html.', 'error');
+        }
+        function handleSignup() { 
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if(window.firebaseSignup) window.firebaseSignup(email, pass, name);
+            else showToast('Firebase not configured. Please add config in index.html.', 'error');
+        }
 
         /* ===================== MOBILE MENU ===================== */
         function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow = 'hidden' }
@@ -1495,6 +1517,72 @@
             initAnimations();
         });
     </script>
-</body>
 
+    <!-- ===================== FIREBASE INTEGRATION ===================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // =========================================================================
+        // 🔴 TODO: PASTE YOUR FIREBASE CONFIG OBJECT HERE TO ENABLE AUTHENTICATION
+        // =========================================================================
+        const firebaseConfig = {
+            // apiKey: "YOUR_API_KEY",
+            // authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            // projectId: "YOUR_PROJECT_ID",
+            // storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            // messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            // appId: "YOUR_APP_ID"
+        };
+
+        window.currentUser = null;
+
+        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+
+            // Track login state changes
+            onAuthStateChanged(auth, (user) => {
+                window.currentUser = user;
+                const btn = document.getElementById('navAccountBtn');
+                if (user) {
+                    btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
+                    btn.title = user.displayName || user.email;
+                } else {
+                    btn.innerHTML = '<i class="fa-regular fa-user"></i>';
+                    btn.title = 'Account';
+                }
+            });
+
+            // Login function
+            window.firebaseLogin = async (email, password) => {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    window.showToast('Welcome back to AERION', 'success');
+                    window.closeAuth();
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
+            };
+
+            // Signup function
+            window.firebaseSignup = async (email, password, name) => {
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name });
+                    window.showToast('Account created — welcome to AERION', 'success');
+                    window.closeAuth();
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
+            };
+
+            // Signout function
+            window.firebaseSignout = async () => {
+                await signOut(auth);
+                window.showToast('Signed out successfully', 'info');
+            };
+        }
+    </script>
+</body>
 </html>
