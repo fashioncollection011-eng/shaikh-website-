@@ -888,6 +888,24 @@
         </div>
     </div>
 
+    <!-- Wishlist Overlay -->
+    <div class="cart-overlay" id="wishlistOverlay" onclick="closeWishlist()"></div>
+    <!-- Wishlist Panel -->
+    <div class="cart-panel glass" id="wishlistPanel" style="background:rgba(253,253,253,.98);backdrop-filter:blur(30px)">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="font-display text-2xl text-cream tracking-wider">Your Wishlist</h3>
+                <button onclick="closeWishlist()" class="text-muted hover:text-cream transition text-lg"
+                    aria-label="Close wishlist"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="wishlistItems" class="space-y-6"></div>
+            <div id="wishlistEmpty" class="text-center py-16">
+                <i class="fa-regular fa-heart text-3xl text-muted/30 mb-4"></i>
+                <p class="text-muted text-sm">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick View Modal -->
     <div class="modal-overlay" id="qvModal">
         <div class="modal-box glass rounded-2xl max-w-4xl w-full mx-4"
@@ -1364,11 +1382,48 @@
                     else { btn.classList.remove('active', 'text-red-400'); btn.classList.add('text-muted/40'); btn.innerHTML = '<i class="fa-regular fa-heart"></i>' }
                 }
             });
+            updateWishlistUI();
         }
         function openWishlist() {
-            if (wishlist.size === 0) { showToast('Your wishlist is empty', 'info'); return }
-            const names = [...wishlist].map(id => products.find(p => p.id === id)?.name).filter(Boolean).join(', ');
-            showToast('Wishlist: ' + names, 'info');
+            updateWishlistUI();
+            document.getElementById('wishlistPanel').classList.add('open');
+            document.getElementById('wishlistOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeWishlist() {
+            document.getElementById('wishlistPanel').classList.remove('open');
+            document.getElementById('wishlistOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function updateWishlistUI() {
+            const itemsEl = document.getElementById('wishlistItems');
+            const emptyEl = document.getElementById('wishlistEmpty');
+            if (!itemsEl || !emptyEl) return;
+            if (wishlist.size === 0) {
+                itemsEl.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+            itemsEl.innerHTML = [...wishlist].map(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return '';
+                return `<div class="flex gap-4 items-center">
+                    <div style="width:70px;height:70px;flex-shrink:0">${generateWatch(p, 70)}</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-display text-cream text-sm tracking-wider">${p.name}</p>
+                        <p class="text-gold text-xs mt-1">$${p.price.toLocaleString()}</p>
+                        <button onclick="moveToCart(${p.id})" class="mt-2 text-[10px] text-gold tracking-wider uppercase border-b border-gold/30 hover:border-gold transition">Add to Bag</button>
+                    </div>
+                    <button onclick="toggleWish(${p.id})" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
+                </div>`;
+            }).join('');
+        }
+        function moveToCart(id) {
+            addToCart(id);
+            toggleWish(id);
+            closeWishlist();
+            openCart();
         }
 
         /* ===================== AUTH ===================== */
@@ -1496,7 +1551,7 @@
 
         /* ===================== CLOSE MODALS ON ESC ===================== */
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeQV(); closeAuth(); closeCart(); closeMobile(); closeSignOut() }
+            if (e.key === 'Escape') { closeQV(); closeAuth(); closeCart(); closeMobile(); closeSignOut(); closeWishlist() }
         });
 
         /* ===================== INIT ===================== */
@@ -1541,6 +1596,7 @@
             initParticles();
             renderProducts('all');
             updateCartUI();
+            updateWishlistUI();
             /* Initial wishlist count sync */
             const wc = document.getElementById('wishCount');
             if (wishlist.size > 0) { wc.textContent = wishlist.size; wc.classList.remove('hidden') }
