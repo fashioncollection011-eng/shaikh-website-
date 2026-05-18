@@ -732,7 +732,7 @@
                         data-filter="ladies">Ladies Watch</button>
                 </div>
                 <!-- Product Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="productGrid"></div>
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="productGrid"></div>
             </div>
         </section>
 
@@ -1172,21 +1172,21 @@
             grid.innerHTML = '';
             filtered.forEach((p, i) => {
                 const card = document.createElement('div');
-                card.className = 'product-card p-6 pb-8';
+                card.className = 'product-card p-4 pb-6 sm:p-6 sm:pb-8';
                 card.setAttribute('data-category', p.category);
                 card.setAttribute('data-id', p.id);
                 card.innerHTML = `
                 <div class="reflection"></div>
-                <div class="flex justify-between items-start mb-4 relative" style="z-index:2">
-                    <span class="text-gold/50 text-[10px] tracking-[.25em] uppercase">${p.category}</span>
+                <div class="flex justify-between items-start mb-2 sm:mb-4 relative" style="z-index:2">
+                    <span class="text-gold/50 text-[9px] sm:text-[10px] tracking-[.25em] uppercase">${p.category}</span>
                 </div>
-                <div class="watch-wrap flex justify-center py-6" style="perspective:600px">
-                    <div style="width:200px;height:200px">${generateWatch(p, 200)}</div>
+                <div class="watch-wrap flex justify-center py-4 sm:py-6" style="perspective:600px">
+                    <div style="width:100%;max-width:180px;aspect-ratio:1;display:flex;align-items:center;justify-content:center">${generateWatch(p, 180)}</div>
                 </div>
                 <div class="relative" style="z-index:2">
-                    <h3 class="font-display text-xl text-cream tracking-wider">${p.name}</h3>
-                    <p class="text-gold text-sm mt-1 font-light">$${p.price.toLocaleString()}</p>
-                    <button class="qv-btn btn-outline w-full mt-5 text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
+                    <h3 class="font-display text-sm sm:text-base md:text-xl text-cream tracking-wider truncate">${p.name}</h3>
+                    <p class="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1 font-light">$${p.price.toLocaleString()}</p>
+                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
                 </div>
             `;
                 card.addEventListener('click', () => openQV(p.id));
