@@ -1385,10 +1385,15 @@
             updateWishlistUI();
         }
         function openWishlist() {
-            updateWishlistUI();
-            document.getElementById('wishlistPanel').classList.add('open');
-            document.getElementById('wishlistOverlay').classList.add('open');
-            document.body.style.overflow = 'hidden';
+            try {
+                updateWishlistUI();
+                document.getElementById('wishlistPanel').classList.add('open');
+                document.getElementById('wishlistOverlay').classList.add('open');
+                document.body.style.overflow = 'hidden';
+            } catch (err) {
+                console.error(err);
+                showToast('Error opening wishlist: ' + err.message, 'error');
+            }
         }
         function closeWishlist() {
             document.getElementById('wishlistPanel').classList.remove('open');
@@ -1396,28 +1401,32 @@
             document.body.style.overflow = '';
         }
         function updateWishlistUI() {
-            const itemsEl = document.getElementById('wishlistItems');
-            const emptyEl = document.getElementById('wishlistEmpty');
-            if (!itemsEl || !emptyEl) return;
-            if (wishlist.size === 0) {
-                itemsEl.innerHTML = '';
-                emptyEl.classList.remove('hidden');
-                return;
+            try {
+                const itemsEl = document.getElementById('wishlistItems');
+                const emptyEl = document.getElementById('wishlistEmpty');
+                if (!itemsEl || !emptyEl) return;
+                if (wishlist.size === 0) {
+                    itemsEl.innerHTML = '';
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+                emptyEl.classList.add('hidden');
+                itemsEl.innerHTML = [...wishlist].map(id => {
+                    const p = products.find(x => x.id === parseInt(id));
+                    if (!p) return '';
+                    return `<div class="flex gap-4 items-center">
+                        <div style="width:70px;height:70px;flex-shrink:0">${generateWatch(p, 70)}</div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-display text-cream text-sm tracking-wider">${p.name}</p>
+                            <p class="text-gold text-xs mt-1">$${p.price.toLocaleString()}</p>
+                            <button onclick="moveToCart(${p.id})" class="mt-2 text-[10px] text-gold tracking-wider uppercase border-b border-gold/30 hover:border-gold transition">Add to Bag</button>
+                        </div>
+                        <button onclick="toggleWish(${p.id})" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                console.error('Wishlist UI Error:', err);
             }
-            emptyEl.classList.add('hidden');
-            itemsEl.innerHTML = [...wishlist].map(id => {
-                const p = products.find(x => x.id === id);
-                if (!p) return '';
-                return `<div class="flex gap-4 items-center">
-                    <div style="width:70px;height:70px;flex-shrink:0">${generateWatch(p, 70)}</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-display text-cream text-sm tracking-wider">${p.name}</p>
-                        <p class="text-gold text-xs mt-1">$${p.price.toLocaleString()}</p>
-                        <button onclick="moveToCart(${p.id})" class="mt-2 text-[10px] text-gold tracking-wider uppercase border-b border-gold/30 hover:border-gold transition">Add to Bag</button>
-                    </div>
-                    <button onclick="toggleWish(${p.id})" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
-                </div>`;
-            }).join('');
         }
         function moveToCart(id) {
             addToCart(id);
