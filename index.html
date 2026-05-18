@@ -1171,7 +1171,6 @@
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
             grid.innerHTML = '';
             filtered.forEach((p, i) => {
-                const isWished = wishlist.has(p.id);
                 const card = document.createElement('div');
                 card.className = 'product-card p-6 pb-8';
                 card.setAttribute('data-category', p.category);
