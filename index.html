@@ -73,7 +73,6 @@
             --gold-dark: #8a6e32;
             --cream: #1d1d1f;
             --muted: #86868b;
-            --teal: #4ee8d0;
             --glass: rgba(255, 255, 255, 0.8);
             --border: rgba(0, 0, 0, 0.06);
         }
@@ -140,7 +139,7 @@
         .preloader-line {
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--teal), var(--gold), transparent);
+            background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
             animation: pLine 1.8s ease-in-out forwards
         }
 
@@ -200,10 +199,10 @@
         .btn-gold {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--teal));
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold-dark));
             background-size: 300% 300%;
             animation: btnGlow 4s ease infinite;
-            color: #0a0a0a;
+            color: #ffffff;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
             letter-spacing: .18em;
@@ -228,7 +227,7 @@
         }
 
         .btn-gold:hover {
-            box-shadow: 0 0 40px rgba(224, 146, 108, .3), 0 0 80px rgba(78, 232, 208, .15);
+            box-shadow: 0 0 40px rgba(175, 140, 66, .3), 0 0 80px rgba(175, 140, 66, .15);
             transform: translateY(-2px)
         }
 
@@ -279,13 +278,13 @@
 
         .streak-1 {
             top: 25%;
-            background: linear-gradient(90deg, transparent, rgba(224, 146, 108, .15), rgba(78, 232, 208, .2), rgba(224, 146, 108, .15), transparent);
+            background: linear-gradient(90deg, transparent, rgba(175, 140, 66, .1), rgba(175, 140, 66, .2), rgba(175, 140, 66, .1), transparent);
             animation: streakAnim 9s ease-in-out infinite
         }
 
         .streak-2 {
             top: 55%;
-            background: linear-gradient(90deg, transparent, rgba(78, 232, 208, .12), rgba(120, 80, 200, .18), rgba(78, 232, 208, .12), transparent);
+            background: linear-gradient(90deg, transparent, rgba(175, 140, 66, .08), rgba(175, 140, 66, .12), rgba(175, 140, 66, .08), transparent);
             animation: streakAnim 11s ease-in-out infinite -4s
         }
 
@@ -329,12 +328,12 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--gold), var(--teal));
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
             transition: width .3s
         }
 
         .nav-link:hover {
-            color: var(--teal)
+            color: var(--gold)
         }
 
         .nav-link:hover::after {
@@ -516,7 +515,7 @@
         .gold-line {
             width: 80px;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), var(--teal), transparent);
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), transparent);
             border-radius: 1px
         }
 
@@ -528,8 +527,8 @@
 
         .feat-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(78, 232, 208, .2);
-            box-shadow: 0 0 40px rgba(78, 232, 208, .08), 0 0 80px rgba(224, 146, 108, .05)
+            border-color: rgba(175, 140, 66, .2);
+            box-shadow: 0 0 40px rgba(175, 140, 66, .08), 0 0 80px rgba(175, 140, 66, .05)
         }
 
         /* Wishlist heart */
