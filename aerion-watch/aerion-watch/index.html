@@ -454,20 +454,43 @@
             z-index: 5000;
             display: flex;
             flex-direction: column;
-            gap: 10px
+            gap: 10px;
+            max-width: calc(100vw - 56px);
         }
 
         .toast {
             padding: 14px 22px;
             border-radius: 8px;
-            font-size: .82rem;
+            font-size: .85rem;
             transform: translateX(130%);
-            transition: transform .45s cubic-bezier(.23, 1, .32, 1);
-            border: 1px solid var(--border)
+            transition: all .45s cubic-bezier(.23, 1, .32, 1);
+            border: 1px solid rgba(175, 140, 66, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            background: #18181b;
         }
 
         .toast.show {
             transform: translateX(0)
+        }
+
+        @media (max-width: 640px) {
+            .toast-wrap {
+                right: 20px;
+                left: 20px;
+                bottom: 20px;
+                max-width: calc(100vw - 40px);
+            }
+            .toast {
+                transform: translateY(150%);
+                width: 100%;
+            }
+            .toast.show {
+                transform: translateY(0);
+            }
         }
 
         /* Watch 3D container */
@@ -1346,12 +1369,24 @@
         function showToast(msg, type) {
             const wrap = document.getElementById('toastWrap');
             const t = document.createElement('div');
-            const bg = type === 'success' ? 'rgba(200,165,92,.12)' : 'rgba(255,255,255,.06)';
-            const border = type === 'success' ? 'rgba(200,165,92,.25)' : 'rgba(255,255,255,.1)';
-            t.className = 'toast glass';
-            t.style.background = bg;
+            t.className = 'toast';
+            
+            let border = 'rgba(175, 140, 66, 0.25)';
+            let icon = '';
+            
+            if (type === 'success') {
+                border = 'rgba(175, 140, 66, 0.4)';
+                icon = '<i class="fa-solid fa-circle-check text-gold text-base"></i>';
+            } else if (type === 'error') {
+                border = 'rgba(239, 68, 68, 0.4)';
+                icon = '<i class="fa-solid fa-circle-exclamation text-rose-500 text-base"></i>';
+            } else {
+                border = 'rgba(175, 140, 66, 0.25)';
+                icon = '<i class="fa-solid fa-circle-info text-gold-light text-base"></i>';
+            }
+            
             t.style.borderColor = border;
-            t.innerHTML = `<span class="text-cream/90">${msg}</span>`;
+            t.innerHTML = `<div class="flex items-center gap-3">${icon}<span class="text-white/95 font-medium leading-tight">${msg}</span></div>`;
             wrap.appendChild(t);
             requestAnimationFrame(() => t.classList.add('show'));
             setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 500) }, 3000);
