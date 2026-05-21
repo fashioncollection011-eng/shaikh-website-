@@ -1395,34 +1395,45 @@
         /* ===================== NEWSLETTER ===================== */
         async function subscribeEmail() {
             const input = document.getElementById('emailInput');
-            const email = input.value ? input.value.trim() : '';
+            const email = input.value;
+            
             if (!email || !email.includes('@')) { 
-                showToast('Please enter a valid email', 'info'); 
+                showToast('Please enter a valid email', 'error'); 
                 return; 
             }
             
-            const btn = document.querySelector('#newsletter button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span>Subscribing...</span>';
+            const btn = input.nextElementSibling;
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<span class="text-white/95">Subscribing...</span>';
             btn.disabled = true;
+            btn.style.opacity = '0.7';
 
             try {
-                // Store in local storage backup
-                let backups = JSON.parse(localStorage.getItem('aerion_subscribers') || '[]');
-                if (!backups.includes(email)) {
-                    backups.push(email);
-                    localStorage.setItem('aerion_subscribers', JSON.stringify(backups));
-                }
+                // To make this fully working, user needs to add their Web3Forms Access Key below
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
+                    body: JSON.stringify({
+                        access_key: "YOUR_WEB3FORMS_ACCESS_KEY_HERE",
+                        email: email,
+                        subject: "New Newsletter Subscriber - AERION Watch",
+                        from_name: "AERION Website"
+                    }),
+                });
+                const result = await response.json();
                 
-                showToast('Welcome to the Inner Circle', 'success');
-                input.value = '';
+                if (result.success) {
+                    showToast('Welcome to the Inner Circle', 'success');
+                    input.value = '';
+                } else {
+                    showToast('Something went wrong. Please configure the Access Key.', 'error');
+                }
             } catch (err) {
-                console.error(err);
-                showToast('Welcome to the Inner Circle', 'success');
-                input.value = '';
+                showToast('Network error. Please try again.', 'error');
             } finally {
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalBtnText;
                 btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
 
@@ -1505,33 +1516,10 @@
         });
 
         /* ===================== INIT ===================== */
+        document.addEventListener('DOMContentLoaded', () => {
             initParticles();
             renderProducts('all');
             initAnimations();
-
-            // Double click AERION logo in footer to download subscribers CSV (backup/offline method)
-            const footerLogo = document.querySelector('footer p.font-display');
-            if (footerLogo) {
-                footerLogo.style.cursor = 'pointer';
-                footerLogo.title = 'Double click to download subscribers list';
-                footerLogo.addEventListener('dblclick', () => {
-                    const subscribers = JSON.parse(localStorage.getItem('aerion_subscribers') || '[]');
-                    if (subscribers.length === 0) {
-                        showToast('No offline subscribers found yet', 'info');
-                        return;
-                    }
-                    
-                    let csvContent = "data:text/csv;charset=utf-8,Email\n" + subscribers.join("\n");
-                    const encodedUri = encodeURI(csvContent);
-                    const link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "aerion_subscribers.csv");
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    showToast(`Downloaded ${subscribers.length} offline subscribers`, 'success');
-                });
-            }
         });
     </script>
 </body>
