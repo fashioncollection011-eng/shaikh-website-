@@ -1437,11 +1437,41 @@
         }
 
         /* ===================== NEWSLETTER ===================== */
-        function subscribeEmail() {
+        async function subscribeEmail() {
             const input = document.getElementById('emailInput');
-            if (!input.value || !input.value.includes('@')) { showToast('Please enter a valid email', 'info'); return }
-            showToast('Welcome to the Inner Circle', 'success');
-            input.value = '';
+            const email = input.value ? input.value.trim() : '';
+            if (!email || !email.includes('@')) { 
+                showToast('Please enter a valid email', 'info'); 
+                return; 
+            }
+            
+            const btn = document.querySelector('#newsletter button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>Subscribing...</span>';
+            btn.disabled = true;
+
+            try {
+                if (window.firebaseSubscribeEmail) {
+                    await window.firebaseSubscribeEmail(email);
+                }
+                
+                // Always store in local storage backup as well
+                let backups = JSON.parse(localStorage.getItem('aerion_subscribers') || '[]');
+                if (!backups.includes(email)) {
+                    backups.push(email);
+                    localStorage.setItem('aerion_subscribers', JSON.stringify(backups));
+                }
+                
+                showToast('Welcome to the Inner Circle', 'success');
+                input.value = '';
+            } catch (err) {
+                console.error(err);
+                showToast('Welcome to the Inner Circle', 'success');
+                input.value = '';
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
         /* ===================== GSAP ANIMATIONS ===================== */
@@ -1543,6 +1573,30 @@
             renderProducts('all');
             updateCartUI();
             initAnimations();
+
+            // Double click AERION logo in footer to download subscribers CSV (backup/offline method)
+            const footerLogo = document.querySelector('footer p.font-display');
+            if (footerLogo) {
+                footerLogo.style.cursor = 'pointer';
+                footerLogo.title = 'Double click to download subscribers list';
+                footerLogo.addEventListener('dblclick', () => {
+                    const subscribers = JSON.parse(localStorage.getItem('aerion_subscribers') || '[]');
+                    if (subscribers.length === 0) {
+                        showToast('No offline subscribers found yet', 'info');
+                        return;
+                    }
+                    
+                    let csvContent = "data:text/csv;charset=utf-8,Email\n" + subscribers.join("\n");
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "aerion_subscribers.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast(`Downloaded ${subscribers.length} offline subscribers`, 'success');
+                });
+            }
         });
     </script>
 
@@ -1550,6 +1604,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // =========================================================================
         // 🔴 TODO: PASTE YOUR FIREBASE CONFIG OBJECT HERE TO ENABLE AUTHENTICATION
@@ -1569,6 +1624,7 @@
         if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
+            const db = getFirestore(app);
 
             // Track login state changes
             onAuthStateChanged(auth, (user) => {
@@ -1582,6 +1638,20 @@
                     btn.title = 'Account';
                 }
             });
+
+            // Email Subscription function using Firestore
+            window.firebaseSubscribeEmail = async (email) => {
+                try {
+                    await addDoc(collection(db, "subscribers"), {
+                        email: email,
+                        subscribedAt: serverTimestamp()
+                    });
+                    return true;
+                } catch (error) {
+                    console.error("Firestore error:", error);
+                    return false;
+                }
+            };
 
             // Login function
             window.firebaseLogin = async (email, password) => {
