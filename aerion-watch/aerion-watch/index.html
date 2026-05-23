@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERION — Time Redefined</title>
+    <meta name="google-site-verification" content="Zb1QLL0RTYDTjCZivEUz548LcpmCDSXkeuGCQsNY3B8" />
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "wtlorkuklu");
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,13 +36,35 @@
             }
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Outfit:wght@200;300;400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
+        html.lenis,
+        html.lenis body {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
         :root {
             --bg: #fdfdfd;
             --bg-alt: #f5f5f7;
@@ -97,7 +128,7 @@
             position: fixed;
             inset: 0;
             z-index: 9999;
-            background: var(--bg);
+            background: #050505;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -108,7 +139,7 @@
         .preloader-line {
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--teal), var(--gold), transparent);
+            background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
             animation: pLine 1.8s ease-in-out forwards
         }
 
@@ -168,10 +199,10 @@
         .btn-gold {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--teal));
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold-dark));
             background-size: 300% 300%;
             animation: btnGlow 4s ease infinite;
-            color: #0a0a0a;
+            color: #ffffff;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
             letter-spacing: .18em;
@@ -196,7 +227,7 @@
         }
 
         .btn-gold:hover {
-            box-shadow: 0 0 40px rgba(224, 146, 108, .3), 0 0 80px rgba(78, 232, 208, .15);
+            box-shadow: 0 0 40px rgba(175, 140, 66, .3), 0 0 80px rgba(175, 140, 66, .15);
             transform: translateY(-2px)
         }
 
@@ -231,10 +262,10 @@
         }
 
         .btn-outline:hover {
-            border-color: var(--teal);
-            color: var(--teal);
-            background: rgba(78, 232, 208, .06);
-            box-shadow: 0 0 25px rgba(78, 232, 208, .08)
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(175, 140, 66, .06);
+            box-shadow: 0 0 25px rgba(175, 140, 66, .08)
         }
 
         /* Light Streaks — now multi-color */
@@ -247,13 +278,13 @@
 
         .streak-1 {
             top: 25%;
-            background: linear-gradient(90deg, transparent, rgba(224, 146, 108, .15), rgba(78, 232, 208, .2), rgba(224, 146, 108, .15), transparent);
+            background: linear-gradient(90deg, transparent, rgba(175, 140, 66, .1), rgba(175, 140, 66, .2), rgba(175, 140, 66, .1), transparent);
             animation: streakAnim 9s ease-in-out infinite
         }
 
         .streak-2 {
             top: 55%;
-            background: linear-gradient(90deg, transparent, rgba(78, 232, 208, .12), rgba(120, 80, 200, .18), rgba(78, 232, 208, .12), transparent);
+            background: linear-gradient(90deg, transparent, rgba(175, 140, 66, .08), rgba(175, 140, 66, .12), rgba(175, 140, 66, .08), transparent);
             animation: streakAnim 11s ease-in-out infinite -4s
         }
 
@@ -297,12 +328,12 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--gold), var(--teal));
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
             transition: width .3s
         }
 
         .nav-link:hover {
-            color: var(--teal)
+            color: var(--gold)
         }
 
         .nav-link:hover::after {
@@ -507,7 +538,7 @@
         .gold-line {
             width: 80px;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), var(--teal), transparent);
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), transparent);
             border-radius: 1px
         }
 
@@ -519,8 +550,8 @@
 
         .feat-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(78, 232, 208, .2);
-            box-shadow: 0 0 40px rgba(78, 232, 208, .08), 0 0 80px rgba(224, 146, 108, .05)
+            border-color: rgba(175, 140, 66, .2);
+            box-shadow: 0 0 40px rgba(175, 140, 66, .08), 0 0 80px rgba(175, 140, 66, .05)
         }
 
         /* Wishlist heart */
@@ -642,11 +673,8 @@
             <div class="flex items-center gap-5">
                 <a href="#collection" class="hidden sm:block btn-gold !py-2 !px-5 !text-[10px]" id="shopNowBtn"><span>Shop
                         Now</span></a>
-                <button class="text-muted hover:text-gold transition text-sm" onclick="openAuth()"
-                    aria-label="Account"><i class="fa-regular fa-user"></i></button>
-                <button class="text-muted hover:text-gold transition text-sm" onclick="openWishlist()"
-                    aria-label="Wishlist"><i class="fa-regular fa-heart"></i><span id="wishCount"
-                        class="hidden ml-1 text-xs text-gold">0</span></button>
+                <button class="text-muted hover:text-gold transition text-sm" onclick="handleNavAccount()"
+                    aria-label="Account" id="navAccountBtn"><i class="fa-regular fa-user"></i></button>
                 <button class="text-muted hover:text-gold transition text-sm relative" onclick="openCart()"
                     aria-label="Cart">
                     <i class="fa-solid fa-bag-shopping"></i>
@@ -662,20 +690,15 @@
     <main>
         <!-- Hero Section -->
         <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-            style="z-index:2">
+            style="z-index:2; background-color: #000;">
             <!-- Video Background -->
-            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto"
-                poster="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.jpg">
-                <source
-                    src="https://media.rolex.com/video/upload/c_limit,q_auto:good,w_1080/vc_h264/v1/rolexcom/collection/family-pages/classic-watches/land-dweller/family-page/2025/videos/presentation-autoplay/classic-watches-land-dweller-autoplay-video.mp4"
-                    type="video/mp4">
+            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto">
+                <source src="https://patek-res.cloudinary.com/video/upload/f_auto:video/dfsmedia/0906caea301d42b3b8bd23bd656d1711/299245-source/pp-5822p-001-screen-20-13-en-cubitus-launch-film-loop" type="video/mp4">
             </video>
-            <div class="absolute inset-0 bg-white/30 z-10"></div> <!-- Lighter overlay for light mode -->
-
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            
             <div class="relative flex flex-col items-center px-6 z-20">
-                <div class="watch-3d mb-8 hero-el opacity-0">
-                    <div class="watch-3d-inner hero-watch-size" id="heroWatch" style="width:380px;height:380px"></div>
-                </div>
+                <!-- Watch removed as requested -->
             </div>
 
             <div
@@ -728,7 +751,7 @@
                     <div class="gold-line mx-auto mt-6 coll-el opacity-0"></div>
                 </div>
                 <!-- Filter Tabs -->
-                <div class="flex justify-center gap-8 mb-14 coll-el opacity-0">
+                <div class="flex justify-center flex-wrap gap-4 sm:gap-8 mb-14 coll-el opacity-0">
                     <button
                         class="filter-tab active text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-gold"
                         data-filter="all">All</button>
@@ -738,9 +761,12 @@
                     <button
                         class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
                         data-filter="ladies">Ladies Watch</button>
+                    <button
+                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                        data-filter="special">Special Editions</button>
                 </div>
                 <!-- Product Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="productGrid"></div>
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="productGrid"></div>
             </div>
         </section>
 
@@ -920,8 +946,6 @@
                         <div class="space-y-3 mb-10" id="qvFeatures"></div>
                         <div class="flex gap-3">
                             <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
-                            <button class="btn-outline px-4" id="qvWishBtn" onclick="toggleWishFromQV()"
-                                aria-label="Wishlist"><i class="fa-regular fa-heart"></i></button>
                         </div>
                     </div>
                 </div>
@@ -935,8 +959,8 @@
             style="background:rgba(12,12,20,.96);backdrop-filter:blur(30px)">
             <div class="p-10">
                 <div class="flex justify-between items-center mb-10">
-                    <h3 class="font-display text-2xl text-cream tracking-wider">Account</h3>
-                    <button onclick="closeAuth()" class="text-muted hover:text-cream transition" aria-label="Close"><i
+                    <h3 class="font-display text-2xl text-white tracking-wider">Account</h3>
+                    <button onclick="closeAuth()" class="text-muted hover:text-white transition" aria-label="Close"><i
                             class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="flex gap-8 mb-8">
@@ -949,14 +973,17 @@
                     <div class="space-y-5">
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
-                            <input type="email"
-                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                            <input type="email" id="loginEmail"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="your@email.com">
                         </div>
                         <div>
-                            <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
-                            <input type="password"
-                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-muted text-xs tracking-wider uppercase">Password</label>
+                                <button class="text-muted/60 hover:text-gold text-[10px] tracking-wider uppercase transition" onclick="handleForgotPassword()">Forgot Password?</button>
+                            </div>
+                            <input type="password" id="loginPassword"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="Enter password">
                         </div>
                         <button class="btn-gold w-full mt-2" onclick="handleLogin()"><span>Sign In</span></button>
@@ -966,20 +993,20 @@
                     <div class="space-y-5">
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Full Name</label>
-                            <input type="text"
-                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                            <input type="text" id="signupName"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="John Doe">
                         </div>
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Email</label>
-                            <input type="email"
-                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                            <input type="email" id="signupEmail"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="your@email.com">
                         </div>
                         <div>
                             <label class="text-muted text-xs tracking-wider uppercase block mb-2">Password</label>
-                            <input type="password"
-                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-cream text-sm outline-none focus:border-gold/30 transition"
+                            <input type="password" id="signupPassword"
+                                class="w-full bg-white/[.03] border border-gold/10 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-gold/30 transition"
                                 placeholder="Create password">
                         </div>
                         <button class="btn-gold w-full mt-2" onclick="handleSignup()"><span>Create
@@ -990,12 +1017,238 @@
         </div>
     </div>
 
+    <!-- Account Profile Modal -->
+    <div class="modal-overlay" id="signOutModal">
+        <div class="modal-box glass rounded-2xl max-w-sm w-full mx-4 text-center"
+            style="background:rgba(12,12,20,.96);backdrop-filter:blur(30px); border: 1px solid rgba(175, 140, 66, 0.25);">
+            <div class="p-8 sm:p-10">
+                <i class="fa-solid fa-circle-user text-5xl text-gold mb-4"></i>
+                <h3 class="font-display text-2xl text-white tracking-wider mb-1">My Account</h3>
+                <div class="mb-6 py-2 border-b border-white/5">
+                    <p class="text-gold font-light text-sm" id="profileName">Aerion Member</p>
+                    <p class="text-muted text-xs mt-0.5" id="profileEmail">loading...</p>
+                </div>
+                
+                <!-- Database Control Panel trigger -->
+                <button class="btn-gold w-full mb-4 flex items-center justify-center gap-2" onclick="closeSignOut(); openAdminPanel();">
+                    <span><i class="fa-solid fa-database"></i> Database Control Panel</span>
+                </button>
+                
+                <div class="flex gap-4">
+                    <button class="btn-outline flex-1" onclick="closeSignOut()">Cancel</button>
+                    <button class="btn-outline border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-400 flex-1" onclick="confirmSignOut()">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Admin Panel Modal -->
+    <div class="modal-overlay" id="adminPanelModal" style="z-index: 100;">
+        <div class="modal-box glass rounded-2xl max-w-4xl w-full mx-4"
+            style="background:rgba(12,12,20,.98); backdrop-filter:blur(30px); border: 1px solid rgba(175, 140, 66, 0.25); max-height: 85vh; display: flex; flex-direction: column;">
+            
+            <!-- Modal Header -->
+            <div class="p-6 pb-4 border-b border-white/5 flex justify-between items-center">
+                <div>
+                    <h3 class="font-display text-xl sm:text-2xl text-white tracking-wider flex items-center gap-3">
+                        <i class="fa-solid fa-database text-gold"></i> DATABASE CONTROL CENTER
+                    </h3>
+                    <p class="text-[10px] text-gold/60 mt-1" id="dbStatusText">Database Status: Syncing...</p>
+                </div>
+                <button class="text-muted hover:text-gold transition text-2xl" onclick="closeAdminPanel()">&times;</button>
+            </div>
+            
+            <!-- Controls Bar -->
+            <div class="p-6 pb-4 flex flex-col sm:flex-row gap-4 justify-between items-center border-b border-white/5 bg-black/10">
+                <!-- Search & Filters -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto flex-1">
+                    <div class="relative flex-1 max-w-xs">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
+                        <input type="text" id="adminSearch" placeholder="Search watches..." 
+                            class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-cream placeholder-muted text-xs focus:border-gold/50 focus:outline-none transition"
+                            oninput="renderAdminWatches()">
+                    </div>
+                    <select id="adminCategoryFilter" onchange="renderAdminWatches()"
+                        class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        <option value="all">All Categories</option>
+                        <option value="mens">Mens Watches</option>
+                        <option value="ladies">Ladies Watches</option>
+                        <option value="special">Special Editions</option>
+                    </select>
+                </div>
+                <!-- Add Button -->
+                <button class="btn-gold !py-2.5 !px-5 !text-[11px] w-full sm:w-auto" onclick="openCustomizer(null)">
+                    <span><i class="fa-solid fa-plus mr-1"></i> Add Custom Watch</span>
+                </button>
+            </div>
+            
+            <!-- Watches List Container -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/5 text-[10px] tracking-wider uppercase text-muted">
+                                <th class="pb-3 w-16">Watch</th>
+                                <th class="pb-3 pl-4">Name</th>
+                                <th class="pb-3">Category</th>
+                                <th class="pb-3 text-right">Price</th>
+                                <th class="pb-3 text-center w-28">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminWatchesList" class="divide-y divide-white/5 text-sm">
+                            <!-- Watches dynamically rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="adminEmptyState" class="hidden text-center py-12 text-muted">
+                    <i class="fa-solid fa-magnifying-glass text-3xl mb-3 text-gold/30"></i>
+                    <p>No watches found matching your criteria.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Watch Customizer Modal -->
+    <div class="modal-overlay" id="customizerModal" style="z-index: 110;">
+        <div class="modal-box glass rounded-2xl max-w-3xl w-full mx-4 animate-modal"
+            style="background:rgba(12,12,20,.98); backdrop-filter:blur(30px); border: 1px solid rgba(175, 140, 66, 0.25); max-height: 90vh; display: flex; flex-direction: column;">
+            
+            <!-- Header -->
+            <div class="p-6 pb-4 border-b border-white/5 flex justify-between items-center">
+                <h3 class="font-display text-xl text-white tracking-wider flex items-center gap-2" id="customizerTitle">
+                    <i class="fa-solid fa-wand-magic-sparkles text-gold"></i> Customizer Control
+                </h3>
+                <button class="text-muted hover:text-gold transition text-2xl" onclick="closeCustomizer()">&times;</button>
+            </div>
+            
+            <!-- Main Customizer Body -->
+            <div class="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
+                <!-- Left Column: Live Preview (5 cols) -->
+                <div class="md:col-span-5 flex flex-col gap-4 items-center justify-center">
+                    <span class="text-[10px] tracking-[0.2em] uppercase text-gold/60 font-semibold">Live Preview</span>
+                    <div class="w-full flex items-center justify-center p-6 bg-black/40 rounded-2xl border border-white/5 relative overflow-hidden aspect-square" style="max-width: 260px;">
+                        <div class="absolute inset-0 bg-radial-gradient from-transparent to-black/20 pointer-events-none"></div>
+                        <div id="customizerPreview" style="width: 100%; aspect-ratio: 1;"></div>
+                    </div>
+                    <p class="text-[10px] text-muted text-center max-w-[200px]">Preview updates in real-time as you tweak the dial details, accent color, and features.</p>
+                </div>
+                
+                <!-- Right Column: Form Controls (7 cols) -->
+                <div class="md:col-span-7 space-y-4">
+                    <input type="hidden" id="custEditId">
+                    
+                    <!-- Basic details -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Watch Name</label>
+                            <input type="text" id="custName" placeholder="e.g. Sovereign Hulk" required
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Price ($)</label>
+                            <input type="number" id="custPrice" placeholder="e.g. 15000" min="0" required
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Category</label>
+                            <select id="custCategory" 
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                                <option value="mens">Mens</option>
+                                <option value="ladies">Ladies</option>
+                                <option value="special">Special Edition</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Second Hand Color</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="color" id="custSecColor" value="#c8a55c"
+                                    class="w-8 h-8 rounded border-0 bg-transparent cursor-pointer">
+                                <span class="text-[10px] text-muted" id="secColorHex">#c8a55c</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Colors Section -->
+                    <div class="grid grid-cols-2 gap-4 border-t border-white/5 pt-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Dial Color (Background)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="color" id="custDial" value="#0a0a15"
+                                    class="w-8 h-8 rounded border-0 bg-transparent cursor-pointer">
+                                <span class="text-[10px] text-muted" id="dialHex">#0a0a15</span>
+                            </div>
+                            <!-- Presets -->
+                            <div class="flex gap-1.5 mt-1.5">
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#0a0a15]" onclick="setDialPreset('#0a0a15')" title="Sapphire Black"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#021a10]" onclick="setDialPreset('#021a10')" title="Emerald Green"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#060d18]" onclick="setDialPreset('#060d18')" title="Deep Blue"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#0a0908]" onclick="setDialPreset('#0a0908')" title="Obsidian Black"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#0c021a]" onclick="setDialPreset('#0c021a')" title="Deep Purple"></button>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Primary Accent Color</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="color" id="custAccent" value="#c8a55c"
+                                    class="w-8 h-8 rounded border-0 bg-transparent cursor-pointer">
+                                <span class="text-[10px] text-muted" id="accentHex">#c8a55c</span>
+                            </div>
+                            <!-- Presets -->
+                            <div class="flex gap-1.5 mt-1.5">
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#c8a55c]" onclick="setAccentPreset('#c8a55c')" title="Gold"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#e28f83]" onclick="setAccentPreset('#e28f83')" title="Rose Gold"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#999999]" onclick="setAccentPreset('#999999')" title="Chrome"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#81d8d0]" onclick="setAccentPreset('#81d8d0')" title="Tiffany"></button>
+                                <button type="button" class="w-4 h-4 rounded-full border border-white/10 bg-[#a855f7]" onclick="setAccentPreset('#a855f7')" title="Amethyst"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Complications Toggle -->
+                    <div class="flex gap-6 border-t border-white/5 pt-3">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="custHasDate" class="rounded border-white/15 bg-white/5 text-gold focus:ring-0 focus:ring-offset-0">
+                            <span class="text-[10px] text-cream uppercase tracking-wider">Date Window</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="custHasSubdials" class="rounded border-white/15 bg-white/5 text-gold focus:ring-0 focus:ring-offset-0">
+                            <span class="text-[10px] text-cream uppercase tracking-wider">Subdials (Chronograph)</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Features & Description -->
+                    <div class="space-y-3 border-t border-white/5 pt-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Key Features (comma separated)</label>
+                            <input type="text" id="custFeatures" placeholder="e.g. Sapphire Crystal, Ceramic Bezel, 300m Waterproof" required
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-muted uppercase tracking-wider block">Description</label>
+                            <textarea id="custDesc" rows="3" placeholder="Describe this luxury horological masterpiece..." required
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-6 border-t border-white/5 flex gap-4 justify-end">
+                <button class="btn-outline !py-2.5 !px-6" onclick="closeCustomizer()">Cancel</button>
+                <button class="btn-gold !py-2.5 !px-6" onclick="saveCustomWatch()"><span>Save Masterpiece</span></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-wrap" id="toastWrap"></div>
 
     <script>
         /* ===================== DATA ===================== */
-        const products = [
+        let products = [
             { id: 1, name: 'Sovereign', price: 12500, category: 'mens', description: 'Hand-assembled with 312 individual components, the Sovereign embodies three generations of horological mastery. Its sunburst dial catches light like liquid gold.', features: ['Sapphire Crystal', '100m Water Resistant', '904L Steel', '72h Power Reserve'], dial: '#0a0a15', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
             { id: 2, name: 'Eclipse', price: 18900, category: 'mens', description: 'Engineered for depth. The Eclipse features a unidirectional ceramic bezel and Super-LumiNova indices for extreme readability in any condition.', features: ['Sapphire Crystal', '300m Water Resistant', 'Titanium Case', 'Chronograph'], dial: '#060d18', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: true, secColor: '#4a8ecc' },
             { id: 3, name: 'Monarch', price: 24500, category: 'mens', description: 'A statement of absolute authority. Rose gold accents on a deep midnight dial, finished with hand-engraved guilloché patterns visible under magnification.', features: ['Sapphire Crystal', '50m Water Resistant', 'Rose Gold', 'Guilloché Dial'], dial: '#100808', accent: '#c89060', accentDark: '#8a5a30', accentLight: '#e8c0a0', hasDate: true, hasSubdials: false, secColor: '#c89060' },
@@ -1009,12 +1262,373 @@
             { id: 11, name: 'Oyster Perpetual', price: 6400, category: 'ladies', description: 'The purest expression of the Oyster concept. A watch that stands for style and precision.', features: ['Sunray Finish', 'Waterproof', 'Oystersteel', '70h Power Reserve'], dial: '#4a8ecc', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: false, hasSubdials: false, secColor: '#af8c42' },
             { id: 12, name: 'Pearlmaster', price: 34000, category: 'ladies', description: 'The peak of jewelry watchmaking. Adorned with precious gems and finished in 18k Everose gold.', features: ['Diamond Set', '18k Everose Gold', 'Sapphire Crystal', '70h Power Reserve'], dial: '#f8f0e8', accent: '#d4af37', accentDark: '#a08020', accentLight: '#f0d870', hasDate: true, hasSubdials: false, secColor: '#d4af37' },
             { id: 13, name: 'Yacht-Master', price: 11500, category: 'mens', description: 'The watch of the open seas. Combining character and performance, the Yacht-Master is at home on deck.', features: ['Bidirectional Bezel', 'Oystersteel', 'Waterproof', '72h Power Reserve'], dial: '#1a1a2a', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: false, secColor: '#4a8ecc' },
-            { id: 14, name: 'Lady-Datejust 28', price: 8200, category: 'ladies', description: 'The classic timepiece for women. A smaller, elegant version of the Datejust with timeless appeal.', features: ['28mm Case', 'Fluted Bezel', 'Oystersteel', '55h Power Reserve'], dial: '#e8d5a3', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' }
+            { id: 14, name: 'Lady-Datejust 28', price: 8200, category: 'ladies', description: 'The classic timepiece for women. A smaller, elegant version of the Datejust with timeless appeal.', features: ['28mm Case', 'Fluted Bezel', 'Oystersteel', '55h Power Reserve'], dial: '#e8d5a3', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
+            { id: 15, name: 'Nebula Tourbillon', price: 95000, category: 'special', description: 'Featuring a real meteorite dial and a flying tourbillon movement at 6 o\'clock. A masterclass in haute horlogerie, limited to 10 pieces worldwide.', features: ['Meteorite Dial', 'Flying Tourbillon', '18k White Gold', 'Manual Winding'], dial: '#0c021a', accent: '#a855f7', accentDark: '#6b21a8', accentLight: '#d8b4fe', hasDate: false, hasSubdials: true, secColor: '#a855f7' },
+            { id: 16, name: 'Sovereign Rose Gold', price: 42000, category: 'special', description: 'Our signature design reimagined in solid 18k rose gold. Fitted with an emerald green dial and an open heart exhibition case back.', features: ['18k Rose Gold Case', 'Emerald Sunburst Dial', 'Exhibition Case Back', '72h Power Reserve'], dial: '#062016', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
+            { id: 17, name: 'Submariner "Hulk"', price: 24000, category: 'mens', description: 'A legendary classic, the Submariner "Hulk" boasts a mesmerizing sunburst emerald green dial and matching ceramic bezel. An absolute grail for collectors.', features: ['Ceramic Green Bezel', 'Emerald Sunburst Dial', '904L Oystersteel', '300m Water Resistant'], dial: '#021a10', accent: '#10b981', accentDark: '#047857', accentLight: '#34d399', hasDate: true, hasSubdials: false, secColor: '#10b981' },
+            { id: 18, name: 'Cosmograph Daytona Rose', price: 48000, category: 'mens', description: 'Crafted in 18k Everose gold, this Daytona features a black dial with snail-counters and high-performance Oysterflex bracelet for ultimate sporty elegance.', features: ['18k Everose Gold', 'Cerachrom Bezel', 'Chronograph Function', 'Oysterflex Strap'], dial: '#0a0908', accent: '#e28f83', accentDark: '#ad5d51', accentLight: '#f5beb4', hasDate: false, hasSubdials: true, secColor: '#ff4b4b' },
+            { id: 19, name: 'Oyster Perpetual Tiffany', price: 9200, category: 'ladies', description: 'Featuring a stunning turquoise Tiffany Blue dial, this Oyster Perpetual represents timeless elegance and modern sophistication, fitting perfectly on any wrist.', features: ['Tiffany Blue Dial', 'Oystersteel Case', 'Chromalight Display', '55h Power Reserve'], dial: '#0b2c30', accent: '#81d8d0', accentDark: '#4fa59d', accentLight: '#b3ebe5', hasDate: false, hasSubdials: false, secColor: '#81d8d0' },
+            { id: 20, name: 'Royal Oak Skeleton Special', price: 135000, category: 'special', description: 'An engineering marvel. The Royal Oak Skeleton exposes the hand-finished double balance wheel mechanism, showcasing a mesmerizing ballet of moving gears.', features: ['Double Balance Wheel', 'Skeletonized Dial', '18k Pink Gold', 'Exhibition Caseback'], dial: '#0a0805', accent: '#fbbf24', accentDark: '#b45309', accentLight: '#fef08a', hasDate: false, hasSubdials: true, secColor: '#fbbf24' }
         ];
 
-        let cart = [];
-        let wishlist = new Set();
+        let cart = JSON.parse(localStorage.getItem('aerion_cart')) || [];
         let currentQV = null;
+
+        function saveState() {
+            localStorage.setItem('aerion_cart', JSON.stringify(cart));
+        }
+
+        /* ===================== DATABASE & CUSTOMIZER CORE ===================== */
+        function adjustBrightness(hex, percent) {
+            let R = parseInt(hex.substring(1, 3), 16);
+            let G = parseInt(hex.substring(3, 5), 16);
+            let B = parseInt(hex.substring(5, 7), 16);
+
+            R = parseInt(R * (100 + percent) / 100);
+            G = parseInt(G * (100 + percent) / 100);
+            B = parseInt(B * (100 + percent) / 100);
+
+            R = (R < 255) ? R : 255;
+            G = (G < 255) ? G : 255;
+            B = (B < 255) ? B : 255;
+
+            R = (R > 0) ? R : 0;
+            G = (G > 0) ? G : 0;
+            B = (B > 0) ? B : 0;
+
+            const rHex = R.toString(16).padStart(2, '0');
+            const gHex = G.toString(16).padStart(2, '0');
+            const bHex = B.toString(16).padStart(2, '0');
+
+            return `#${rHex}${gHex}${bHex}`;
+        }
+
+        function openAdminPanel() {
+            document.getElementById('adminPanelModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            
+            // Set DB status text
+            const statusText = document.getElementById('dbStatusText');
+            if (window.dbConnected) {
+                statusText.innerHTML = '<span class="w-2 h-2 inline-block rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Connected to Google Cloud Database';
+                statusText.className = "text-[10px] text-emerald-400 mt-1 flex items-center";
+            } else {
+                statusText.innerHTML = '<span class="w-2 h-2 inline-block rounded-full bg-amber-500 mr-1.5"></span> Offline (Local Browser Mode)';
+                statusText.className = "text-[10px] text-amber-400 mt-1 flex items-center";
+            }
+            
+            renderAdminWatches();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanelModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function renderAdminWatches() {
+            const list = document.getElementById('adminWatchesList');
+            const searchQuery = document.getElementById('adminSearch').value.toLowerCase().trim();
+            const categoryFilter = document.getElementById('adminCategoryFilter').value;
+            
+            // Filter
+            const filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery);
+                const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+            
+            list.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                document.getElementById('adminEmptyState').classList.remove('hidden');
+                return;
+            }
+            
+            document.getElementById('adminEmptyState').classList.add('hidden');
+            
+            filtered.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
+                tr.innerHTML = `
+                    <td class="py-3 w-16">
+                        <div class="w-10 h-10 rounded-full bg-black/30 border border-white/5 flex items-center justify-center p-1">
+                            ${generateWatch(p, 40)}
+                        </div>
+                    </td>
+                    <td class="py-3 pl-4 font-medium text-cream">${p.name}</td>
+                    <td class="py-3 text-muted text-xs capitalize">${p.category}</td>
+                    <td class="py-3 text-right text-gold font-light">$${p.price.toLocaleString()}</td>
+                    <td class="py-3 text-center">
+                        <div class="flex justify-center gap-3">
+                            <button class="text-gold hover:text-white transition p-1" onclick="openCustomizer(${p.id})" title="Edit Watch">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="text-red-400 hover:text-white transition p-1" onclick="deleteCustomWatch(${p.id})" title="Delete Watch">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        // Live Customizer Preview and Presets
+        window.setDialPreset = function(color) {
+            document.getElementById('custDial').value = color;
+            document.getElementById('dialHex').textContent = color.toUpperCase();
+            updateCustomizerPreview();
+        }
+
+        window.setAccentPreset = function(color) {
+            document.getElementById('custAccent').value = color;
+            document.getElementById('accentHex').textContent = color.toUpperCase();
+            updateCustomizerPreview();
+        }
+
+        function updateCustomizerPreview() {
+            const name = document.getElementById('custName').value || 'Custom Watch';
+            const price = Number(document.getElementById('custPrice').value) || 0;
+            const category = document.getElementById('custCategory').value;
+            const dial = document.getElementById('custDial').value;
+            const accent = document.getElementById('custAccent').value;
+            const secColor = document.getElementById('custSecColor').value;
+            const hasDate = document.getElementById('custHasDate').checked;
+            const hasSubdials = document.getElementById('custHasSubdials').checked;
+
+            // Update hex tags
+            document.getElementById('dialHex').textContent = dial.toUpperCase();
+            document.getElementById('accentHex').textContent = accent.toUpperCase();
+            document.getElementById('secColorHex').textContent = secColor.toUpperCase();
+
+            // Auto calculate accents
+            const accentLight = adjustBrightness(accent, 30);
+            const accentDark = adjustBrightness(accent, -30);
+
+            const tempP = {
+                id: 'preview',
+                name,
+                price,
+                category,
+                dial,
+                accent,
+                accentDark,
+                accentLight,
+                hasDate,
+                hasSubdials,
+                secColor
+            };
+
+            document.getElementById('customizerPreview').innerHTML = generateWatch(tempP, 200);
+        }
+
+        // Open/Close Customizer Modal
+        function openCustomizer(id) {
+            const modal = document.getElementById('customizerModal');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            
+            // Register input events for live updates if not already registered
+            if (!window.customizerEventsBound) {
+                const inputs = ['custName', 'custPrice', 'custCategory', 'custDial', 'custAccent', 'custSecColor', 'custHasDate', 'custHasSubdials'];
+                inputs.forEach(inpId => {
+                    const el = document.getElementById(inpId);
+                    if (el) {
+                        el.addEventListener('input', updateCustomizerPreview);
+                        el.addEventListener('change', updateCustomizerPreview);
+                    }
+                });
+                window.customizerEventsBound = true;
+            }
+
+            if (id === null) {
+                // ADD MODE
+                document.getElementById('customizerTitle').innerHTML = '<i class="fa-solid fa-wand-magic-sparkles text-gold"></i> Create New Masterpiece';
+                document.getElementById('custEditId').value = '';
+                document.getElementById('custName').value = '';
+                document.getElementById('custPrice').value = '';
+                document.getElementById('custCategory').value = 'mens';
+                document.getElementById('custDial').value = '#0a0a15';
+                document.getElementById('custAccent').value = '#c8a55c';
+                document.getElementById('custSecColor').value = '#c8a55c';
+                document.getElementById('custHasDate').checked = false;
+                document.getElementById('custHasSubdials').checked = false;
+                document.getElementById('custFeatures').value = 'Sapphire Crystal, Oystersteel Case, Waterproof';
+                document.getElementById('custDesc').value = 'A handcrafted horological masterpiece designed for the discerning individual.';
+            } else {
+                // EDIT MODE
+                const p = products.find(x => x.id === id);
+                if (!p) return;
+                document.getElementById('customizerTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-gold"></i> Edit ${p.name}`;
+                document.getElementById('custEditId').value = p.id;
+                document.getElementById('custName').value = p.name;
+                document.getElementById('custPrice').value = p.price;
+                document.getElementById('custCategory').value = p.category;
+                document.getElementById('custDial').value = p.dial;
+                document.getElementById('custAccent').value = p.accent;
+                document.getElementById('custSecColor').value = p.secColor || p.accent;
+                document.getElementById('custHasDate').checked = !!p.hasDate;
+                document.getElementById('custHasSubdials').checked = !!p.hasSubdials;
+                document.getElementById('custFeatures').value = p.features.join(', ');
+                document.getElementById('custDesc').value = p.description;
+            }
+
+            updateCustomizerPreview();
+        }
+
+        function closeCustomizer() {
+            document.getElementById('customizerModal').classList.remove('open');
+            if (!document.getElementById('adminPanelModal').classList.contains('open')) {
+                document.body.style.overflow = '';
+            }
+        }
+
+        // SAVE & DELETE MUTATIONS
+        async function saveCustomWatch() {
+            const editIdStr = document.getElementById('custEditId').value;
+            const name = document.getElementById('custName').value.trim();
+            const priceVal = document.getElementById('custPrice').value;
+            const category = document.getElementById('custCategory').value;
+            const dial = document.getElementById('custDial').value;
+            const accent = document.getElementById('custAccent').value;
+            const secColor = document.getElementById('custSecColor').value;
+            const hasDate = document.getElementById('custHasDate').checked;
+            const hasSubdials = document.getElementById('custHasSubdials').checked;
+            const featuresStr = document.getElementById('custFeatures').value;
+            const description = document.getElementById('custDesc').value.trim();
+
+            if (!name || !priceVal || !featuresStr || !description) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+
+            const price = Number(priceVal);
+            const features = featuresStr.split(',').map(f => f.trim()).filter(f => f.length > 0);
+            
+            const accentLight = adjustBrightness(accent, 30);
+            const accentDark = adjustBrightness(accent, -30);
+
+            let watchObj = {};
+
+            if (editIdStr === '') {
+                // CREATE NEW WATCH
+                const nextId = products.length > 0 ? Math.max(...products.map(p => Number(p.id))) + 1 : 1;
+                watchObj = {
+                    id: nextId,
+                    name,
+                    price,
+                    category,
+                    description,
+                    features,
+                    dial,
+                    accent,
+                    accentDark,
+                    accentLight,
+                    hasDate,
+                    hasSubdials,
+                    secColor
+                };
+
+                products.push(watchObj);
+                showToast(`Adding "${name}" to collection...`, 'info');
+
+                // Sync to Cloud Firestore if connected
+                let firestoreSynced = false;
+                if (window.dbConnected && window.dbAddProduct) {
+                    firestoreSynced = await window.dbAddProduct(watchObj);
+                }
+
+                if (firestoreSynced) {
+                    showToast(`"${name}" saved to Cloud Database!`, 'success');
+                } else {
+                    showToast(`"${name}" saved locally to browser`, 'success');
+                }
+            } else {
+                // EDIT EXISTING WATCH
+                const editId = Number(editIdStr);
+                const idx = products.findIndex(x => x.id === editId);
+                if (idx === -1) return;
+
+                watchObj = {
+                    id: editId,
+                    name,
+                    price,
+                    category,
+                    description,
+                    features,
+                    dial,
+                    accent,
+                    accentDark,
+                    accentLight,
+                    hasDate,
+                    hasSubdials,
+                    secColor
+                };
+
+                products[idx] = watchObj;
+                showToast(`Saving changes for "${name}"...`, 'info');
+
+                // Sync to Cloud Firestore if connected
+                let firestoreSynced = false;
+                if (window.dbConnected && window.dbUpdateProduct) {
+                    firestoreSynced = await window.dbUpdateProduct(watchObj);
+                }
+
+                if (firestoreSynced) {
+                    showToast(`"${name}" updated in Cloud Database!`, 'success');
+                } else {
+                    showToast(`"${name}" changes saved locally`, 'success');
+                }
+            }
+
+            // Sync localStorage
+            localStorage.setItem('aerion_custom_products', JSON.stringify(products));
+
+            // Refresh UI
+            renderProducts('all');
+            renderAdminWatches();
+            closeCustomizer();
+        }
+
+        async function deleteCustomWatch(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+
+            if (!confirm(`Are you sure you want to remove "${p.name}" from your portfolio?`)) {
+                return;
+            }
+
+            showToast(`Deleting "${p.name}"...`, 'info');
+            products = products.filter(x => x.id !== id);
+
+            // Sync to Firestore if connected
+            let firestoreSynced = false;
+            if (window.dbConnected && window.dbDeleteProduct) {
+                firestoreSynced = await window.dbDeleteProduct(id);
+            }
+
+            // Sync localStorage
+            localStorage.setItem('aerion_custom_products', JSON.stringify(products));
+
+            if (firestoreSynced) {
+                showToast(`"${p.name}" deleted from Cloud Database!`, 'success');
+            } else {
+                showToast(`"${p.name}" deleted locally`, 'success');
+            }
+
+            // Refresh UI
+            renderProducts('all');
+            renderAdminWatches();
+        }
+
+        // Bind global helper references to window so they are accessible from HTML elements
+        window.openAdminPanel = openAdminPanel;
+        window.closeAdminPanel = closeAdminPanel;
+        window.renderAdminWatches = renderAdminWatches;
+        window.openCustomizer = openCustomizer;
+        window.closeCustomizer = closeCustomizer;
+        window.saveCustomWatch = saveCustomWatch;
+        window.deleteCustomWatch = deleteCustomWatch;
 
         /* ===================== WATCH SVG GENERATOR ===================== */
         function generateWatch(p, size) {
@@ -1159,23 +1773,22 @@
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
             grid.innerHTML = '';
             filtered.forEach((p, i) => {
-                const isWished = wishlist.has(p.id);
                 const card = document.createElement('div');
-                card.className = 'product-card p-6 pb-8';
+                card.className = 'product-card p-4 pb-6 sm:p-6 sm:pb-8';
                 card.setAttribute('data-category', p.category);
+                card.setAttribute('data-id', p.id);
                 card.innerHTML = `
                 <div class="reflection"></div>
-                <div class="flex justify-between items-start mb-4 relative" style="z-index:2">
-                    <span class="text-gold/50 text-[10px] tracking-[.25em] uppercase">${p.category}</span>
-                    <button class="heart-btn text-sm ${isWished ? 'active text-red-400' : 'text-muted/40'}" onclick="event.stopPropagation();toggleWish(${p.id},this)" aria-label="Add to wishlist"><i class="fa-${isWished ? 'solid' : 'regular'} fa-heart"></i></button>
+                <div class="flex justify-between items-start mb-2 sm:mb-4 relative" style="z-index:2">
+                    <span class="text-gold/50 text-[9px] sm:text-[10px] tracking-[.25em] uppercase">${p.category}</span>
                 </div>
-                <div class="watch-wrap flex justify-center py-6" style="perspective:600px">
-                    <div style="width:200px;height:200px">${generateWatch(p, 200)}</div>
+                <div class="watch-wrap flex justify-center py-4 sm:py-6" style="perspective:600px">
+                    <div style="width:100%;max-width:180px;aspect-ratio:1;display:flex;align-items:center;justify-content:center">${generateWatch(p, 180)}</div>
                 </div>
                 <div class="relative" style="z-index:2">
-                    <h3 class="font-display text-xl text-cream tracking-wider">${p.name}</h3>
-                    <p class="text-gold text-sm mt-1 font-light">$${p.price.toLocaleString()}</p>
-                    <button class="qv-btn btn-outline w-full mt-5 text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
+                    <h3 class="font-display text-sm sm:text-base md:text-xl text-cream tracking-wider truncate">${p.name}</h3>
+                    <p class="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1 font-light">$${p.price.toLocaleString()}</p>
+                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
                 </div>
             `;
                 card.addEventListener('click', () => openQV(p.id));
@@ -1204,10 +1817,6 @@
             document.getElementById('qvPrice').textContent = '$' + currentQV.price.toLocaleString();
             document.getElementById('qvDesc').textContent = currentQV.description;
             document.getElementById('qvWatch').innerHTML = generateWatch(currentQV, 320);
-            const isW = wishlist.has(id);
-            const wb = document.getElementById('qvWishBtn');
-            wb.innerHTML = `<i class="fa-${isW ? 'solid' : 'regular'} fa-heart"></i>`;
-            wb.className = `btn-outline px-4 ${isW ? 'text-red-400 border-red-400/30' : ''}`;
             const featDiv = document.getElementById('qvFeatures');
             featDiv.innerHTML = currentQV.features.map(f => `
             <div class="flex items-center gap-3">
@@ -1242,10 +1851,6 @@
             addToCart(currentQV.id);
             closeQV();
         }
-        function toggleWishFromQV() {
-            if (!currentQV) return;
-            toggleWish(currentQV.id, document.getElementById('qvWishBtn'));
-        }
 
         /* ===================== CART ===================== */
         function addToCart(id) {
@@ -1253,19 +1858,21 @@
             if (existing) { existing.qty++ }
             else { cart.push({ id, qty: 1 }) }
             updateCartUI();
+            saveState();
             const p = products.find(x => x.id === id);
             showToast(`${p.name} added to bag`, 'success');
         }
         function removeFromCart(id) {
             cart = cart.filter(c => c.id !== id);
             updateCartUI();
+            saveState();
         }
         function changeQty(id, delta) {
             const item = cart.find(c => c.id === id);
             if (!item) return;
             item.qty += delta;
             if (item.qty <= 0) removeFromCart(id);
-            else updateCartUI();
+            else { updateCartUI(); saveState(); }
         }
         function updateCartUI() {
             const countEl = document.getElementById('cartCount');
@@ -1317,36 +1924,7 @@
             cart = []; updateCartUI(); closeCart();
         }
 
-        /* ===================== WISHLIST ===================== */
-        function toggleWish(id, btnEl) {
-            if (wishlist.has(id)) {
-                wishlist.delete(id);
-                if (btnEl) { btnEl.classList.remove('active', 'text-red-400'); btnEl.classList.add('text-muted/40'); btnEl.innerHTML = '<i class="fa-regular fa-heart"></i>' }
-                showToast('Removed from wishlist', 'info');
-            } else {
-                wishlist.add(id);
-                if (btnEl) { btnEl.classList.add('active', 'text-red-400'); btnEl.classList.remove('text-muted/40'); btnEl.innerHTML = '<i class="fa-solid fa-heart"></i>' }
-                const p = products.find(x => x.id === id);
-                showToast(`${p.name} added to wishlist`, 'success');
-            }
-            const wc = document.getElementById('wishCount');
-            if (wishlist.size > 0) { wc.textContent = wishlist.size; wc.classList.remove('hidden') }
-            else { wc.classList.add('hidden') }
-            /* Sync product card hearts */
-            document.querySelectorAll('.product-card .heart-btn').forEach(btn => {
-                const card = btn.closest('.product-card');
-                const pid = products.find(pp => pp.name === card.querySelector('h3').textContent)?.id;
-                if (pid !== undefined) {
-                    if (wishlist.has(pid)) { btn.classList.add('active', 'text-red-400'); btn.classList.remove('text-muted/40'); btn.innerHTML = '<i class="fa-solid fa-heart"></i>' }
-                    else { btn.classList.remove('active', 'text-red-400'); btn.classList.add('text-muted/40'); btn.innerHTML = '<i class="fa-regular fa-heart"></i>' }
-                }
-            });
-        }
-        function openWishlist() {
-            if (wishlist.size === 0) { showToast('Your wishlist is empty', 'info'); return }
-            const names = [...wishlist].map(id => products.find(p => p.id === id)?.name).filter(Boolean).join(', ');
-            showToast('Wishlist: ' + names, 'info');
-        }
+
 
         /* ===================== AUTH ===================== */
         function openAuth() { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden' }
@@ -1358,8 +1936,40 @@
             document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
             document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
         }
-        function handleLogin() { showToast('Welcome back to AERION', 'success'); closeAuth() }
-        function handleSignup() { showToast('Account created — welcome to AERION', 'success'); closeAuth() }
+        function handleNavAccount() {
+            if (window.currentUser) {
+                openSignOut();
+            } else {
+                openAuth();
+            }
+        }
+        function openSignOut() { document.getElementById('signOutModal').classList.add('open'); document.body.style.overflow = 'hidden' }
+        function closeSignOut() { document.getElementById('signOutModal').classList.remove('open'); document.body.style.overflow = '' }
+        function confirmSignOut() {
+            closeSignOut();
+            if (window.firebaseSignout) window.firebaseSignout();
+        }
+        function handleLogin() { 
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if(window.firebaseLogin) window.firebaseLogin(email, pass);
+            else showToast('Firebase not configured. Please add config in index.html.', 'error');
+        }
+        function handleForgotPassword() {
+            const email = document.getElementById('loginEmail').value;
+            if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if(window.firebaseResetPassword) window.firebaseResetPassword(email);
+            else showToast('Firebase not configured.', 'error');
+        }
+        function handleSignup() { 
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if(window.firebaseSignup) window.firebaseSignup(email, pass, name);
+            else showToast('Firebase not configured. Please add config in index.html.', 'error');
+        }
 
         /* ===================== MOBILE MENU ===================== */
         function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow = 'hidden' }
@@ -1450,15 +2060,6 @@
                 gsap.to(els, { opacity: 1, duration: 1, stagger: .15, ease: 'power2.out' });
             }
 
-            /* Hero watch rotation on scroll */
-            gsap.to('#heroWatch', {
-                rotation: 90,
-                scale: .85,
-                y: -60,
-                ease: 'none',
-                scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
-            });
-
             /* Hero parallax text */
             gsap.to('.hero-el', { y: -80, opacity: 0, ease: 'none', scrollTrigger: { trigger: '#hero', start: '60% top', end: 'bottom top', scrub: 1 } });
 
@@ -1495,33 +2096,224 @@
             });
         }
 
-        /* ===================== HERO WATCH MOUSE TILT ===================== */
-        (function () {
-            const heroWatch = document.getElementById('heroWatch');
-            const heroSection = document.getElementById('hero');
-            heroSection.addEventListener('mousemove', e => {
-                const rect = heroSection.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - .5;
-                const y = (e.clientY - rect.top) / rect.height - .5;
-                heroWatch.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg)`;
-            });
-            heroSection.addEventListener('mouseleave', () => {
-                heroWatch.style.transform = '';
-            });
-        })();
+        /* ===================== HERO WATCH MOUSE TILT REMOVED ===================== */
 
         /* ===================== CLOSE MODALS ON ESC ===================== */
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeQV(); closeAuth(); closeCart(); closeMobile() }
+            if (e.key === 'Escape') { closeQV(); closeAuth(); closeCart(); closeMobile(); closeSignOut() }
         });
 
         /* ===================== INIT ===================== */
         document.addEventListener('DOMContentLoaded', () => {
+            // Load custom local products before rendering
+            const cachedProducts = localStorage.getItem('aerion_custom_products');
+            if (cachedProducts) {
+                try {
+                    products = JSON.parse(cachedProducts);
+                } catch (e) {
+                    console.error("Failed to parse cached products:", e);
+                }
+            }
+
+            /* Initialize Lenis */
+            try {
+                if (typeof Lenis !== 'undefined') {
+                    const lenis = new Lenis({
+                        duration: 1.2,
+                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                        direction: 'vertical',
+                        gestureDirection: 'vertical',
+                        smoothWheel: true,
+                        wheelMultiplier: 1,
+                        smoothTouch: false,
+                        touchMultiplier: 2,
+                        infinite: false,
+                    });
+
+                    function raf(time) {
+                        lenis.raf(time);
+                        requestAnimationFrame(raf);
+                    }
+
+                    requestAnimationFrame(raf);
+
+                    /* Handle internal links for Lenis */
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const target = document.querySelector(this.getAttribute('href'));
+                            if (target) {
+                                lenis.scrollTo(target);
+                            }
+                        });
+                    });
+                }
+            } catch (e) {
+                console.error('Lenis failed to initialize:', e);
+            }
+
             initParticles();
             renderProducts('all');
+            updateCartUI();
             initAnimations();
         });
     </script>
-</body>
 
+    <!-- ===================== FIREBASE INTEGRATION ===================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // =========================================================================
+        // 🔴 TODO: PASTE YOUR FIREBASE CONFIG OBJECT HERE TO ENABLE AUTHENTICATION
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3sz4I_FZzSSvoKDzpdurxZMPpjRPWx7o",
+            authDomain: "aerion-watch.firebaseapp.com",
+            projectId: "aerion-watch",
+            storageBucket: "aerion-watch.firebasestorage.app",
+            messagingSenderId: "547423352235",
+            appId: "1:547423352235:web:2980f5e26bc5a950a94eee",
+            measurementId: "G-GPXBZ7Y1TS"
+        };
+
+        window.currentUser = null;
+        window.dbConnected = false;
+
+        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            window.dbConnected = true;
+
+            // Load products from Firestore
+            async function syncWithFirestore() {
+                try {
+                    const querySnapshot = await getDocs(collection(db, "products"));
+                    const dbProducts = [];
+                    querySnapshot.forEach((doc) => {
+                        dbProducts.push({ id: Number(doc.id), ...doc.data() });
+                    });
+
+                    if (dbProducts.length > 0) {
+                        dbProducts.sort((a, b) => a.id - b.id);
+                        window.products = dbProducts;
+                        localStorage.setItem('aerion_custom_products', JSON.stringify(window.products));
+                        if (typeof window.renderProducts === 'function') {
+                            window.renderProducts('all');
+                        }
+                        window.showToast('Cloud Database synced successfully', 'success');
+                    } else {
+                        // Seed database
+                        console.log("Firestore empty. Seeding defaults...");
+                        window.showToast('Initializing Cloud Database...', 'info');
+                        for (const p of window.products) {
+                            const { id, ...data } = p;
+                            await setDoc(doc(db, "products", String(id)), data);
+                        }
+                        window.showToast('Cloud Database seeded with premium collection', 'success');
+                    }
+                } catch (e) {
+                    console.error("Firestore sync failed:", e);
+                    window.showToast('Cloud Database offline. Local mode active.', 'info');
+                }
+            }
+
+            // Trigger sync
+            setTimeout(syncWithFirestore, 1500);
+
+            // Exposed Database mutations
+            window.dbAddProduct = async (p) => {
+                try {
+                    const { id, ...data } = p;
+                    await setDoc(doc(db, "products", String(id)), data);
+                    return true;
+                } catch (e) {
+                    console.error("Firestore add product failed:", e);
+                    return false;
+                }
+            };
+
+            window.dbUpdateProduct = async (p) => {
+                try {
+                    const { id, ...data } = p;
+                    await setDoc(doc(db, "products", String(id)), data);
+                    return true;
+                } catch (e) {
+                    console.error("Firestore update product failed:", e);
+                    return false;
+                }
+            };
+
+            window.dbDeleteProduct = async (id) => {
+                try {
+                    await deleteDoc(doc(db, "products", String(id)));
+                    return true;
+                } catch (e) {
+                    console.error("Firestore delete product failed:", e);
+                    return false;
+                }
+            };
+
+            // Track login state changes
+            onAuthStateChanged(auth, (user) => {
+                window.currentUser = user;
+                const btn = document.getElementById('navAccountBtn');
+                const pName = document.getElementById('profileName');
+                const pEmail = document.getElementById('profileEmail');
+                if (user) {
+                    btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
+                    btn.title = user.displayName || user.email;
+                    if (pName) pName.textContent = user.displayName || 'Aerion Member';
+                    if (pEmail) pEmail.textContent = user.email || '';
+                } else {
+                    btn.innerHTML = '<i class="fa-regular fa-user"></i>';
+                    btn.title = 'Account';
+                    if (pName) pName.textContent = 'Aerion Member';
+                    if (pEmail) pEmail.textContent = 'Not Logged In';
+                }
+            });
+
+            // Login function
+            window.firebaseLogin = async (email, password) => {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    window.showToast('Welcome back to AERION', 'success');
+                    window.closeAuth();
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
+            };
+
+            // Signup function
+            window.firebaseSignup = async (email, password, name) => {
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name });
+                    window.showToast('Account created — welcome to AERION', 'success');
+                    window.closeAuth();
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
+            };
+
+            // Signout function
+            window.firebaseSignout = async () => {
+                await signOut(auth);
+                window.showToast('Signed out successfully', 'info');
+            };
+
+            // Forgot Password function
+            window.firebaseResetPassword = async (email) => {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    window.showToast('Password reset link sent to your email', 'success');
+                } catch (error) {
+                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                }
+            };
+        }
+    </script>
+</body>
 </html>
