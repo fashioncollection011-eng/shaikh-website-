@@ -1151,11 +1151,17 @@
                         </div>
                     </div>
                     
-                    <!-- Watch Photo Image URL -->
+                    <!-- Watch Photograph (Direct File Upload) -->
                     <div class="space-y-1">
-                        <label class="text-[10px] text-gold/80 uppercase tracking-wider block">Watch Photo Image URL (Optional)</label>
-                        <input type="text" id="custImage" placeholder="e.g. assets/my-watch.png or https://example.com/watch-photo.png"
-                            class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        <label class="text-[10px] text-gold/80 uppercase tracking-wider block">Watch Photograph (Upload Photo)</label>
+                        <div class="flex items-center gap-4 bg-white/[0.02] border border-white/10 p-3 rounded-lg">
+                            <input type="file" id="custImageFile" accept="image/*" class="hidden" onchange="handleWatchPhotoUpload(event)">
+                            <button type="button" class="btn-outline !py-2 !px-4 !text-[10px] flex items-center gap-2" onclick="document.getElementById('custImageFile').click()">
+                                <i class="fa-solid fa-cloud-arrow-up text-gold"></i> Choose Photo File
+                            </button>
+                            <span id="uploadStatusText" class="text-[10px] text-muted truncate max-w-[180px]">No file chosen</span>
+                        </div>
+                        <input type="hidden" id="custImage">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -1400,6 +1406,67 @@
             updateCustomizerPreview();
         }
 
+        /* ===================== DIRECT FILE UPLOAD AND AUTO COMPRESSION ===================== */
+        function handleWatchPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusText = document.getElementById('uploadStatusText');
+            if (statusText) {
+                statusText.textContent = "Processing image...";
+                statusText.className = "text-[10px] text-gold/70 animate-pulse truncate max-w-[180px]";
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Setup Canvas for high-performance browser resizing & compression
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const MAX_HEIGHT = 400;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Compress as high-quality JPEG (0.75 ratio) to keep document size ultra small (~25KB)
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+                    // Store inside the hidden input field
+                    document.getElementById('custImage').value = compressedBase64;
+
+                    if (statusText) {
+                        statusText.textContent = `${file.name} (${Math.round(compressedBase64.length / 1024)} KB)`;
+                        statusText.className = "text-[10px] text-emerald-400 font-medium truncate max-w-[180px]";
+                    }
+
+                    // Trigger visual custom preview reload instantly!
+                    updateCustomizerPreview();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.handleWatchPhotoUpload = handleWatchPhotoUpload;
+
         function updateCustomizerPreview() {
             const name = document.getElementById('custName').value || 'Custom Watch';
             const price = Number(document.getElementById('custPrice').value) || 0;
@@ -1457,6 +1524,12 @@
                 window.customizerEventsBound = true;
             }
 
+            // Reset file input element
+            const fileInput = document.getElementById('custImageFile');
+            if (fileInput) fileInput.value = '';
+
+            const statusSpan = document.getElementById('uploadStatusText');
+
             if (id === null) {
                 // ADD MODE
                 document.getElementById('customizerTitle').innerHTML = '<i class="fa-solid fa-wand-magic-sparkles text-gold"></i> Create New Masterpiece';
@@ -1472,6 +1545,11 @@
                 document.getElementById('custHasSubdials').checked = false;
                 document.getElementById('custFeatures').value = 'Sapphire Crystal, Oystersteel Case, Waterproof';
                 document.getElementById('custDesc').value = 'A handcrafted horological masterpiece designed for the discerning individual.';
+                
+                if (statusSpan) {
+                    statusSpan.textContent = 'No file chosen';
+                    statusSpan.className = 'text-[10px] text-muted truncate max-w-[180px]';
+                }
             } else {
                 // EDIT MODE
                 const p = products.find(x => x.id === id);
@@ -1489,6 +1567,16 @@
                 document.getElementById('custHasSubdials').checked = !!p.hasSubdials;
                 document.getElementById('custFeatures').value = p.features.join(', ');
                 document.getElementById('custDesc').value = p.description;
+
+                if (statusSpan) {
+                    if (p.image && p.image.trim() !== '') {
+                        statusSpan.textContent = 'Photo attached';
+                        statusSpan.className = 'text-[10px] text-emerald-400 font-medium truncate max-w-[180px]';
+                    } else {
+                        statusSpan.textContent = 'No file chosen';
+                        statusSpan.className = 'text-[10px] text-muted truncate max-w-[180px]';
+                    }
+                }
             }
 
             updateCustomizerPreview();
