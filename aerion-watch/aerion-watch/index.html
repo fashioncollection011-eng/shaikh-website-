@@ -1151,6 +1151,13 @@
                         </div>
                     </div>
                     
+                    <!-- Watch Photo Image URL -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-gold/80 uppercase tracking-wider block">Watch Photo Image URL (Optional)</label>
+                        <input type="text" id="custImage" placeholder="e.g. assets/my-watch.png or https://example.com/watch-photo.png"
+                            class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                    </div>
+                    
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Category</label>
@@ -1402,6 +1409,7 @@
             const secColor = document.getElementById('custSecColor').value;
             const hasDate = document.getElementById('custHasDate').checked;
             const hasSubdials = document.getElementById('custHasSubdials').checked;
+            const image = document.getElementById('custImage').value.trim();
 
             // Update hex tags
             document.getElementById('dialHex').textContent = dial.toUpperCase();
@@ -1423,7 +1431,8 @@
                 accentLight,
                 hasDate,
                 hasSubdials,
-                secColor
+                secColor,
+                image
             };
 
             document.getElementById('customizerPreview').innerHTML = generateWatch(tempP, 200);
@@ -1437,7 +1446,7 @@
             
             // Register input events for live updates if not already registered
             if (!window.customizerEventsBound) {
-                const inputs = ['custName', 'custPrice', 'custCategory', 'custDial', 'custAccent', 'custSecColor', 'custHasDate', 'custHasSubdials'];
+                const inputs = ['custName', 'custPrice', 'custCategory', 'custDial', 'custAccent', 'custSecColor', 'custHasDate', 'custHasSubdials', 'custImage'];
                 inputs.forEach(inpId => {
                     const el = document.getElementById(inpId);
                     if (el) {
@@ -1458,6 +1467,7 @@
                 document.getElementById('custDial').value = '#0a0a15';
                 document.getElementById('custAccent').value = '#c8a55c';
                 document.getElementById('custSecColor').value = '#c8a55c';
+                document.getElementById('custImage').value = '';
                 document.getElementById('custHasDate').checked = false;
                 document.getElementById('custHasSubdials').checked = false;
                 document.getElementById('custFeatures').value = 'Sapphire Crystal, Oystersteel Case, Waterproof';
@@ -1474,6 +1484,7 @@
                 document.getElementById('custDial').value = p.dial;
                 document.getElementById('custAccent').value = p.accent;
                 document.getElementById('custSecColor').value = p.secColor || p.accent;
+                document.getElementById('custImage').value = p.image || '';
                 document.getElementById('custHasDate').checked = !!p.hasDate;
                 document.getElementById('custHasSubdials').checked = !!p.hasSubdials;
                 document.getElementById('custFeatures').value = p.features.join(', ');
@@ -1503,6 +1514,7 @@
             const hasSubdials = document.getElementById('custHasSubdials').checked;
             const featuresStr = document.getElementById('custFeatures').value;
             const description = document.getElementById('custDesc').value.trim();
+            const image = document.getElementById('custImage').value.trim();
 
             if (!name || !priceVal || !featuresStr || !description) {
                 showToast('Please fill all required fields', 'error');
@@ -1533,7 +1545,8 @@
                     accentLight,
                     hasDate,
                     hasSubdials,
-                    secColor
+                    secColor,
+                    image
                 };
 
                 products.push(watchObj);
@@ -1569,7 +1582,8 @@
                     accentLight,
                     hasDate,
                     hasSubdials,
-                    secColor
+                    secColor,
+                    image
                 };
 
                 products[idx] = watchObj;
@@ -1639,6 +1653,9 @@
 
         /* ===================== WATCH SVG GENERATOR ===================== */
         function generateWatch(p, size) {
+            if (p.image && p.image.trim() !== '') {
+                return `<img src="${p.image}" alt="${p.name}" class="w-full h-full object-contain p-1 transition-transform duration-500 hover:scale-105" style="aspect-ratio: 1;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=300';">`;
+            }
             size = size || 300;
             const s = size;
             const cx = s / 2, cy = s / 2;
