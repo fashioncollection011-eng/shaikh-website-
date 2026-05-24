@@ -1029,8 +1029,8 @@
                     <p class="text-muted text-xs mt-0.5" id="profileEmail">loading...</p>
                 </div>
                 
-                <!-- Database Control Panel trigger -->
-                <button class="btn-gold w-full mb-4 flex items-center justify-center gap-2" onclick="closeSignOut(); openAdminPanel();">
+                <!-- Database Control Panel trigger (Admin only, hidden by default) -->
+                <button id="adminPanelTrigger" class="btn-gold w-full mb-4 flex items-center justify-center gap-2 hidden" onclick="closeSignOut(); openAdminPanel();">
                     <span><i class="fa-solid fa-database"></i> Database Control Panel</span>
                 </button>
                 
@@ -1304,6 +1304,13 @@
         }
 
         function openAdminPanel() {
+            // Secure Administrator verification check!
+            const ADMIN_EMAILS = ['clothingspot0011@gmail.com'];
+            if (!window.currentUser || !ADMIN_EMAILS.includes(window.currentUser.email)) {
+                showToast("Access Denied: Administrator privileges required.", "error");
+                return;
+            }
+
             document.getElementById('adminPanelModal').classList.add('open');
             document.body.style.overflow = 'hidden';
             
@@ -2257,21 +2264,33 @@
             };
 
             // Track login state changes
+            const ADMIN_EMAILS = ['clothingspot0011@gmail.com'];
             onAuthStateChanged(auth, (user) => {
                 window.currentUser = user;
                 const btn = document.getElementById('navAccountBtn');
                 const pName = document.getElementById('profileName');
                 const pEmail = document.getElementById('profileEmail');
+                const adminBtn = document.getElementById('adminPanelTrigger');
                 if (user) {
                     btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
                     btn.title = user.displayName || user.email;
                     if (pName) pName.textContent = user.displayName || 'Aerion Member';
                     if (pEmail) pEmail.textContent = user.email || '';
+                    
+                    // Show admin dashboard button only for admin emails!
+                    if (adminBtn) {
+                        if (ADMIN_EMAILS.includes(user.email)) {
+                            adminBtn.classList.remove('hidden');
+                        } else {
+                            adminBtn.classList.add('hidden');
+                        }
+                    }
                 } else {
                     btn.innerHTML = '<i class="fa-regular fa-user"></i>';
                     btn.title = 'Account';
                     if (pName) pName.textContent = 'Aerion Member';
                     if (pEmail) pEmail.textContent = 'Not Logged In';
+                    if (adminBtn) adminBtn.classList.add('hidden');
                 }
             });
 
