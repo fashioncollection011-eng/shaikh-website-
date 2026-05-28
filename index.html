@@ -268,6 +268,33 @@
             box-shadow: 0 0 25px rgba(175, 140, 66, .08)
         }
 
+        /* Premium glowing green WhatsApp button style */
+        .btn-whatsapp {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #128c7e, #25d366, #128c7e);
+            background-size: 200% 200%;
+            animation: btnGlow 4s ease infinite;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: .72rem;
+            padding: 1rem 1.8rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .5s cubic-bezier(.23, 1, .32, 1);
+        }
+
+        .btn-whatsapp:hover {
+            box-shadow: 0 0 40px rgba(37, 211, 102, .3), 0 0 80px rgba(37, 211, 102, .15);
+            transform: translateY(-2px);
+        }
+
         /* Light Streaks — now multi-color */
         .streak {
             position: absolute;
@@ -912,7 +939,12 @@
                     <span class="text-muted text-sm">Total</span>
                     <span class="font-display text-2xl text-gold" id="cartTotal">$0</span>
                 </div>
-                <button class="btn-gold w-full" onclick="checkout()"><span>Proceed to Checkout</span></button>
+                <div class="space-y-3">
+                    <button class="btn-gold w-full" onclick="checkout()"><span>Proceed to Checkout</span></button>
+                    <button class="btn-whatsapp w-full flex items-center justify-center gap-2" onclick="orderCartViaWhatsApp()">
+                        <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
+                    </button>
+                </div>
                 <p class="text-muted text-[10px] text-center mt-4 tracking-wider">COMPLIMENTARY SHIPPING &middot; SECURE
                     PAYMENT</p>
             </div>
@@ -942,8 +974,11 @@
                         <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
                         <p class="text-[#333333] text-sm leading-relaxed mb-8 font-light" id="qvDesc">Description</p>
                         <div class="space-y-3 mb-10" id="qvFeatures"></div>
-                        <div class="flex gap-3">
+                        <div class="flex flex-col sm:flex-row gap-3">
                             <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
+                            <button class="btn-whatsapp flex-1 flex items-center justify-center gap-2" onclick="orderViaWhatsAppFromQV()">
+                                <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1259,6 +1294,7 @@
 
     <script>
         /* ===================== DATA ===================== */
+        const WHATSAPP_NUMBER = '918075775834'; // Change this to your actual WhatsApp phone number with country code (e.g. 91 for India)
         let products = [
             { id: 1, name: 'Sovereign', price: 12500, category: 'mens', description: 'Hand-assembled with 312 individual components, the Sovereign embodies three generations of horological mastery. Its sunburst dial catches light like liquid gold.', features: ['Sapphire Crystal', '100m Water Resistant', '904L Steel', '72h Power Reserve'], dial: '#0a0a15', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
             { id: 2, name: 'Eclipse', price: 18900, category: 'mens', description: 'Engineered for depth. The Eclipse features a unidirectional ceramic bezel and Super-LumiNova indices for extreme readability in any condition.', features: ['Sapphire Crystal', '300m Water Resistant', 'Titanium Case', 'Chronograph'], dial: '#060d18', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: true, secColor: '#4a8ecc' },
@@ -1948,6 +1984,38 @@
             if (!currentQV) return;
             addToCart(currentQV.id);
             closeQV();
+        }
+
+        /* Order dynamic single product via WhatsApp */
+        function orderViaWhatsAppFromQV() {
+            if (!currentQV) return;
+            const phone = WHATSAPP_NUMBER;
+            const text = `Hello Aerion Watches, I would like to order the following watch:\n\n*Watch Name:* ${currentQV.name}\n*Price:* $${currentQV.price.toLocaleString()}\n*Category:* ${currentQV.category === 'mens' ? 'Mens Watch' : currentQV.category === 'ladies' ? 'Ladies Watch' : 'Special Edition'}\n\nPlease confirm my order. Thank you!`;
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        /* Order entire bag via WhatsApp */
+        function orderCartViaWhatsApp() {
+            if (cart.length === 0) return;
+            const phone = WHATSAPP_NUMBER;
+            let text = `Hello Aerion Watches, I would like to place an order for the following items in my bag:\n\n`;
+            
+            cart.forEach((item, index) => {
+                const p = products.find(x => x.id === item.id);
+                if (p) {
+                    text += `${index + 1}. *${p.name}* (Qty: ${item.qty}) - $${(p.price * item.qty).toLocaleString()}\n`;
+                }
+            });
+            
+            const totalVal = cart.reduce((s, c) => {
+                const p = products.find(x => x.id === c.id);
+                return s + (p ? p.price * c.qty : 0);
+            }, 0);
+            
+            text += `\n*Total Value:* $${totalVal.toLocaleString()}\n\nPlease confirm my order. Thank you!`;
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
 
         /* ===================== CART ===================== */
