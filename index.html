@@ -1065,11 +1065,11 @@
                     <div class="relative flex-1 max-w-xs">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
                         <input type="text" id="adminSearch" placeholder="Search watches..." 
-                            class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-cream placeholder-muted text-xs focus:border-gold/50 focus:outline-none transition"
+                            class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-muted text-xs focus:border-gold/50 focus:outline-none transition"
                             oninput="renderAdminWatches()">
                     </div>
                     <select id="adminCategoryFilter" onchange="renderAdminWatches()"
-                        class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                        class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white bg-[#0c0c14] text-xs focus:border-gold/50 focus:outline-none transition">
                         <option value="all">All Categories</option>
                         <option value="mens">Mens Watches</option>
                         <option value="ladies">Ladies Watches</option>
@@ -1142,12 +1142,12 @@
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Watch Name</label>
                             <input type="text" id="custName" placeholder="e.g. Sovereign Hulk" required
-                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-gold/50 focus:outline-none transition">
                         </div>
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Price ($)</label>
                             <input type="number" id="custPrice" placeholder="e.g. 15000" min="0" required
-                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-gold/50 focus:outline-none transition">
                         </div>
                     </div>
                     
@@ -1168,7 +1168,7 @@
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Category</label>
                             <select id="custCategory" 
-                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white bg-[#0c0c14] text-xs focus:border-gold/50 focus:outline-none transition">
                                 <option value="mens">Mens</option>
                                 <option value="ladies">Ladies</option>
                                 <option value="special">Special Edition</option>
@@ -1224,11 +1224,11 @@
                     <div class="flex gap-6 border-t border-white/5 pt-3">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" id="custHasDate" class="rounded border-white/15 bg-white/5 text-gold focus:ring-0 focus:ring-offset-0">
-                            <span class="text-[10px] text-cream uppercase tracking-wider">Date Window</span>
+                            <span class="text-[10px] text-white/80 uppercase tracking-wider">Date Window</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" id="custHasSubdials" class="rounded border-white/15 bg-white/5 text-gold focus:ring-0 focus:ring-offset-0">
-                            <span class="text-[10px] text-cream uppercase tracking-wider">Subdials (Chronograph)</span>
+                            <span class="text-[10px] text-white/80 uppercase tracking-wider">Subdials (Chronograph)</span>
                         </label>
                     </div>
                     
@@ -1237,12 +1237,12 @@
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Key Features (comma separated)</label>
                             <input type="text" id="custFeatures" placeholder="e.g. Sapphire Crystal, Ceramic Bezel, 300m Waterproof" required
-                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition">
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-gold/50 focus:outline-none transition">
                         </div>
                         <div class="space-y-1">
                             <label class="text-[10px] text-muted uppercase tracking-wider block">Description</label>
                             <textarea id="custDesc" rows="3" placeholder="Describe this luxury horological masterpiece..." required
-                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-cream text-xs focus:border-gold/50 focus:outline-none transition resize-none"></textarea>
+                                class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-gold/50 focus:outline-none transition resize-none"></textarea>
                         </div>
                     </div>
                 </div>
