@@ -922,14 +922,14 @@
     <!-- Quick View Modal -->
     <div class="modal-overlay" id="qvModal">
         <div class="modal-box glass rounded-2xl max-w-4xl w-full mx-4"
-            style="background:rgba(12,12,20,.96);backdrop-filter:blur(30px); border: 1px solid rgba(175, 140, 66, 0.2);">
+            style="background:rgba(255,255,255,0.98); backdrop-filter:blur(30px); border: 1px solid rgba(175, 140, 66, 0.15);">
             <div class="p-8 md:p-12">
                 <div class="flex justify-between items-start mb-8">
                     <div>
                         <p class="text-gold text-xs tracking-[.3em] uppercase" id="qvCategory">ROLEX</p>
-                        <h3 class="font-display text-3xl md:text-4xl text-white mt-1" id="qvName">Sovereign</h3>
+                        <h3 class="font-display text-3xl md:text-4xl text-[#121212] mt-1" id="qvName">Sovereign</h3>
                     </div>
-                    <button onclick="closeQV()" class="text-muted hover:text-white transition text-lg"
+                    <button onclick="closeQV()" class="text-muted hover:text-[#121212] transition text-lg"
                         aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -942,7 +942,7 @@
                     </div>
                     <div>
                         <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
-                        <p class="text-white/80 text-sm leading-relaxed mb-8" id="qvDesc">Description</p>
+                        <p class="text-[#333333] text-sm leading-relaxed mb-8 font-light" id="qvDesc">Description</p>
                         <div class="space-y-3 mb-10" id="qvFeatures"></div>
                         <div class="flex gap-3">
                             <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
@@ -1933,7 +1933,7 @@
             featDiv.innerHTML = currentQV.features.map(f => `
             <div class="flex items-center gap-3">
                 <div class="w-1.5 h-1.5 rounded-full bg-gold/60"></div>
-                <span class="text-white/80 text-sm">${f}</span>
+                <span class="text-[#222222] text-sm font-light">${f}</span>
             </div>
         `).join('');
             document.getElementById('qvModal').classList.add('open');
