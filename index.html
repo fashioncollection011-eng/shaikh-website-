@@ -934,11 +934,9 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div class="flex justify-center">
-                        <div class="watch-3d" style="width:320px;height:320px;cursor:grab" id="qvWatchContainer">
+                        <div class="watch-3d" style="width:320px;height:320px" id="qvWatchContainer">
                             <div id="qvWatch" style="width:100%;height:100%"></div>
                         </div>
-                        <p class="text-muted text-[10px] tracking-wider text-center mt-4 w-full">DRAG TO ROTATE 360&deg;
-                        </p>
                     </div>
                     <div>
                         <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
@@ -1938,25 +1936,13 @@
         `).join('');
             document.getElementById('qvModal').classList.add('open');
             document.body.style.overflow = 'hidden';
-            /* Reset rotation */
-            qvRotation = 0;
-            document.getElementById('qvWatchContainer').querySelector('div').style.transform = '';
         }
         function closeQV() {
             document.getElementById('qvModal').classList.remove('open');
             document.body.style.overflow = '';
             currentQV = null;
         }
-        let qvRotation = 0, qvDragging = false, qvStartX = 0;
-        (function () {
-            const container = document.getElementById('qvWatchContainer');
-            container.addEventListener('mousedown', e => { qvDragging = true; qvStartX = e.clientX; e.preventDefault() });
-            container.addEventListener('touchstart', e => { qvDragging = true; qvStartX = e.touches[0].clientX }, { passive: true });
-            window.addEventListener('mousemove', e => { if (!qvDragging) return; const dx = e.clientX - qvStartX; qvRotation += dx * .5; qvStartX = e.clientX; container.querySelector('div').style.transform = `rotateY(${qvRotation}deg)` });
-            window.addEventListener('touchmove', e => { if (!qvDragging) return; const dx = e.touches[0].clientX - qvStartX; qvRotation += dx * .5; qvStartX = e.touches[0].clientX; container.querySelector('div').style.transform = `rotateY(${qvRotation}deg)` }, { passive: true });
-            window.addEventListener('mouseup', () => qvDragging = false);
-            window.addEventListener('touchend', () => qvDragging = false);
-        })();
+
 
         function addToCartFromQV() {
             if (!currentQV) return;
