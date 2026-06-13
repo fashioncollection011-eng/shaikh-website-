@@ -1295,28 +1295,123 @@
     <script>
         /* ===================== DATA ===================== */
         const WHATSAPP_NUMBER = '918320602637'; // Change this to your actual WhatsApp phone number with country code (e.g. 91 for India)
+        const SHOPIFY_DOMAIN = 'cfjczn-ud.myshopify.com';
+        const SHOPIFY_TOKEN = 'e046779f0186704278f3d7800b5e511c';
+        const CURRENCY_SYMBOL = '₹';
+
         let products = [
             { id: 1, name: 'Sovereign', price: 12500, category: 'mens', description: 'Hand-assembled with 312 individual components, the Sovereign embodies three generations of horological mastery. Its sunburst dial catches light like liquid gold.', features: ['Sapphire Crystal', '100m Water Resistant', '904L Steel', '72h Power Reserve'], dial: '#0a0a15', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
-            { id: 2, name: 'Eclipse', price: 18900, category: 'mens', description: 'Engineered for depth. The Eclipse features a unidirectional ceramic bezel and Super-LumiNova indices for extreme readability in any condition.', features: ['Sapphire Crystal', '300m Water Resistant', 'Titanium Case', 'Chronograph'], dial: '#060d18', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: true, secColor: '#4a8ecc' },
-            { id: 3, name: 'Monarch', price: 24500, category: 'mens', description: 'A statement of absolute authority. Rose gold accents on a deep midnight dial, finished with hand-engraved guilloché patterns visible under magnification.', features: ['Sapphire Crystal', '50m Water Resistant', 'Rose Gold', 'Guilloché Dial'], dial: '#100808', accent: '#c89060', accentDark: '#8a5a30', accentLight: '#e8c0a0', hasDate: true, hasSubdials: false, secColor: '#c89060' },
-            { id: 4, name: 'Phantom', price: 15800, category: 'mens', description: 'Absolute stealth. Every surface blackened with DLC coating, every edge sharpened. The Phantom is invisible until it demands attention.', features: ['Sapphire Crystal', '100m Water Resistant', 'DLC Coated', 'Skeleton Movement'], dial: '#080808', accent: '#666666', accentDark: '#444444', accentLight: '#999999', hasDate: false, hasSubdials: false, secColor: '#cc3333' },
-            { id: 5, name: 'Vanguard', price: 21000, category: 'mens', description: 'Two time zones, one perspective. The Vanguard GMT tracks your journey across meridians with a dedicated 24-hour hand and ceramic bezel.', features: ['Sapphire Crystal', '200m Water Resistant', 'Ceramic Bezel', 'GMT Function'], dial: '#0a0a12', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
-            { id: 6, name: 'Heritage', price: 32000, category: 'mens', description: 'Our magnum opus. Four years in development, the Heritage features a minute repeater, perpetual calendar, and moonphase complication in 18k gold.', features: ['Sapphire Crystal', '30m Water Resistant', '18k Gold', 'Perpetual Calendar'], dial: '#0f0a05', accent: '#d4af37', accentDark: '#a08020', accentLight: '#f0d870', hasDate: true, hasSubdials: true, secColor: '#d4af37' },
-            { id: 7, name: 'Submariner', price: 9100, category: 'mens', description: 'The quintessential divers’ watch. Robust and functional, it is the reference in its category.', features: ['Ceramic Bezel', '300m Water Resistant', 'Oystersteel', '70h Power Reserve'], dial: '#000000', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
-            { id: 8, name: 'Cosmograph Daytona', price: 15100, category: 'mens', description: 'A watch born to race. Designed for professional racing drivers, it remains in a class of its own.', features: ['Tachymetric Scale', 'Chronograph', 'Oystersteel', '72h Power Reserve'], dial: '#ffffff', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: false, hasSubdials: true, secColor: '#ff0000' },
-            { id: 9, name: 'Datejust', price: 7500, category: 'ladies', description: 'The classic watch of reference. The first self-winding waterproof chronometer to display the date.', features: ['Cyclops Lens', 'Jubilee Bracelet', 'White Gold Bezel', '70h Power Reserve'], dial: '#333333', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
-            { id: 10, name: 'GMT-Master II', price: 10700, category: 'mens', description: 'The cosmopolitan watch. Designed to show the time in two different time zones simultaneously.', features: ['Two-color Bezel', 'GMT Function', 'Oystersteel', '70h Power Reserve'], dial: '#000000', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#00ff00' },
-            { id: 11, name: 'Oyster Perpetual', price: 6400, category: 'ladies', description: 'The purest expression of the Oyster concept. A watch that stands for style and precision.', features: ['Sunray Finish', 'Waterproof', 'Oystersteel', '70h Power Reserve'], dial: '#4a8ecc', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: false, hasSubdials: false, secColor: '#af8c42' },
-            { id: 12, name: 'Pearlmaster', price: 34000, category: 'ladies', description: 'The peak of jewelry watchmaking. Adorned with precious gems and finished in 18k Everose gold.', features: ['Diamond Set', '18k Everose Gold', 'Sapphire Crystal', '70h Power Reserve'], dial: '#f8f0e8', accent: '#d4af37', accentDark: '#a08020', accentLight: '#f0d870', hasDate: true, hasSubdials: false, secColor: '#d4af37' },
-            { id: 13, name: 'Yacht-Master', price: 11500, category: 'mens', description: 'The watch of the open seas. Combining character and performance, the Yacht-Master is at home on deck.', features: ['Bidirectional Bezel', 'Oystersteel', 'Waterproof', '72h Power Reserve'], dial: '#1a1a2a', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: false, secColor: '#4a8ecc' },
-            { id: 14, name: 'Lady-Datejust 28', price: 8200, category: 'ladies', description: 'The classic timepiece for women. A smaller, elegant version of the Datejust with timeless appeal.', features: ['28mm Case', 'Fluted Bezel', 'Oystersteel', '55h Power Reserve'], dial: '#e8d5a3', accent: '#af8c42', accentDark: '#8a6e32', accentLight: '#c6a86c', hasDate: true, hasSubdials: false, secColor: '#af8c42' },
-            { id: 15, name: 'Nebula Tourbillon', price: 95000, category: 'special', description: 'Featuring a real meteorite dial and a flying tourbillon movement at 6 o\'clock. A masterclass in haute horlogerie, limited to 10 pieces worldwide.', features: ['Meteorite Dial', 'Flying Tourbillon', '18k White Gold', 'Manual Winding'], dial: '#0c021a', accent: '#a855f7', accentDark: '#6b21a8', accentLight: '#d8b4fe', hasDate: false, hasSubdials: true, secColor: '#a855f7' },
-            { id: 16, name: 'Sovereign Rose Gold', price: 42000, category: 'special', description: 'Our signature design reimagined in solid 18k rose gold. Fitted with an emerald green dial and an open heart exhibition case back.', features: ['18k Rose Gold Case', 'Emerald Sunburst Dial', 'Exhibition Case Back', '72h Power Reserve'], dial: '#062016', accent: '#c8a55c', accentDark: '#8a7032', accentLight: '#e8d5a3', hasDate: true, hasSubdials: false, secColor: '#c8a55c' },
-            { id: 17, name: 'Submariner "Hulk"', price: 24000, category: 'mens', description: 'A legendary classic, the Submariner "Hulk" boasts a mesmerizing sunburst emerald green dial and matching ceramic bezel. An absolute grail for collectors.', features: ['Ceramic Green Bezel', 'Emerald Sunburst Dial', '904L Oystersteel', '300m Water Resistant'], dial: '#021a10', accent: '#10b981', accentDark: '#047857', accentLight: '#34d399', hasDate: true, hasSubdials: false, secColor: '#10b981' },
-            { id: 18, name: 'Cosmograph Daytona Rose', price: 48000, category: 'mens', description: 'Crafted in 18k Everose gold, this Daytona features a black dial with snail-counters and high-performance Oysterflex bracelet for ultimate sporty elegance.', features: ['18k Everose Gold', 'Cerachrom Bezel', 'Chronograph Function', 'Oysterflex Strap'], dial: '#0a0908', accent: '#e28f83', accentDark: '#ad5d51', accentLight: '#f5beb4', hasDate: false, hasSubdials: true, secColor: '#ff4b4b' },
-            { id: 19, name: 'Oyster Perpetual Tiffany', price: 9200, category: 'ladies', description: 'Featuring a stunning turquoise Tiffany Blue dial, this Oyster Perpetual represents timeless elegance and modern sophistication, fitting perfectly on any wrist.', features: ['Tiffany Blue Dial', 'Oystersteel Case', 'Chromalight Display', '55h Power Reserve'], dial: '#0b2c30', accent: '#81d8d0', accentDark: '#4fa59d', accentLight: '#b3ebe5', hasDate: false, hasSubdials: false, secColor: '#81d8d0' },
-            { id: 20, name: 'Royal Oak Skeleton Special', price: 135000, category: 'special', description: 'An engineering marvel. The Royal Oak Skeleton exposes the hand-finished double balance wheel mechanism, showcasing a mesmerizing ballet of moving gears.', features: ['Double Balance Wheel', 'Skeletonized Dial', '18k Pink Gold', 'Exhibition Caseback'], dial: '#0a0805', accent: '#fbbf24', accentDark: '#b45309', accentLight: '#fef08a', hasDate: false, hasSubdials: true, secColor: '#fbbf24' }
+            { id: 2, name: 'Eclipse', price: 18900, category: 'mens', description: 'Engineered for depth. The Eclipse features a unidirectional ceramic bezel and Super-LumiNova indices for extreme readability in any condition.', features: ['Sapphire Crystal', '300m Water Resistant', 'Titanium Case', 'Chronograph'], dial: '#060d18', accent: '#4a8ecc', accentDark: '#2a5a8a', accentLight: '#8abcee', hasDate: true, hasSubdials: true, secColor: '#4a8ecc' }
         ];
+
+        async function fetchShopifyProducts() {
+            const query = `
+            {
+              products(first: 50) {
+                edges {
+                  node {
+                    id
+                    title
+                    description
+                    tags
+                    collections(first: 5) {
+                      edges {
+                        node {
+                          title
+                        }
+                      }
+                    }
+                    images(first: 1) {
+                      edges {
+                        node {
+                          url
+                        }
+                      }
+                    }
+                    variants(first: 1) {
+                      edges {
+                        node {
+                          id
+                          price {
+                            amount
+                            currencyCode
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `;
+
+            try {
+                const response = await fetch(`https://${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
+                    },
+                    body: JSON.stringify({ query }),
+                });
+                const json = await response.json();
+                if (json.errors) {
+                    console.error("Shopify GraphQL errors:", json.errors);
+                    return null;
+                }
+                if (!json.data || !json.data.products) return null;
+                
+                return json.data.products.edges.map((edge) => {
+                    const node = edge.node;
+                    const variantNode = node.variants.edges[0]?.node;
+                    const priceAmount = variantNode ? parseFloat(variantNode.price.amount) : 0;
+                    const variantId = variantNode ? variantNode.id : '';
+                    const imageUrl = node.images.edges[0]?.node?.url || '';
+                    
+                    // Determine category based on tags or collections
+                    let category = 'mens';
+                    const tags = (node.tags || []).map(t => t.toLowerCase());
+                    const collections = (node.collections?.edges || []).map(e => e.node.title.toLowerCase());
+                    
+                    if (tags.includes('mens') || collections.some(c => c.includes('mens') || c.includes('men'))) {
+                        category = 'mens';
+                    } else if (tags.includes('ladies') || tags.includes('ladies watch') || tags.includes('women') || collections.some(c => c.includes('ladies') || c.includes('women') || c.includes('lady'))) {
+                        category = 'ladies';
+                    } else if (tags.includes('special') || tags.includes('limited') || collections.some(c => c.includes('special') || c.includes('limited') || c.includes('exclusive'))) {
+                        category = 'special';
+                    } else if (tags.includes('ladies')) {
+                        category = 'ladies';
+                    }
+                    
+                    const categoryKeywords = ['mens', 'men', 'ladies', 'women', 'lady', 'special', 'limited', 'watch', 'watches'];
+                    const features = node.tags.filter(t => !categoryKeywords.includes(t.toLowerCase()));
+                    if (features.length === 0) {
+                        features.push('Premium Quality', 'Water Resistant', 'Sapphire Crystal');
+                    }
+                    
+                    return {
+                        id: node.id,
+                        variantId: variantId,
+                        name: node.title,
+                        price: priceAmount,
+                        category: category,
+                        description: node.description || 'No description available.',
+                        features: features,
+                        image: imageUrl,
+                        dial: '#000000',
+                        accent: '#af8c42',
+                        accentDark: '#8a6e32',
+                        accentLight: '#c6a86c',
+                        hasDate: false,
+                        hasSubdials: false,
+                        secColor: '#af8c42'
+                    };
+                });
+            } catch (e) {
+                console.error("Shopify product fetch failed:", e);
+                return null;
+            }
+        }
 
         let cart = JSON.parse(localStorage.getItem('aerion_cart')) || [];
         let currentQV = null;
@@ -1933,8 +2028,8 @@
                 </div>
                 <div class="relative" style="z-index:2">
                     <h3 class="font-display text-sm sm:text-base md:text-xl text-cream tracking-wider truncate">${p.name}</h3>
-                    <p class="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1 font-light">$${p.price.toLocaleString()}</p>
-                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();openQV(${p.id})">Quick View</button>
+                    <p class="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1 font-light">${CURRENCY_SYMBOL}${p.price.toLocaleString()}</p>
+                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();openQV('${p.id}')">Quick View</button>
                 </div>
             `;
                 card.addEventListener('click', () => openQV(p.id));
@@ -1960,7 +2055,7 @@
             if (!currentQV) return;
             document.getElementById('qvCategory').textContent = currentQV.category === 'mens' ? 'MENS WATCH' : 'LADIES WATCH';
             document.getElementById('qvName').textContent = currentQV.name;
-            document.getElementById('qvPrice').textContent = '$' + currentQV.price.toLocaleString();
+            document.getElementById('qvPrice').textContent = CURRENCY_SYMBOL + currentQV.price.toLocaleString();
             document.getElementById('qvDesc').textContent = currentQV.description;
             document.getElementById('qvWatch').innerHTML = generateWatch(currentQV, 320);
             const featDiv = document.getElementById('qvFeatures');
@@ -1990,7 +2085,7 @@
         function orderViaWhatsAppFromQV() {
             if (!currentQV) return;
             const phone = WHATSAPP_NUMBER;
-            const text = `Hello Aerion Watches, I would like to order the following watch:\n\n*Watch Name:* ${currentQV.name}\n*Price:* $${currentQV.price.toLocaleString()}\n*Category:* ${currentQV.category === 'mens' ? 'Mens Watch' : currentQV.category === 'ladies' ? 'Ladies Watch' : 'Special Edition'}\n\nPlease confirm my order. Thank you!`;
+            const text = `Hello Aerion Watches, I would like to order the following watch:\n\n*Watch Name:* ${currentQV.name}\n*Price:* ${CURRENCY_SYMBOL}${currentQV.price.toLocaleString()}\n*Category:* ${currentQV.category === 'mens' ? 'Mens Watch' : currentQV.category === 'ladies' ? 'Ladies Watch' : 'Special Edition'}\n\nPlease confirm my order. Thank you!`;
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -2004,7 +2099,7 @@
             cart.forEach((item, index) => {
                 const p = products.find(x => x.id === item.id);
                 if (p) {
-                    text += `${index + 1}. *${p.name}* (Qty: ${item.qty}) - $${(p.price * item.qty).toLocaleString()}\n`;
+                    text += `${index + 1}. *${p.name}* (Qty: ${item.qty}) - ${CURRENCY_SYMBOL}${(p.price * item.qty).toLocaleString()}\n`;
                 }
             });
             
@@ -2013,7 +2108,7 @@
                 return s + (p ? p.price * c.qty : 0);
             }, 0);
             
-            text += `\n*Total Value:* $${totalVal.toLocaleString()}\n\nPlease confirm my order. Thank you!`;
+            text += `\n*Total Value:* ${CURRENCY_SYMBOL}${totalVal.toLocaleString()}\n\nPlease confirm my order. Thank you!`;
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -2061,17 +2156,17 @@
                 <div style="width:70px;height:70px;flex-shrink:0">${generateWatch(p, 70)}</div>
                 <div class="flex-1 min-w-0">
                     <p class="font-display text-cream text-sm tracking-wider">${p.name}</p>
-                    <p class="text-gold text-xs mt-1">$${p.price.toLocaleString()}</p>
+                    <p class="text-gold text-xs mt-1">${CURRENCY_SYMBOL}${p.price.toLocaleString()}</p>
                     <div class="flex items-center gap-3 mt-2">
-                        <button onclick="changeQty(${p.id},-1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">-</button>
+                        <button onclick="changeQty('${p.id}',-1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">-</button>
                         <span class="text-cream text-xs">${c.qty}</span>
-                        <button onclick="changeQty(${p.id},1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">+</button>
+                        <button onclick="changeQty('${p.id}',1)" class="w-6 h-6 rounded border border-gold/20 text-gold/60 text-xs flex items-center justify-center hover:border-gold/40 transition">+</button>
                     </div>
                 </div>
-                <button onclick="removeFromCart(${p.id})" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="removeFromCart('${p.id}')" class="text-muted/40 hover:text-red-400 transition text-xs" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
             </div>`;
             }).join('');
-            document.getElementById('cartTotal').textContent = '$' + sum.toLocaleString();
+            document.getElementById('cartTotal').textContent = CURRENCY_SYMBOL + sum.toLocaleString();
         }
         function openCart() {
             document.getElementById('cartPanel').classList.add('open');
@@ -2085,17 +2180,21 @@
         }
         function checkout() {
             if (cart.length === 0) return;
-            // Check if any items are from Shopify
-            const hasShopifyItems = cart.some(item => {
+            // Generate Shopify checkout permalink
+            const cartItems = cart.map(item => {
                 const p = products.find(x => x.id === item.id);
-                return p && p._shopify;
-            });
-            if (hasShopifyItems && window.shopifyCheckoutCart) {
-                window.shopifyCheckoutCart();
+                if (!p || !p.variantId) return '';
+                const numericVariantId = p.variantId.split('/').pop();
+                return `${numericVariantId}:${item.qty}`;
+            }).filter(Boolean).join(',');
+            
+            if (cartItems) {
+                showToast('Redirecting to secure checkout...', 'success');
+                setTimeout(() => {
+                    window.location.href = `https://${SHOPIFY_DOMAIN}/cart/${cartItems}`;
+                }, 800);
             } else {
-                const sum = cart.reduce((s, c) => { const p = products.find(x => x.id === c.id); return s + p.price * c.qty }, 0);
-                showToast(`Order placed — $${sum.toLocaleString()}. Thank you.`, 'success');
-                cart = []; updateCartUI(); closeCart();
+                showToast('Error generating checkout link. Please try again.', 'error');
             }
         }
 
@@ -2280,7 +2379,7 @@
 
         /* ===================== INIT ===================== */
         document.addEventListener('DOMContentLoaded', () => {
-            // Load custom local products before rendering
+            // Load custom local products before rendering (as cache fallback)
             const cachedProducts = localStorage.getItem('aerion_custom_products');
             if (cachedProducts) {
                 try {
@@ -2328,249 +2427,23 @@
             }
 
             initParticles();
-            renderProducts('all');
-            updateCartUI();
-            initAnimations();
+            
+            // Fetch products from Shopify Storefront API
+            fetchShopifyProducts().then(shopifyProducts => {
+                if (shopifyProducts && shopifyProducts.length > 0) {
+                    products = shopifyProducts;
+                    localStorage.setItem('aerion_custom_products', JSON.stringify(products));
+                }
+                renderProducts('all');
+                updateCartUI();
+                initAnimations();
+            }).catch(err => {
+                console.error("Shopify products loading failed, using fallback:", err);
+                renderProducts('all');
+                updateCartUI();
+                initAnimations();
+            });
         });
-    </script>
-
-    <!-- ===================== SHOPIFY STOREFRONT API INTEGRATION ===================== -->
-    <script>
-        (function () {
-            /* ---------- CONFIG ---------- */
-            const SHOPIFY_DOMAIN = 'cfjczn-ud.myshopify.com';
-            const SHOPIFY_STOREFRONT_TOKEN = '112a9be5300522ab21788df16f49555e';
-            const SHOPIFY_API_VERSION = '2024-01';
-
-            /* ---------- FETCH PRODUCTS FROM SHOPIFY ---------- */
-            async function fetchShopifyProducts() {
-                const query = `{
-                    products(first: 50) {
-                        edges {
-                            node {
-                                id
-                                title
-                                description
-                                handle
-                                productType
-                                tags
-                                variants(first: 1) {
-                                    edges {
-                                        node {
-                                            id
-                                            price {
-                                                amount
-                                                currencyCode
-                                            }
-                                        }
-                                    }
-                                }
-                                images(first: 3) {
-                                    edges {
-                                        node {
-                                            url
-                                            altText
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }`;
-
-                try {
-                    const response = await fetch(
-                        `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
-                            },
-                            body: JSON.stringify({ query })
-                        }
-                    );
-
-                    if (!response.ok) {
-                        console.warn('Shopify API responded with status:', response.status);
-                        return [];
-                    }
-
-                    const data = await response.json();
-
-                    if (data.errors) {
-                        console.warn('Shopify API errors:', data.errors);
-                        return [];
-                    }
-
-                    const startId = 5000; // High IDs to avoid conflicts with existing products
-                    return data.data.products.edges.map((edge, index) => {
-                        const node = edge.node;
-                        const variant = node.variants.edges[0]?.node;
-                        const price = parseFloat(variant?.price?.amount || 0);
-                        const currency = variant?.price?.currencyCode || 'USD';
-                        const imageUrl = node.images.edges[0]?.node.url || '';
-                        const variantGid = variant?.id || '';
-
-                        // Determine category from tags or productType
-                        let category = 'mens';
-                        const lowerTags = node.tags.map(t => t.toLowerCase());
-                        const lowerType = (node.productType || '').toLowerCase();
-                        if (lowerTags.includes('ladies') || lowerTags.includes('women') || lowerType.includes('ladies') || lowerType.includes('women')) {
-                            category = 'ladies';
-                        } else if (lowerTags.includes('special') || lowerType.includes('special')) {
-                            category = 'special';
-                        }
-
-                        return {
-                            id: startId + index,
-                            name: node.title,
-                            price: price,
-                            category: category,
-                            description: node.description || 'Premium timepiece from our exclusive collection.',
-                            features: ['Premium Craftsmanship', 'Sapphire Crystal', 'Water Resistant', 'Swiss Movement'],
-                            image: imageUrl,
-                            // Shopify-specific metadata
-                            _shopify: true,
-                            _shopifyVariantGid: variantGid,
-                            _shopifyHandle: node.handle,
-                            _shopifyCurrency: currency,
-                            // SVG fallback colors (used if image fails)
-                            dial: '#0a0a15',
-                            accent: '#c8a55c',
-                            accentDark: '#8a7032',
-                            accentLight: '#e8d5a3',
-                            hasDate: true,
-                            hasSubdials: false,
-                            secColor: '#c8a55c'
-                        };
-                    });
-                } catch (error) {
-                    console.warn('Shopify fetch failed (this is okay, existing products will still show):', error.message);
-                    return [];
-                }
-            }
-
-            /* ---------- CREATE SHOPIFY CHECKOUT ---------- */
-            window.createShopifyCheckout = async function (items) {
-                // items = [{ variantGid: "gid://...", quantity: 1 }, ...]
-                const lineItems = items.map(i => `{ variantId: "${i.variantGid}", quantity: ${i.quantity} }`).join(',');
-                const mutation = `mutation {
-                    checkoutCreate(input: { lineItems: [${lineItems}] }) {
-                        checkout { webUrl }
-                        checkoutUserErrors { message field }
-                    }
-                }`;
-
-                try {
-                    const response = await fetch(
-                        `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
-                            },
-                            body: JSON.stringify({ query: mutation })
-                        }
-                    );
-
-                    const data = await response.json();
-                    const checkoutUrl = data.data?.checkoutCreate?.checkout?.webUrl;
-                    const errors = data.data?.checkoutCreate?.checkoutUserErrors;
-
-                    if (errors && errors.length > 0) {
-                        console.error('Shopify checkout errors:', errors);
-                        window.showToast('Checkout error. Please try WhatsApp order.', 'error');
-                        return null;
-                    }
-
-                    if (checkoutUrl) {
-                        return checkoutUrl;
-                    }
-                    return null;
-                } catch (error) {
-                    console.error('Shopify checkout failed:', error);
-                    window.showToast('Checkout unavailable. Please try WhatsApp order.', 'error');
-                    return null;
-                }
-            };
-
-            /* ---------- DIRECT BUY (single product) ---------- */
-            window.shopifyBuyNow = async function (productId) {
-                const product = window.products.find(p => p.id === productId);
-                if (!product || !product._shopify || !product._shopifyVariantGid) {
-                    window.showToast('This product is not available for online checkout. Use WhatsApp order.', 'info');
-                    return;
-                }
-
-                window.showToast('Creating secure checkout...', 'info');
-                const url = await window.createShopifyCheckout([
-                    { variantGid: product._shopifyVariantGid, quantity: 1 }
-                ]);
-                if (url) {
-                    window.open(url, '_blank');
-                }
-            };
-
-            /* ---------- CHECKOUT ENTIRE CART VIA SHOPIFY ---------- */
-            window.shopifyCheckoutCart = async function () {
-                const shopifyItems = [];
-                const nonShopifyItems = [];
-
-                window.cart.forEach(item => {
-                    const p = window.products.find(x => x.id === item.id);
-                    if (p && p._shopify && p._shopifyVariantGid) {
-                        shopifyItems.push({ variantGid: p._shopifyVariantGid, quantity: item.qty });
-                    } else {
-                        nonShopifyItems.push(item);
-                    }
-                });
-
-                if (shopifyItems.length > 0) {
-                    window.showToast('Creating secure checkout...', 'info');
-                    const url = await window.createShopifyCheckout(shopifyItems);
-                    if (url) {
-                        window.open(url, '_blank');
-                        // Remove Shopify items from local cart
-                        window.cart = nonShopifyItems;
-                        window.updateCartUI();
-                        if (nonShopifyItems.length === 0) window.closeCart();
-                    }
-                }
-
-                if (nonShopifyItems.length > 0 && shopifyItems.length === 0) {
-                    // Fallback for non-Shopify products
-                    window.orderCartViaWhatsApp();
-                }
-            };
-
-            /* ---------- INIT: Fetch & Merge Shopify Products ---------- */
-            async function initShopify() {
-                const shopifyProducts = await fetchShopifyProducts();
-
-                if (shopifyProducts.length > 0) {
-                    // Remove any previously loaded Shopify products (avoid duplicates on re-init)
-                    window.products = window.products.filter(p => !p._shopify);
-                    // Add Shopify products to the beginning of the array
-                    window.products = [...shopifyProducts, ...window.products];
-                    // Re-render the product grid
-                    if (typeof window.renderProducts === 'function') {
-                        window.renderProducts('all');
-                    }
-                    console.log(`✅ Shopify: Loaded ${shopifyProducts.length} products from your store`);
-                } else {
-                    console.log('ℹ️ Shopify: No products found or API not accessible. Existing products will display.');
-                }
-            }
-
-            // Run after a short delay to let other scripts initialize first
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => setTimeout(initShopify, 800));
-            } else {
-                setTimeout(initShopify, 800);
-            }
-        })();
     </script>
 
     <!-- ===================== FIREBASE INTEGRATION ===================== -->
@@ -2634,8 +2507,8 @@
                 }
             }
 
-            // Trigger sync
-            setTimeout(syncWithFirestore, 1500);
+            // Trigger sync (Disabled in favor of Shopify product fetching)
+            // setTimeout(syncWithFirestore, 1500);
 
             // Exposed Database mutations
             window.dbAddProduct = async (p) => {
