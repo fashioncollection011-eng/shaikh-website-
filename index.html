@@ -2013,6 +2013,18 @@
             const grid = document.getElementById('productGrid');
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
             grid.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20 text-muted/80">
+                        <i class="fa-solid fa-hourglass-empty text-4xl mb-4 text-gold/30"></i>
+                        <p class="font-display text-xl text-cream">No Timepieces Found</p>
+                        <p class="text-xs mt-2 text-muted">Check back later for new exclusive additions.</p>
+                    </div>
+                `;
+                return;
+            }
+            
             filtered.forEach((p, i) => {
                 const card = document.createElement('div');
                 card.className = 'product-card p-4 pb-6 sm:p-6 sm:pb-8';
@@ -2430,15 +2442,19 @@
             
             // Fetch products from Shopify Storefront API
             fetchShopifyProducts().then(shopifyProducts => {
-                if (shopifyProducts && shopifyProducts.length > 0) {
+                if (shopifyProducts) {
                     products = shopifyProducts;
                     localStorage.setItem('aerion_custom_products', JSON.stringify(products));
+                    showToast("Shopify synced: " + shopifyProducts.length + " products", "success");
+                } else {
+                    showToast("Shopify returned no data", "error");
                 }
                 renderProducts('all');
                 updateCartUI();
                 initAnimations();
             }).catch(err => {
                 console.error("Shopify products loading failed, using fallback:", err);
+                showToast("Shopify fetch failed: " + err.message, "error");
                 renderProducts('all');
                 updateCartUI();
                 initAnimations();
