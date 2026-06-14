@@ -2359,6 +2359,17 @@
 
         /* ===================== GSAP ANIMATIONS ===================== */
         function initAnimations() {
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.style.transition = 'opacity 0.6s ease';
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 600);
+                }
+                return;
+            }
             gsap.registerPlugin(ScrollTrigger);
 
             /* Preloader out */
@@ -2415,6 +2426,11 @@
 
         /* ===================== INIT ===================== */
         document.addEventListener('DOMContentLoaded', () => {
+            // Register GSAP plugins immediately to prevent unregistered access crashes
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                gsap.registerPlugin(ScrollTrigger);
+            }
+
             // Load custom local products before rendering (as cache fallback)
             const cachedProducts = localStorage.getItem('aerion_custom_products');
             if (cachedProducts) {
@@ -2436,14 +2452,29 @@
                         infinite: false
                     });
 
-                    // Sync GSAP ScrollTrigger with Lenis scroll updates
-                    lenis.on('scroll', ScrollTrigger.update);
-
-                    // Use GSAP ticker to run Lenis frames synchronously
-                    gsap.ticker.add((time) => {
-                        lenis.raf(time * 1000);
+                    // Sync GSAP ScrollTrigger with Lenis scroll updates safely
+                    lenis.on('scroll', () => {
+                        if (typeof ScrollTrigger !== 'undefined' && typeof ScrollTrigger.update === 'function') {
+                            ScrollTrigger.update();
+                        }
                     });
-                    gsap.ticker.lagSmoothing(0);
+
+                    // Use GSAP ticker to run Lenis frames synchronously safely
+                    if (typeof gsap !== 'undefined' && gsap.ticker) {
+                        gsap.ticker.add((time) => {
+                            lenis.raf(time * 1000);
+                        });
+                        if (typeof gsap.ticker.lagSmoothing === 'function') {
+                            gsap.ticker.lagSmoothing(0);
+                        }
+                    } else {
+                        // Fallback to requestAnimationFrame if GSAP ticker is not available
+                        function raf(time) {
+                            lenis.raf(time);
+                            requestAnimationFrame(raf);
+                        }
+                        requestAnimationFrame(raf);
+                    }
 
                     /* Handle internal links for Lenis */
                     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
