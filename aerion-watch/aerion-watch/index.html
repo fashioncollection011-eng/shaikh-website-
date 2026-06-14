@@ -65,6 +65,21 @@
             pointer-events: none;
         }
 
+        html:not(.lenis) {
+            scroll-behavior: smooth;
+        }
+
+        /* GPU Acceleration & Scroll Optimizations */
+        #particles {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        #mainNav {
+            transform: translateZ(0);
+            will-change: transform, background-color, backdrop-filter;
+        }
+
         :root {
             --bg: #fdfdfd;
             --bg-alt: #f5f5f7;
@@ -115,6 +130,7 @@
             pointer-events: none;
             z-index: 0;
             animation: ambientShift 20s ease-in-out infinite alternate;
+            will-change: transform;
         }
 
         @keyframes ambientShift {
@@ -1967,11 +1983,19 @@
             const particles = [];
             const COUNT = 65;
 
-            function resize() {
+            function initSize() {
                 W = canvas.width = window.innerWidth;
                 H = canvas.height = window.innerHeight;
             }
-            resize();
+            initSize();
+
+            let lastW = window.innerWidth;
+            function resize() {
+                if (window.innerWidth === lastW) return;
+                lastW = window.innerWidth;
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
             window.addEventListener('resize', resize);
 
             for (let i = 0; i < COUNT; i++) {
@@ -2405,23 +2429,21 @@
             try {
                 if (typeof Lenis !== 'undefined') {
                     const lenis = new Lenis({
-                        duration: 1.2,
-                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                        direction: 'vertical',
-                        gestureDirection: 'vertical',
+                        lerp: 0.08,
+                        wheelMultiplier: 1.1,
                         smoothWheel: true,
-                        wheelMultiplier: 1,
-                        smoothTouch: false,
-                        touchMultiplier: 2,
-                        infinite: false,
+                        smoothTouch: false, // Maintain native touch momentum scrolling on mobile
+                        infinite: false
                     });
 
-                    function raf(time) {
-                        lenis.raf(time);
-                        requestAnimationFrame(raf);
-                    }
+                    // Sync GSAP ScrollTrigger with Lenis scroll updates
+                    lenis.on('scroll', ScrollTrigger.update);
 
-                    requestAnimationFrame(raf);
+                    // Use GSAP ticker to run Lenis frames synchronously
+                    gsap.ticker.add((time) => {
+                        lenis.raf(time * 1000);
+                    });
+                    gsap.ticker.lagSmoothing(0);
 
                     /* Handle internal links for Lenis */
                     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
