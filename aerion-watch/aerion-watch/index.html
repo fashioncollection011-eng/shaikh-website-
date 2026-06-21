@@ -2166,8 +2166,10 @@
         function updateCartUI() {
             const countEl = document.getElementById('cartCount');
             const total = cart.reduce((s, c) => s + c.qty, 0);
-            if (total > 0) { countEl.textContent = total; countEl.classList.remove('hidden'); countEl.classList.add('flex') }
-            else { countEl.classList.add('hidden'); countEl.classList.remove('flex') }
+            if (countEl) {
+                if (total > 0) { countEl.textContent = total; countEl.classList.remove('hidden'); countEl.classList.add('flex') }
+                else { countEl.classList.add('hidden'); countEl.classList.remove('flex') }
+            }
             const itemsEl = document.getElementById('cartItems');
             const emptyEl = document.getElementById('cartEmpty');
             const footerEl = document.getElementById('cartFooter');
@@ -2613,8 +2615,10 @@
                 const pEmail = document.getElementById('profileEmail');
                 const adminBtn = document.getElementById('adminPanelTrigger');
                 if (user) {
-                    btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
-                    btn.title = user.displayName || user.email;
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
+                        btn.title = user.displayName || user.email;
+                    }
                     if (pName) pName.textContent = user.displayName || 'Aerion Member';
                     if (pEmail) pEmail.textContent = user.email || '';
                     
@@ -2627,8 +2631,10 @@
                         }
                     }
                 } else {
-                    btn.innerHTML = '<i class="fa-regular fa-user"></i>';
-                    btn.title = 'Account';
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-regular fa-user"></i>';
+                        btn.title = 'Account';
+                    }
                     if (pName) pName.textContent = 'Aerion Member';
                     if (pEmail) pEmail.textContent = 'Not Logged In';
                     if (adminBtn) adminBtn.classList.add('hidden');
