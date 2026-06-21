@@ -976,10 +976,11 @@
                         aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div class="flex justify-center">
+                    <div class="flex flex-col gap-4 items-center">
                         <div class="watch-3d mx-auto" style="width:100%; max-width:280px; aspect-ratio:1; height:auto;" id="qvWatchContainer">
                             <div id="qvWatch" style="width:100%;height:100%"></div>
                         </div>
+                        <div id="qvGallery" class="flex gap-2 justify-center flex-wrap mt-2"></div>
                     </div>
                     <div>
                         <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
@@ -1332,7 +1333,7 @@
                         }
                       }
                     }
-                    images(first: 1) {
+                    images(first: 10) {
                       edges {
                         node {
                           url
@@ -1377,7 +1378,8 @@
                     const variantNode = node.variants.edges[0]?.node;
                     const priceAmount = variantNode ? parseFloat(variantNode.price.amount) : 0;
                     const variantId = variantNode ? variantNode.id : '';
-                    const imageUrl = node.images.edges[0]?.node?.url || '';
+                    const imageUrls = (node.images?.edges || []).map(e => e.node.url);
+                    const imageUrl = imageUrls[0] || '';
                     
                     // Determine category based on tags or collections
                     let category = 'mens';
@@ -1409,6 +1411,7 @@
                         description: node.description || 'No description available.',
                         features: features,
                         image: imageUrl,
+                        images: imageUrls,
                         dial: '#000000',
                         accent: '#af8c42',
                         accentDark: '#8a6e32',
@@ -2081,6 +2084,22 @@
         });
 
         /* ===================== QUICK VIEW ===================== */
+        function changeQVImage(imgUrl, thumbEl) {
+            const mainImg = document.querySelector('#qvWatch img');
+            if (mainImg) {
+                mainImg.src = imgUrl;
+            }
+            // Update active state of thumbnails
+            document.querySelectorAll('.qv-thumbnail').forEach(t => {
+                t.classList.remove('border-gold', 'ring-1', 'ring-gold/30');
+                t.classList.add('border-black/10');
+            });
+            if (thumbEl) {
+                thumbEl.classList.remove('border-black/10');
+                thumbEl.classList.add('border-gold', 'ring-1', 'ring-gold/30');
+            }
+        }
+
         function openQV(id) {
             currentQV = products.find(p => p.id === id);
             if (!currentQV) return;
@@ -2096,6 +2115,26 @@
                 <span class="text-[#222222] text-sm font-light">${f}</span>
             </div>
         `).join('');
+
+            // Render Gallery
+            const galleryEl = document.getElementById('qvGallery');
+            galleryEl.innerHTML = '';
+            
+            const allImages = currentQV.images && currentQV.images.length > 0 ? currentQV.images : (currentQV.image ? [currentQV.image] : []);
+            
+            if (allImages.length > 1) {
+                allImages.forEach((imgUrl, idx) => {
+                    const thumb = document.createElement('img');
+                    thumb.src = imgUrl;
+                    thumb.className = `w-12 h-12 sm:w-14 sm:h-14 rounded-lg border p-1 cursor-pointer bg-neutral-50 hover:border-gold transition object-contain qv-thumbnail ${idx === 0 ? 'border-gold ring-1 ring-gold/30' : 'border-black/10'}`;
+                    thumb.alt = `${currentQV.name} view ${idx + 1}`;
+                    thumb.addEventListener('click', function() {
+                        changeQVImage(imgUrl, this);
+                    });
+                    galleryEl.appendChild(thumb);
+                });
+            }
+
             document.getElementById('qvModal').classList.add('open');
             document.body.style.overflow = 'hidden';
         }
