@@ -666,6 +666,15 @@
             }
         }
 
+        #qvWatch {
+            position: relative;
+            overflow: hidden;
+        }
+        #qvWatch img {
+            transition: transform 0.25s ease-out !important;
+            transform-origin: center;
+        }
+
         @media(max-width:768px) {
             .hero-watch-size {
                 width: 260px !important;
@@ -2525,6 +2534,32 @@
                 }
             } catch (e) {
                 console.error('Lenis failed to initialize:', e);
+            }
+
+            // Zoom functionality for Quick View main image
+            const qvWatch = document.getElementById('qvWatch');
+            if (qvWatch) {
+                qvWatch.addEventListener('mousemove', function(e) {
+                    const img = qvWatch.querySelector('img');
+                    if (!img) return;
+                    
+                    const rect = qvWatch.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const xPercent = (x / rect.width) * 100;
+                    const yPercent = (y / rect.height) * 100;
+                    
+                    img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                    img.style.transform = 'scale(2.2)';
+                });
+                
+                qvWatch.addEventListener('mouseleave', function() {
+                    const img = qvWatch.querySelector('img');
+                    if (!img) return;
+                    img.style.transform = 'scale(1)';
+                    img.style.transformOrigin = 'center';
+                });
             }
 
             initParticles();
