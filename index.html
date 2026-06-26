@@ -1367,6 +1367,8 @@
             `;
 
             try {
+                const controller = new AbortController();
+                const fetchTimeout = setTimeout(() => controller.abort(), 5000);
                 const response = await fetch(`https://${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`, {
                     method: 'POST',
                     headers: {
@@ -1374,7 +1376,9 @@
                         'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
                     },
                     body: JSON.stringify({ query }),
+                    signal: controller.signal,
                 });
+                clearTimeout(fetchTimeout);
                 const json = await response.json();
                 if (json.errors) {
                     console.error("Shopify GraphQL errors:", json.errors);
@@ -2475,6 +2479,16 @@
             if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                 gsap.registerPlugin(ScrollTrigger);
             }
+
+            // GUARANTEED PRELOADER HIDE — max 4 seconds, no matter what
+            const _preloaderFallback = setTimeout(() => {
+                const pl = document.getElementById('preloader');
+                if (pl && pl.style.display !== 'none') {
+                    pl.style.transition = 'opacity 0.5s ease';
+                    pl.style.opacity = '0';
+                    setTimeout(() => { pl.style.display = 'none'; }, 500);
+                }
+            }, 4000);
 
             // Load custom local products before rendering (as cache fallback)
             const cachedProducts = localStorage.getItem('aerion_custom_products');
