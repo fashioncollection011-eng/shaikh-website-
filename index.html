@@ -1338,6 +1338,7 @@
                   node {
                     id
                     title
+                    descriptionHtml
                     description
                     tags
                     collections(first: 5) {
@@ -1426,7 +1427,7 @@
                         name: node.title,
                         price: priceAmount,
                         category: category,
-                        description: node.description || 'No description available.',
+                        description: node.descriptionHtml || node.description || 'No description available.',
                         features: features,
                         image: imageUrl,
                         images: imageUrls,
@@ -2124,7 +2125,10 @@
             document.getElementById('qvCategory').textContent = currentQV.category === 'mens' ? 'MENS WATCH' : 'LADIES WATCH';
             document.getElementById('qvName').textContent = currentQV.name;
             document.getElementById('qvPrice').textContent = CURRENCY_SYMBOL + currentQV.price.toLocaleString();
-            document.getElementById('qvDesc').textContent = currentQV.description;
+            let desc = currentQV.description || '';
+            // Match "NOTE:" (with optional spaces) case-insensitively and replace with <br><br> and highlighted tag
+            desc = desc.replace(/(?:\s*)NOTE:/gi, '<br><br><span class="font-semibold text-gold">NOTE:</span>');
+            document.getElementById('qvDesc').innerHTML = desc;
             document.getElementById('qvWatch').innerHTML = generateWatch(currentQV, 320);
             const featDiv = document.getElementById('qvFeatures');
             featDiv.innerHTML = currentQV.features.map(f => `
