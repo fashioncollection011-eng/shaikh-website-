@@ -2408,6 +2408,10 @@
 
         /* ===================== GSAP ANIMATIONS ===================== */
         function initAnimations() {
+            if (window._preloaderFallback) {
+                clearTimeout(window._preloaderFallback);
+            }
+
             if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
                 const preloader = document.getElementById('preloader');
                 if (preloader) {
@@ -2417,17 +2421,36 @@
                         preloader.style.display = 'none';
                     }, 600);
                 }
+                // Fallback: make all elements visible if GSAP is missing
+                document.querySelectorAll('.hero-el, .phil-el, .coll-el, .craft-el, .nl-el').forEach(el => {
+                    el.classList.remove('opacity-0');
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                });
                 return;
             }
             gsap.registerPlugin(ScrollTrigger);
 
             /* Preloader out */
-            gsap.to('#preloader', { opacity: 0, duration: .6, delay: 1.8, ease: 'power2.inOut', onComplete: () => { document.getElementById('preloader').style.display = 'none'; startHeroAnim() } });
+            gsap.to('#preloader', { 
+                opacity: 0, 
+                duration: .6, 
+                delay: 1.8, 
+                ease: 'power2.inOut', 
+                onComplete: () => { 
+                    const pl = document.getElementById('preloader');
+                    if (pl) pl.style.display = 'none'; 
+                    startHeroAnim(); 
+                } 
+            });
 
             /* Hero entrance */
             function startHeroAnim() {
                 const els = document.querySelectorAll('.hero-el');
-                gsap.to(els, { opacity: 1, duration: 1, stagger: .15, ease: 'power2.out' });
+                gsap.fromTo(els, 
+                    { opacity: 0, y: 20 },
+                    { opacity: 1, y: 0, duration: 1, stagger: .15, ease: 'power2.out' }
+                );
             }
 
             /* Hero parallax text */
@@ -2443,27 +2466,71 @@
 
             /* Philosophy section */
             gsap.utils.toArray('.phil-el').forEach((el, i) => {
-                gsap.to(el, { opacity: 1, y: 0, duration: .8, delay: i * .12, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-                gsap.set(el, { opacity: 0, y: 30 });
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 30 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: .8, 
+                        delay: i * .12, 
+                        ease: 'power3.out', 
+                        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } 
+                    }
+                );
             });
 
             /* Collection section */
             gsap.utils.toArray('.coll-el').forEach((el, i) => {
-                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-                gsap.set(el, { opacity: 0, y: 30 });
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 30 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: .7, 
+                        delay: i * .1, 
+                        ease: 'power3.out', 
+                        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } 
+                    }
+                );
             });
 
             /* Craftsmanship section */
             gsap.utils.toArray('.craft-el').forEach((el, i) => {
-                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-                gsap.set(el, { opacity: 0, y: 30 });
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 30 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: .7, 
+                        delay: i * .08, 
+                        ease: 'power3.out', 
+                        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } 
+                    }
+                );
             });
 
             /* Newsletter section */
             gsap.utils.toArray('.nl-el').forEach((el, i) => {
-                gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-                gsap.set(el, { opacity: 0, y: 25 });
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 25 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        duration: .7, 
+                        delay: i * .1, 
+                        ease: 'power3.out', 
+                        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } 
+                    }
+                );
             });
+
+            // Recalculate GSAP ScrollTrigger positions after page setup/image loading delays
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 500);
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 1500);
         }
 
         /* ===================== HERO WATCH MOUSE TILT REMOVED ===================== */
@@ -2481,13 +2548,19 @@
             }
 
             // GUARANTEED PRELOADER HIDE — max 4 seconds, no matter what
-            const _preloaderFallback = setTimeout(() => {
+            window._preloaderFallback = setTimeout(() => {
                 const pl = document.getElementById('preloader');
                 if (pl && pl.style.display !== 'none') {
                     pl.style.transition = 'opacity 0.5s ease';
                     pl.style.opacity = '0';
                     setTimeout(() => { pl.style.display = 'none'; }, 500);
                 }
+                // Force show all animated elements in case they are stuck at opacity-0
+                document.querySelectorAll('.hero-el, .phil-el, .coll-el, .craft-el, .nl-el').forEach(el => {
+                    el.classList.remove('opacity-0');
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                });
             }, 4000);
 
             // Load custom local products before rendering (as cache fallback)
