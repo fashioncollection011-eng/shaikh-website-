@@ -712,7 +712,7 @@
             onclick="closeMobile()">Craftsmanship</a>
         <a href="#newsletter" class="font-display text-2xl text-white hover:text-gold transition"
             onclick="closeMobile()">Contact</a>
-        <button class="btn-outline mt-4 !text-white !border-white/30" onclick="closeMobile();openAuth()">Sign In</button>
+        <button class="btn-outline mt-4 !text-white !border-white/30" onclick="closeMobile();handleNavAccount()" id="mobileAuthBtn">Sign In</button>
     </div>
 
     <!-- Navigation -->
@@ -2783,6 +2783,7 @@
                 const pName = document.getElementById('profileName');
                 const pEmail = document.getElementById('profileEmail');
                 const adminBtn = document.getElementById('adminPanelTrigger');
+                const mobileAuthBtn = document.getElementById('mobileAuthBtn');
                 if (user) {
                     if (btn) {
                         btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
@@ -2790,6 +2791,7 @@
                     }
                     if (pName) pName.textContent = user.displayName || 'Aerion Member';
                     if (pEmail) pEmail.textContent = user.email || '';
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign Out';
                     
                     // Show admin dashboard button only for admin emails!
                     if (adminBtn) {
@@ -2806,6 +2808,7 @@
                     }
                     if (pName) pName.textContent = 'Aerion Member';
                     if (pEmail) pEmail.textContent = 'Not Logged In';
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign In';
                     if (adminBtn) adminBtn.classList.add('hidden');
                 }
             });
