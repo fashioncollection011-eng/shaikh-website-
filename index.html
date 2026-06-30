@@ -521,6 +521,37 @@
             transform: scale(1) translateY(0)
         }
 
+        /* Consistent size layout for Quick View modal on desktop */
+        @media (min-width: 768px) {
+            #qvModal .modal-box {
+                height: 620px;
+                overflow-y: hidden;
+            }
+            #qvModal .qv-details-col {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                justify-content: space-between;
+                overflow: hidden;
+            }
+            #qvModal .qv-scroll-area {
+                flex: 1;
+                overflow-y: auto;
+                margin-bottom: 1.25rem;
+                padding-right: 0.5rem;
+            }
+            #qvModal .qv-scroll-area::-webkit-scrollbar {
+                width: 4px;
+            }
+            #qvModal .qv-scroll-area::-webkit-scrollbar-thumb {
+                background: rgba(175, 140, 66, 0.2);
+                border-radius: 2px;
+            }
+            #qvModal .qv-scroll-area::-webkit-scrollbar-thumb:hover {
+                background: rgba(175, 140, 66, 0.4);
+            }
+        }
+
         /* Toast */
         .toast-wrap {
             position: fixed;
@@ -980,27 +1011,29 @@
     <div class="modal-overlay" id="qvModal">
         <div class="modal-box rounded-2xl max-w-4xl w-full mx-4" data-lenis-prevent
             style="background:#ffffff; border: 1px solid rgba(175, 140, 66, 0.15);">
-            <div class="p-6 sm:p-8 md:p-12">
-                <div class="flex justify-between items-start mb-8">
+            <div class="p-6 sm:p-8 md:p-10 h-full flex flex-col justify-between">
+                <div class="flex justify-between items-start mb-6">
                     <div>
                         <p class="text-gold text-xs tracking-[.3em] uppercase" id="qvCategory">ROLEX</p>
-                        <h3 class="font-display text-3xl md:text-4xl text-[#121212] mt-1" id="qvName">Sovereign</h3>
+                        <h3 class="font-display text-2xl md:text-3xl text-[#121212] mt-1" id="qvName">Sovereign</h3>
                     </div>
                     <button onclick="closeQV()" class="text-muted hover:text-[#121212] transition text-lg"
                         aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div class="flex flex-col gap-4 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center md:items-stretch overflow-hidden flex-1">
+                    <div class="flex flex-col gap-4 items-center justify-center">
                         <div class="watch-3d mx-auto" style="width:100%; max-width:280px; aspect-ratio:1; height:auto;" id="qvWatchContainer">
                             <div id="qvWatch" style="width:100%;height:100%"></div>
                         </div>
                         <div id="qvGallery" class="flex gap-2 justify-center flex-wrap mt-2"></div>
                     </div>
-                    <div>
-                        <p class="font-display text-3xl text-gold mb-2" id="qvPrice">$12,500</p>
-                        <p class="text-[#333333] text-sm leading-relaxed mb-8 font-light" id="qvDesc">Description</p>
-                        <div class="space-y-3 mb-10" id="qvFeatures"></div>
-                        <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex flex-col justify-between overflow-hidden h-full qv-details-col">
+                        <div class="overflow-y-auto pr-1 flex-1 qv-scroll-area" data-lenis-prevent>
+                            <p class="font-display text-3xl text-gold mb-4" id="qvPrice">$12,500</p>
+                            <p class="text-[#333333] text-sm leading-relaxed mb-6 font-light" id="qvDesc">Description</p>
+                            <div class="space-y-3 mb-6" id="qvFeatures"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-black/5 mt-auto">
                             <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
                             <button class="btn-whatsapp flex-1 flex items-center justify-center gap-2" onclick="orderViaWhatsAppFromQV()">
                                 <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
