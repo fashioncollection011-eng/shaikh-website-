@@ -838,20 +838,29 @@
                         Collection</h2>
                     <div class="gold-line mx-auto mt-6 coll-el opacity-0"></div>
                 </div>
-                <!-- Filter Tabs -->
-                <div class="flex justify-center flex-wrap gap-4 sm:gap-8 mb-14 coll-el opacity-0">
-                    <button
-                        class="filter-tab active text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-gold"
-                        data-filter="all">All</button>
-                    <button
-                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
-                        data-filter="mens">Mens Watch</button>
-                    <button
-                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
-                        data-filter="ladies">Ladies Watch</button>
-                    <button
-                        class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
-                        data-filter="special">Special Editions</button>
+                <!-- Filter Tabs & Search Bar Row -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-14 coll-el opacity-0 border-b border-gold/10 pb-6">
+                    <!-- Filter Tabs -->
+                    <div class="flex flex-wrap justify-center gap-4 sm:gap-8">
+                        <button
+                            class="filter-tab active text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-gold"
+                            data-filter="all">All</button>
+                        <button
+                            class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                            data-filter="mens">Mens Watch</button>
+                        <button
+                            class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                            data-filter="ladies">Ladies Watch</button>
+                        <button
+                            class="filter-tab text-xs tracking-[.2em] uppercase pb-2 border-b border-transparent text-muted"
+                            data-filter="special">Special Editions</button>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
+                        <input type="text" id="watchSearchInput" placeholder="Search by model name..." 
+                            class="w-full pl-10 pr-4 py-2.5 text-xs bg-bg-alt/50 border border-gold/15 rounded-full text-cream placeholder-muted focus:border-gold focus:outline-none transition-all duration-300">
+                    </div>
                 </div>
                 <!-- Product Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="productGrid"></div>
@@ -1889,7 +1898,7 @@
             localStorage.setItem('aerion_custom_products', JSON.stringify(products));
 
             // Refresh UI
-            renderProducts('all');
+            renderProducts();
             renderAdminWatches();
             closeCustomizer();
         }
@@ -1921,7 +1930,7 @@
             }
 
             // Refresh UI
-            renderProducts('all');
+            renderProducts();
             renderAdminWatches();
         }
 
@@ -2082,10 +2091,28 @@
             draw();
         }
 
+        let activeCategoryFilter = 'all';
+        let activeSearchQuery = '';
+
         /* ===================== RENDER PRODUCTS ===================== */
-        function renderProducts(filter) {
+        function renderProducts() {
             const grid = document.getElementById('productGrid');
-            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            
+            // Filter by category
+            let filtered = activeCategoryFilter === 'all' 
+                ? products 
+                : products.filter(p => p.category === activeCategoryFilter);
+                
+            // Filter by search query
+            if (activeSearchQuery.trim() !== '') {
+                const query = activeSearchQuery.toLowerCase().trim();
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    (p.category === 'mens' ? 'mens watch' : 'ladies watch').includes(query) ||
+                    (p.features || []).some(f => f.toLowerCase().includes(query))
+                );
+            }
+            
             grid.innerHTML = '';
             
             if (filtered.length === 0) {
@@ -2093,7 +2120,7 @@
                     <div class="col-span-full text-center py-20 text-muted/80">
                         <i class="fa-solid fa-hourglass-empty text-4xl mb-4 text-gold/30"></i>
                         <p class="font-display text-xl text-cream">No Timepieces Found</p>
-                        <p class="text-xs mt-2 text-muted">Check back later for new exclusive additions.</p>
+                        <p class="text-xs mt-2 text-muted">Try adjusting your search query or category filters.</p>
                     </div>
                 `;
                 return;
@@ -2121,9 +2148,10 @@
                 card.addEventListener('click', () => openQV(p.id));
                 grid.appendChild(card);
                 /* Stagger animation */
-                gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .7, delay: i * .1, ease: 'power3.out' });
+                gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .7, delay: i * .05, ease: 'power3.out' });
             });
         }
+        window.renderProducts = renderProducts;
 
         /* ===================== FILTER TABS ===================== */
         document.querySelectorAll('.filter-tab').forEach(tab => {
@@ -2131,8 +2159,20 @@
                 document.querySelectorAll('.filter-tab').forEach(t => { t.classList.remove('active', 'text-gold'); t.classList.add('text-muted') });
                 this.classList.add('active', 'text-gold');
                 this.classList.remove('text-muted');
-                renderProducts(this.dataset.filter);
+                activeCategoryFilter = this.dataset.filter;
+                renderProducts();
             });
+        });
+
+        // Search Input Event Handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const watchSearch = document.getElementById('watchSearchInput');
+            if (watchSearch) {
+                watchSearch.addEventListener('input', function(e) {
+                    activeSearchQuery = e.target.value;
+                    renderProducts();
+                });
+            }
         });
 
         /* ===================== QUICK VIEW ===================== */
@@ -2702,13 +2742,13 @@
                 } else {
                     showToast("Shopify returned no data", "error");
                 }
-                renderProducts('all');
+                renderProducts();
                 updateCartUI();
                 initAnimations();
             }).catch(err => {
                 console.error("Shopify products loading failed, using fallback:", err);
                 showToast("Shopify fetch failed: " + err.message, "error");
-                renderProducts('all');
+                renderProducts();
                 updateCartUI();
                 initAnimations();
             });
@@ -2757,7 +2797,7 @@
                         window.products = dbProducts;
                         localStorage.setItem('aerion_custom_products', JSON.stringify(window.products));
                         if (typeof window.renderProducts === 'function') {
-                            window.renderProducts('all');
+                            window.renderProducts();
                         }
                         window.showToast('Cloud Database synced successfully', 'success');
                     } else {
