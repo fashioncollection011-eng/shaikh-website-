@@ -2142,10 +2142,12 @@
                 <div class="relative" style="z-index:2">
                     <h3 class="font-display text-sm sm:text-base md:text-xl text-cream tracking-wider truncate">${p.name}</h3>
                     <p class="text-gold text-xs sm:text-sm mt-0.5 sm:mt-1 font-light">${CURRENCY_SYMBOL}${p.price.toLocaleString()}</p>
-                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();openQV('${p.id}')">Quick View</button>
+                    <button class="qv-btn btn-outline w-full mt-3 sm:mt-5 text-[9px] sm:text-[11px]" onclick="event.stopPropagation();window.location.href = 'product.html?id=' + encodeURIComponent('${p.id}')">View Details</button>
                 </div>
             `;
-                card.addEventListener('click', () => openQV(p.id));
+                card.addEventListener('click', () => {
+                    window.location.href = 'product.html?id=' + encodeURIComponent(p.id);
+                });
                 grid.appendChild(card);
                 /* Stagger animation */
                 gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .7, delay: i * .05, ease: 'power3.out' });
