@@ -524,8 +524,12 @@
         /* Consistent size layout for Quick View modal on desktop */
         @media (min-width: 768px) {
             #qvModal .modal-box {
-                height: 620px;
-                overflow-y: hidden;
+                height: 650px;
+                overflow: hidden;
+            }
+            #qvModal .grid {
+                height: 480px;
+                align-items: stretch;
             }
             #qvModal .qv-details-col {
                 display: flex;
