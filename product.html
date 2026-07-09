@@ -662,11 +662,11 @@
 
                 <!-- Bag & Order Operations -->
                 <div class="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-black/5">
-                    <button class="btn-gold flex-1 rounded-xl flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important; color: #ffffff !important;" onclick="addToBagDynamic()">
+                    <button id="detailAddToBag" class="btn-gold flex-1 rounded-xl flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important; color: #ffffff !important;" onclick="addToBagDynamic()">
                         <i class="fa-solid fa-bag-shopping"></i>
                         <span>Add to Bag</span>
                     </button>
-                    <button class="btn-whatsapp flex-1 rounded-xl flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #128c7e, #25d366, #128c7e) !important; color: #ffffff !important;" onclick="orderWhatsAppDynamic()">
+                    <button id="detailWhatsApp" class="btn-whatsapp flex-1 rounded-xl flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #128c7e, #25d366, #128c7e) !important; color: #ffffff !important;" onclick="orderWhatsAppDynamic()">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
                         <span>Order via WhatsApp</span>
                     </button>
@@ -1478,7 +1478,7 @@
 
             if (typeof gsap !== 'undefined') {
                 gsap.from("#productGalleryCol", { opacity: 0, x: -50, duration: 0.8, ease: "power2.out" });
-                gsap.from("#detailCategory, #detailName, #detailPrice, #detailDesc, #detailFeatures, .btn-gold, .btn-whatsapp", {
+                gsap.from("#detailCategory, #detailName, #detailPrice, #detailDesc, #detailFeatures, #detailAddToBag, #detailWhatsApp", {
                     opacity: 0,
                     y: 30,
                     stagger: 0.1,
