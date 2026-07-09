@@ -224,7 +224,8 @@
         .btn-gold {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold-dark)) !important;
+            background: #af8c42 !important;
+            background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important;
             background-size: 300% 300% !important;
             animation: btnGlow 4s ease infinite;
             color: #ffffff !important;
@@ -1017,8 +1018,8 @@
                     <span class="font-display text-2xl text-gold" id="cartTotal">$0</span>
                 </div>
                 <div class="space-y-3">
-                    <button class="btn-gold w-full" onclick="checkout()"><span>Proceed to Checkout</span></button>
-                    <button class="btn-whatsapp w-full flex items-center justify-center gap-2" onclick="orderCartViaWhatsApp()">
+                    <button class="btn-gold w-full" style="background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important; color: #ffffff !important;" onclick="checkout()"><span>Proceed to Checkout</span></button>
+                    <button class="btn-whatsapp w-full flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #128c7e, #25d366, #128c7e) !important; color: #ffffff !important;" onclick="orderCartViaWhatsApp()">
                         <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
                     </button>
                 </div>
@@ -1055,8 +1056,8 @@
                             <div class="space-y-3 mb-6" id="qvFeatures"></div>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-black/5 mt-auto">
-                            <button class="btn-gold flex-1" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
-                            <button class="btn-whatsapp flex-1 flex items-center justify-center gap-2" onclick="orderViaWhatsAppFromQV()">
+                            <button class="btn-gold flex-1" style="background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important; color: #ffffff !important;" onclick="addToCartFromQV()"><span>Add to Bag</span></button>
+                            <button class="btn-whatsapp flex-1 flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #128c7e, #25d366, #128c7e) !important; color: #ffffff !important;" onclick="orderViaWhatsAppFromQV()">
                                 <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
                             </button>
                         </div>
