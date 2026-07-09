@@ -1518,6 +1518,21 @@
                     setTimeout(() => preloader.style.display = 'none', 500);
                 }, 1000);
             }
+
+            // Failsafe to ensure buttons are ALWAYS visible (e.g. if GSAP gets stuck)
+            setTimeout(() => {
+                ['detailAddToBag', 'detailWhatsApp'].forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        const style = window.getComputedStyle(btn);
+                        if (style.opacity === '0' || style.visibility === 'hidden') {
+                            console.warn(`Failsafe: forcing visibility on #${id}`);
+                            btn.style.setProperty('opacity', '1', 'important');
+                            btn.style.setProperty('transform', 'none', 'important');
+                        }
+                    }
+                });
+            }, 1500);
         });
     </script>
 
