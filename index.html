@@ -469,11 +469,14 @@
             top: 0;
             right: -440px;
             width: 420px;
-            max-width: 92vw;
+            max-width: 100vw;
             height: 100vh;
+            height: 100dvh;
             z-index: 1100;
             transition: right .55s cubic-bezier(.23, 1, .32, 1);
-            overflow-y: auto
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .cart-panel.open {
@@ -1001,31 +1004,36 @@
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
     <!-- Cart Panel -->
     <div class="cart-panel" id="cartPanel" data-lenis-prevent style="background:#fdfdfd; border-left: 1px solid rgba(0,0,0,0.06);">
-        <div class="p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-display text-2xl text-cream tracking-wider">Your Bag</h3>
-                <button onclick="closeCart()" class="text-muted hover:text-cream transition text-lg"
-                    aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+        <!-- Cart Header (fixed) -->
+        <div class="flex justify-between items-center px-6 py-5 border-b border-black/5 flex-shrink-0">
+            <h3 class="font-display text-2xl text-cream tracking-wider">Your Bag</h3>
+            <button onclick="closeCart()" class="text-muted hover:text-cream transition text-lg" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <!-- Cart Items (scrollable) -->
+        <div class="flex-1 overflow-y-auto px-6 py-6" style="-webkit-overflow-scrolling: touch;">
             <div id="cartItems" class="space-y-6"></div>
             <div id="cartEmpty" class="text-center py-16">
                 <i class="fa-solid fa-bag-shopping text-3xl text-muted/30 mb-4"></i>
                 <p class="text-muted text-sm">Your bag is empty</p>
             </div>
-            <div id="cartFooter" class="hidden border-t border-gold/10 mt-8 pt-8">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-muted text-sm">Total</span>
-                    <span class="font-display text-2xl text-gold" id="cartTotal">$0</span>
-                </div>
-                <div class="space-y-3">
-                    <button class="btn-gold w-full" style="background: linear-gradient(135deg, #8a6e32, #af8c42, #c6a86c, #8a6e32) !important; color: #ffffff !important;" onclick="checkout()"><span>Proceed to Checkout</span></button>
-                    <button class="btn-whatsapp w-full flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #128c7e, #25d366, #128c7e) !important; color: #ffffff !important;" onclick="orderCartViaWhatsApp()">
-                        <span><i class="fa-brands fa-whatsapp text-base"></i> Order via WhatsApp</span>
-                    </button>
-                </div>
-                <p class="text-muted text-[10px] text-center mt-4 tracking-wider">COMPLIMENTARY SHIPPING &middot; SECURE
-                    PAYMENT</p>
+        </div>
+        <!-- Cart Footer (always pinned at bottom) -->
+        <div id="cartFooter" class="hidden flex-shrink-0 border-t border-gold/10 px-6 py-5 bg-white">
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-muted text-xs uppercase tracking-widest">Subtotal</span>
+                <span class="font-display text-2xl text-gold" id="cartTotal">₹0</span>
             </div>
+            <div class="space-y-3">
+                <button class="w-full bg-[#af8c42] hover:bg-[#c6a86c] text-white font-body font-semibold text-xs uppercase tracking-widest py-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300" onclick="checkout()">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>Secure Checkout</span>
+                </button>
+                <button class="w-full bg-[#25d366] hover:bg-[#128c7e] text-white font-body font-semibold text-xs uppercase tracking-widest py-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300" onclick="orderCartViaWhatsApp()">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>Order via WhatsApp</span>
+                </button>
+            </div>
+            <p class="text-muted text-[10px] text-center mt-4 tracking-wider">COMPLIMENTARY SHIPPING &middot; SECURE PAYMENT</p>
         </div>
     </div>
 
