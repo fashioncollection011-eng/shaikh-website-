@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERION — Timepiece Details</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <script src="assets/rate-limiter.js"></script>
+    <script>
+        window.limiter = new RateLimiter();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -958,6 +962,21 @@
 
         /* ===================== SHOPIFY FETCH FALLBACK ===================== */
         async function fetchShopifyProducts() {
+            if (window.limiter) {
+                const check = window.limiter.checkPublicLimit();
+                if (!check.allowed) {
+                    console.warn("Public rate limit checking:", check.reason);
+                    const cached = localStorage.getItem('aerion_custom_products');
+                    if (cached) {
+                        try {
+                            return JSON.parse(cached);
+                        } catch (e) {
+                            // ignore parsing error
+                        }
+                    }
+                    return null;
+                }
+            }
             const query = `{
               products(first: 50) {
                 edges {
@@ -1328,12 +1347,26 @@
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
             if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('login', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('login', email);
+            }
             if(window.firebaseLogin) window.firebaseLogin(email, pass);
             else showToast('Firebase integration pending local initialization.', 'error');
         }
         function handleForgotPassword() {
             const email = document.getElementById('loginEmail').value;
             if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('forgot_password', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('forgot_password', email);
+            }
             if(window.firebaseResetPassword) window.firebaseResetPassword(email);
             else showToast('Firebase integration pending local initialization.', 'error');
         }
@@ -1342,6 +1375,13 @@
             const email = document.getElementById('signupEmail').value;
             const pass = document.getElementById('signupPassword').value;
             if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('signup', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('signup', email);
+            }
             if(window.firebaseSignup) window.firebaseSignup(email, pass, name);
             else showToast('Firebase integration pending local initialization.', 'error');
         }
@@ -1580,9 +1620,11 @@
             window.firebaseLogin = async (email, password) => {
                 try {
                     await signInWithEmailAndPassword(auth, email, password);
+                    if (window.limiter) window.limiter.recordAuthSuccess('login', email);
                     window.showToast('Welcome back to AERION', 'success');
                     window.closeAuth();
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('login', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };
@@ -1591,9 +1633,11 @@
                 try {
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     await updateProfile(userCredential.user, { displayName: name });
+                    if (window.limiter) window.limiter.recordAuthSuccess('signup', email);
                     window.showToast('Account created — welcome to AERION', 'success');
                     window.closeAuth();
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('signup', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };
@@ -1606,8 +1650,10 @@
             window.firebaseResetPassword = async (email) => {
                 try {
                     await sendPasswordResetEmail(auth, email);
+                    if (window.limiter) window.limiter.recordAuthSuccess('forgot_password', email);
                     window.showToast('Password reset link sent to your email', 'success');
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('forgot_password', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };

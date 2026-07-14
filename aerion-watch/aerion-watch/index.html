@@ -23,6 +23,10 @@
         gtag('js', new Date());
         gtag('config', 'G-GPXBZ7Y1TS');
     </script>
+    <script src="assets/rate-limiter.js"></script>
+    <script>
+        window.limiter = new RateLimiter();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -794,15 +798,13 @@
     <main>
         <!-- Hero Section -->
         <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-            style="z-index:2; background-color: #000;">
-            <!-- Video Background -->
-            <video class="absolute inset-0 w-full h-full object-cover" style="will-change: transform; transform: translate3d(0,0,0);" autoplay muted loop playsinline preload="auto">
-                <source src="https://v1.pinimg.com/videos/mc/720p/82/f2/8a/82f28a53a19d3604cb5da8276b4e47f4.mp4" type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            style="z-index:2; background: radial-gradient(circle, #101014 0%, #050508 100%);">
             
-            <div class="relative flex flex-col items-center px-6 z-20">
-                <!-- Watch removed as requested -->
+            <div class="relative flex flex-col items-center px-6 z-20 text-center">
+                <span class="text-gold text-[11px] tracking-[0.4em] uppercase mb-4 hero-el opacity-0">Geneva Atelier</span>
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-white tracking-[0.2em] font-light uppercase hero-el opacity-0">AERION</h1>
+                <p class="text-gold-light/70 font-body text-xs md:text-sm tracking-[0.3em] uppercase mt-4 max-w-md hero-el opacity-0">Time Redefined</p>
+                <a href="#collection" class="mt-12 btn-outline !py-3 !px-8 hero-el opacity-0"><span>Explore Collection</span></a>
             </div>
 
             <div
@@ -1398,6 +1400,21 @@
         ];
 
         async function fetchShopifyProducts() {
+            if (window.limiter) {
+                const check = window.limiter.checkPublicLimit();
+                if (!check.allowed) {
+                    console.warn("Public rate limit checking:", check.reason);
+                    const cached = localStorage.getItem('aerion_custom_products');
+                    if (cached) {
+                        try {
+                            return JSON.parse(cached);
+                        } catch (e) {
+                            // ignore parsing error
+                        }
+                    }
+                    return null;
+                }
+            }
             const query = `
             {
               products(first: 50) {
@@ -1820,6 +1837,13 @@
 
         // SAVE & DELETE MUTATIONS
         async function saveCustomWatch() {
+            if (window.limiter) {
+                const check = window.limiter.checkAuthenticatedLimit();
+                if (!check.allowed) {
+                    showToast(check.reason, 'error');
+                    return;
+                }
+            }
             const editIdStr = document.getElementById('custEditId').value;
             const name = document.getElementById('custName').value.trim();
             const priceVal = document.getElementById('custPrice').value;
@@ -1929,6 +1953,13 @@
         }
 
         async function deleteCustomWatch(id) {
+            if (window.limiter) {
+                const check = window.limiter.checkAuthenticatedLimit();
+                if (!check.allowed) {
+                    showToast(check.reason, 'error');
+                    return;
+                }
+            }
             const p = products.find(x => x.id === id);
             if (!p) return;
 
@@ -2374,6 +2405,13 @@
         }
         function checkout() {
             if (cart.length === 0) return;
+            if (window.limiter) {
+                const check = window.limiter.checkAuthenticatedLimit();
+                if (!check.allowed) {
+                    showToast(check.reason, 'error');
+                    return;
+                }
+            }
             // Generate Shopify checkout permalink
             const cartItems = cart.map(item => {
                 const p = products.find(x => x.id === item.id);
@@ -2421,12 +2459,26 @@
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
             if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('login', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('login', email);
+            }
             if(window.firebaseLogin) window.firebaseLogin(email, pass);
             else showToast('Firebase not configured. Please add config in index.html.', 'error');
         }
         function handleForgotPassword() {
             const email = document.getElementById('loginEmail').value;
             if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('forgot_password', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('forgot_password', email);
+            }
             if(window.firebaseResetPassword) window.firebaseResetPassword(email);
             else showToast('Firebase not configured.', 'error');
         }
@@ -2435,6 +2487,13 @@
             const email = document.getElementById('signupEmail').value;
             const pass = document.getElementById('signupPassword').value;
             if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if (window.limiter) {
+                const check = window.limiter.checkAuthLimit('signup', email);
+                if (!check.allowed) {
+                    return showToast(check.reason, 'error');
+                }
+                window.limiter.recordAuthAttempt('signup', email);
+            }
             if(window.firebaseSignup) window.firebaseSignup(email, pass, name);
             else showToast('Firebase not configured. Please add config in index.html.', 'error');
         }
@@ -2921,9 +2980,11 @@
             window.firebaseLogin = async (email, password) => {
                 try {
                     await signInWithEmailAndPassword(auth, email, password);
+                    if (window.limiter) window.limiter.recordAuthSuccess('login', email);
                     window.showToast('Welcome back to AERION', 'success');
                     window.closeAuth();
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('login', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };
@@ -2933,9 +2994,11 @@
                 try {
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     await updateProfile(userCredential.user, { displayName: name });
+                    if (window.limiter) window.limiter.recordAuthSuccess('signup', email);
                     window.showToast('Account created — welcome to AERION', 'success');
                     window.closeAuth();
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('signup', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };
@@ -2950,8 +3013,10 @@
             window.firebaseResetPassword = async (email) => {
                 try {
                     await sendPasswordResetEmail(auth, email);
+                    if (window.limiter) window.limiter.recordAuthSuccess('forgot_password', email);
                     window.showToast('Password reset link sent to your email', 'success');
                 } catch (error) {
+                    if (window.limiter) window.limiter.recordAuthFailure('forgot_password', email);
                     window.showToast(error.message.replace('Firebase: ', ''), 'error');
                 }
             };
