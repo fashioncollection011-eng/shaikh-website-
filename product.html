@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERION — Timepiece Details</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <script src="assets/rate-limiter.js"></script>
+    <script src="assets/rate-limiter.js" onerror="window.RateLimiter=function(){this.checkAuthLimit=this.checkPublicLimit=this.checkAuthenticatedLimit=function(){return{allowed:true}};this.recordAuthAttempt=this.recordAuthFailure=this.recordAuthSuccess=function(){};}"></script>
     <script>
-        window.limiter = new RateLimiter();
+        try { window.limiter = new RateLimiter(); } catch(e) { window.limiter = null; console.warn('RateLimiter not loaded:', e); }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
