@@ -23,6 +23,7 @@
         gtag('js', new Date());
         gtag('config', 'G-GPXBZ7Y1TS');
     </script>
+    <script src="assets/validator.js" onerror="window.Validator=null;"></script>
     <script src="assets/rate-limiter.js" onerror="window.RateLimiter=function(){this.checkAuthLimit=this.checkPublicLimit=this.checkAuthenticatedLimit=function(){return{allowed:true}};this.recordAuthAttempt=this.recordAuthFailure=this.recordAuthSuccess=function(){};}"></script>
     <script>
         try { window.limiter = new RateLimiter(); } catch(e) { window.limiter = null; console.warn('RateLimiter not loaded:', e); }
@@ -1593,7 +1594,16 @@
 
         function renderAdminWatches() {
             const list = document.getElementById('adminWatchesList');
-            const searchQuery = document.getElementById('adminSearch').value.toLowerCase().trim();
+            const searchEl = document.getElementById('adminSearch');
+            let searchQuery = searchEl.value.toLowerCase().trim();
+            if (window.Validator && searchEl.value.trim() !== '') {
+                const sv = Validator.validateSearch(searchEl.value);
+                if (!sv.isValid) {
+                    showToast(sv.error, 'error');
+                    searchEl.value = '';
+                    searchQuery = '';
+                }
+            }
             const categoryFilter = document.getElementById('adminCategoryFilter').value;
             
             // Filter
@@ -1857,7 +1867,22 @@
             const description = document.getElementById('custDesc').value.trim();
             const image = document.getElementById('custImage').value.trim();
 
-            if (!name || !priceVal || !featuresStr || !description) {
+            if (window.Validator) {
+                const nv = Validator.validateName(name);
+                if (!nv.isValid) return showToast(nv.error, 'error');
+                const pv = Validator.validateWatchPrice(priceVal);
+                if (!pv.isValid) return showToast(pv.error, 'error');
+                const cv1 = Validator.validateHexColor(dial);
+                if (!cv1.isValid) return showToast('Dial: ' + cv1.error, 'error');
+                const cv2 = Validator.validateHexColor(accent);
+                if (!cv2.isValid) return showToast('Accent: ' + cv2.error, 'error');
+                const cv3 = Validator.validateHexColor(secColor);
+                if (!cv3.isValid) return showToast('Secondary Color: ' + cv3.error, 'error');
+                const fv = Validator.validateWatchText(featuresStr, 'Features', 500);
+                if (!fv.isValid) return showToast(fv.error, 'error');
+                const dv = Validator.validateWatchText(description, 'Description', 2000);
+                if (!dv.isValid) return showToast(dv.error, 'error');
+            } else if (!name || !priceVal || !featuresStr || !description) {
                 showToast('Please fill all required fields', 'error');
                 return;
             }
@@ -2227,6 +2252,14 @@
             const watchSearch = document.getElementById('watchSearchInput');
             if (watchSearch) {
                 watchSearch.addEventListener('input', function(e) {
+                    if (window.Validator) {
+                        const sv = Validator.validateSearch(e.target.value);
+                        if (!sv.isValid) {
+                            showToast(sv.error, 'error');
+                            e.target.value = activeSearchQuery; // revert
+                            return;
+                        }
+                    }
                     activeSearchQuery = e.target.value;
                     renderProducts();
                 });
@@ -2458,7 +2491,12 @@
         function handleLogin() { 
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
-            if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if (window.Validator) {
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+                const pv = Validator.validatePassword(pass);
+                if (!pv.isValid) return showToast(pv.error, 'error');
+            } else if(!email || !pass) return showToast('Please enter email and password', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('login', email);
                 if (!check.allowed) {
@@ -2471,7 +2509,10 @@
         }
         function handleForgotPassword() {
             const email = document.getElementById('loginEmail').value;
-            if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if (window.Validator) {
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+            } else if(!email) return showToast('Please enter your email first to reset password', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('forgot_password', email);
                 if (!check.allowed) {
@@ -2486,7 +2527,14 @@
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const pass = document.getElementById('signupPassword').value;
-            if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if (window.Validator) {
+                const nv = Validator.validateName(name);
+                if (!nv.isValid) return showToast(nv.error, 'error');
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+                const pv = Validator.validatePassword(pass);
+                if (!pv.isValid) return showToast(pv.error, 'error');
+            } else if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('signup', email);
                 if (!check.allowed) {
@@ -2534,7 +2582,13 @@
             const input = document.getElementById('emailInput');
             const email = input.value;
             
-            if (!email || !email.includes('@')) { 
+            if (window.Validator) {
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) {
+                    showToast(ev.error, 'error');
+                    return;
+                }
+            } else if (!email || !email.includes('@')) { 
                 showToast('Please enter a valid email', 'error'); 
                 return; 
             }

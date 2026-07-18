@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERION — Timepiece Details</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <script src="assets/validator.js" onerror="window.Validator=null;"></script>
     <script src="assets/rate-limiter.js" onerror="window.RateLimiter=function(){this.checkAuthLimit=this.checkPublicLimit=this.checkAuthenticatedLimit=function(){return{allowed:true}};this.recordAuthAttempt=this.recordAuthFailure=this.recordAuthSuccess=function(){};}"></script>
     <script>
         try { window.limiter = new RateLimiter(); } catch(e) { window.limiter = null; console.warn('RateLimiter not loaded:', e); }
@@ -1346,7 +1347,12 @@
         function handleLogin() { 
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
-            if(!email || !pass) return showToast('Please enter email and password', 'info');
+            if (window.Validator) {
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+                const pv = Validator.validatePassword(pass);
+                if (!pv.isValid) return showToast(pv.error, 'error');
+            } else if(!email || !pass) return showToast('Please enter email and password', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('login', email);
                 if (!check.allowed) {
@@ -1359,7 +1365,10 @@
         }
         function handleForgotPassword() {
             const email = document.getElementById('loginEmail').value;
-            if(!email) return showToast('Please enter your email first to reset password', 'info');
+            if (window.Validator) {
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+            } else if(!email) return showToast('Please enter your email first to reset password', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('forgot_password', email);
                 if (!check.allowed) {
@@ -1374,7 +1383,14 @@
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const pass = document.getElementById('signupPassword').value;
-            if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
+            if (window.Validator) {
+                const nv = Validator.validateName(name);
+                if (!nv.isValid) return showToast(nv.error, 'error');
+                const ev = Validator.validateEmail(email);
+                if (!ev.isValid) return showToast(ev.error, 'error');
+                const pv = Validator.validatePassword(pass);
+                if (!pv.isValid) return showToast(pv.error, 'error');
+            } else if(!name || !email || !pass) return showToast('Please fill all fields', 'info');
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('signup', email);
                 if (!check.allowed) {

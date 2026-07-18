@@ -2,3 +2,6 @@
 node_modules/
 temp-debug/
 *.log
+
+# Local Netlify folder
+.netlify
