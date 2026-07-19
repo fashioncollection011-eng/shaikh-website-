@@ -25,6 +25,7 @@
     </script>
     <script src="assets/validator.js" onerror="window.Validator=null;"></script>
     <script src="assets/rate-limiter.js" onerror="window.RateLimiter=function(){this.checkAuthLimit=this.checkPublicLimit=this.checkAuthenticatedLimit=function(){return{allowed:true}};this.recordAuthAttempt=this.recordAuthFailure=this.recordAuthSuccess=function(){};}"></script>
+    <script src="assets/error-handler.js"></script>
     <script>
         try { window.limiter = new RateLimiter(); } catch(e) { window.limiter = null; console.warn('RateLimiter not loaded:', e); }
     </script>
@@ -3039,7 +3040,11 @@
                     window.closeAuth();
                 } catch (error) {
                     if (window.limiter) window.limiter.recordAuthFailure('login', email);
-                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                    if (window.handleAppError) {
+                        window.handleAppError(error, 'Login failed');
+                    } else {
+                        window.showToast("Login failed. Please try again.", 'error');
+                    }
                 }
             };
 
@@ -3053,7 +3058,11 @@
                     window.closeAuth();
                 } catch (error) {
                     if (window.limiter) window.limiter.recordAuthFailure('signup', email);
-                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                    if (window.handleAppError) {
+                        window.handleAppError(error, 'Signup failed');
+                    } else {
+                        window.showToast("Signup failed. Please try again.", 'error');
+                    }
                 }
             };
 
@@ -3071,7 +3080,11 @@
                     window.showToast('Password reset link sent to your email', 'success');
                 } catch (error) {
                     if (window.limiter) window.limiter.recordAuthFailure('forgot_password', email);
-                    window.showToast(error.message.replace('Firebase: ', ''), 'error');
+                    if (window.handleAppError) {
+                        window.handleAppError(error, 'Password reset failed');
+                    } else {
+                        window.showToast("Password reset failed. Please try again.", 'error');
+                    }
                 }
             };
         }
