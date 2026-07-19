@@ -2389,17 +2389,6 @@
             if (!currentQV) return;
             const phone = WHATSAPP_NUMBER;
             const text = `Hello Aerion Watches, I would like to order the following watch:\n\n*Watch Name:* ${currentQV.name}\n*Price:* ${CURRENCY_SYMBOL}${currentQV.price.toLocaleString()}\n*Category:* ${currentQV.category === 'mens' ? 'Mens Watch' : currentQV.category === 'ladies' ? 'Ladies Watch' : 'Special Edition'}\n\nPlease confirm my order. Thank you!`;
-            
-            // Save to Firestore if user is logged in
-            if (window.currentUser && window.dbSaveOrder) {
-                window.dbSaveOrder({
-                    items: [{ id: currentQV.id, name: currentQV.name, price: currentQV.price, qty: 1 }],
-                    total: currentQV.price,
-                    status: 'Pending',
-                    method: 'WhatsApp'
-                });
-            }
-            
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -2423,26 +2412,6 @@
             }, 0);
             
             text += `\n*Total Value:* ${CURRENCY_SYMBOL}${totalVal.toLocaleString()}\n\nPlease confirm my order. Thank you!`;
-            
-            // Save to Firestore if user is logged in
-            if (window.currentUser && window.dbSaveOrder) {
-                const orderItems = cart.map(c => {
-                    const p = products.find(x => x.id === c.id);
-                    return { id: c.id, name: p ? p.name : 'Unknown', price: p ? p.price : 0, qty: c.qty };
-                });
-                window.dbSaveOrder({
-                    items: orderItems,
-                    total: totalVal,
-                    status: 'Pending',
-                    method: 'WhatsApp'
-                });
-                
-                // Clear cart after order is sent
-                cart = [];
-                updateCartUI();
-                saveState();
-            }
-            
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -3070,26 +3039,6 @@
                 }
             };
 
-            window.dbSaveOrder = async (orderData) => {
-                try {
-                    if (!window.currentUser) return false;
-                    const orderId = 'ORD-' + Date.now();
-                    const fullOrder = {
-                        orderId: orderId,
-                        userEmail: window.currentUser.email,
-                        createdAt: new Date().toISOString(),
-                        ...orderData
-                    };
-                    // Use setDoc with generated ID
-                    await setDoc(doc(db, "orders", orderId), fullOrder);
-                    console.log("Order saved to database:", orderId);
-                    return true;
-                } catch (e) {
-                    console.error("Firestore save order failed:", e);
-                    return false;
-                }
-            };
-
             // Track login state changes
             const ADMIN_EMAILS = ['clothingspot0011@gmail.com'];
             onAuthStateChanged(auth, (user) => {
@@ -3103,14 +3052,10 @@
                     if (btn) {
                         btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
                         btn.title = user.displayName || user.email;
-                        btn.onclick = () => window.location.href = 'profile.html';
                     }
                     if (pName) pName.textContent = user.displayName || 'Aerion Member';
                     if (pEmail) pEmail.textContent = user.email || '';
-                    if (mobileAuthBtn) {
-                        mobileAuthBtn.innerHTML = 'My Profile';
-                        mobileAuthBtn.onclick = () => window.location.href = 'profile.html';
-                    }
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign Out';
                     
                     // Show admin dashboard button only for admin emails!
                     if (adminBtn) {
@@ -3124,14 +3069,10 @@
                     if (btn) {
                         btn.innerHTML = '<i class="fa-regular fa-user"></i>';
                         btn.title = 'Account';
-                        btn.onclick = window.handleNavAccount;
                     }
                     if (pName) pName.textContent = 'Aerion Member';
                     if (pEmail) pEmail.textContent = 'Not Logged In';
-                    if (mobileAuthBtn) {
-                        mobileAuthBtn.innerHTML = 'Sign In';
-                        mobileAuthBtn.onclick = () => { closeMobile(); handleNavAccount(); };
-                    }
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign In';
                     if (adminBtn) adminBtn.classList.add('hidden');
                 }
             });

@@ -1220,17 +1220,6 @@
             if (!activeWatch) return;
             const phone = WHATSAPP_NUMBER;
             const text = `Hello Aerion Watches, I would like to order the following watch:\n\n*Watch Name:* ${activeWatch.name}\n*Price:* ${CURRENCY_SYMBOL}${activeWatch.price.toLocaleString()}\n*Category:* ${activeWatch.category === 'mens' ? 'Mens Watch' : activeWatch.category === 'ladies' ? 'Ladies Watch' : 'Special Edition'}\n\nPlease confirm my order. Thank you!`;
-            
-            // Save to Firestore if user is logged in
-            if (window.currentUser && window.dbSaveOrder) {
-                window.dbSaveOrder({
-                    items: [{ id: activeWatch.id, name: activeWatch.name, price: activeWatch.price, qty: 1 }],
-                    total: activeWatch.price,
-                    status: 'Pending',
-                    method: 'WhatsApp'
-                });
-            }
-            
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -1346,26 +1335,6 @@
             }, 0);
             
             text += `\n*Total Value:* ${CURRENCY_SYMBOL}${totalVal.toLocaleString()}\n\nPlease confirm my order. Thank you!`;
-            
-            // Save to Firestore if user is logged in
-            if (window.currentUser && window.dbSaveOrder) {
-                const orderItems = cart.map(c => {
-                    const p = products.find(x => x.id === c.id);
-                    return { id: c.id, name: p ? p.name : 'Unknown', price: p ? p.price : 0, qty: c.qty };
-                });
-                window.dbSaveOrder({
-                    items: orderItems,
-                    total: totalVal,
-                    status: 'Pending',
-                    method: 'WhatsApp'
-                });
-                
-                // Clear cart after order is sent
-                cart = [];
-                updateCartUI();
-                saveState();
-            }
-            
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
@@ -1645,7 +1614,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "__FIREBASE_API_KEY__",
@@ -1662,25 +1630,6 @@
         if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
-            const db = getFirestore(app);
-
-            window.dbSaveOrder = async (orderData) => {
-                try {
-                    if (!window.currentUser) return false;
-                    const orderId = 'ORD-' + Date.now();
-                    const fullOrder = {
-                        orderId: orderId,
-                        userEmail: window.currentUser.email,
-                        createdAt: new Date().toISOString(),
-                        ...orderData
-                    };
-                    await setDoc(doc(db, "orders", orderId), fullOrder);
-                    return true;
-                } catch (e) {
-                    console.error("Firestore save order failed:", e);
-                    return false;
-                }
-            };
 
             onAuthStateChanged(auth, (user) => {
                 window.currentUser = user;
@@ -1691,22 +1640,14 @@
                     if (btn) {
                         btn.innerHTML = '<i class="fa-solid fa-user-check text-gold"></i>';
                         btn.title = user.displayName || user.email;
-                        btn.onclick = () => window.location.href = 'profile.html';
                     }
-                    if (mobileAuthBtn) {
-                        mobileAuthBtn.innerHTML = 'My Profile';
-                        mobileAuthBtn.onclick = () => window.location.href = 'profile.html';
-                    }
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign Out';
                 } else {
                     if (btn) {
                         btn.innerHTML = '<i class="fa-regular fa-user"></i>';
                         btn.title = 'Account';
-                        btn.onclick = window.handleNavAccount;
                     }
-                    if (mobileAuthBtn) {
-                        mobileAuthBtn.innerHTML = 'Sign In';
-                        mobileAuthBtn.onclick = () => { closeMobile(); handleNavAccount(); };
-                    }
+                    if (mobileAuthBtn) mobileAuthBtn.textContent = 'Sign In';
                 }
             });
 
