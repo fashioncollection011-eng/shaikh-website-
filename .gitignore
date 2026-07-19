@@ -5,3 +5,7 @@ temp-debug/
 
 # Local Netlify folder
 .netlify
+
+# Secrets and build outputs
+.env
+dist/
