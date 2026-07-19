@@ -1668,6 +1668,35 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            // 1. Strict File Type Validation (MIME type checking)
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                if (window.handleAppError) {
+                    window.handleAppError({ message: 'Invalid file type. Only JPEG, PNG, and WEBP images are allowed.' }, 'File Upload');
+                } else if (window.showToast) {
+                    window.showToast('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.', 'error');
+                } else {
+                    alert('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.');
+                }
+                event.target.value = ''; // Clear the input
+                return;
+            }
+
+            // 2. Strict File Size Validation (Max 5MB)
+            const MAX_SIZE_MB = 5;
+            const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+            if (file.size > MAX_SIZE_BYTES) {
+                if (window.handleAppError) {
+                    window.handleAppError({ message: `File is too large. Maximum allowed size is ${MAX_SIZE_MB}MB.` }, 'File Upload');
+                } else if (window.showToast) {
+                    window.showToast(`File is too large. Maximum allowed size is ${MAX_SIZE_MB}MB.`, 'error');
+                } else {
+                    alert(`File is too large. Maximum allowed size is ${MAX_SIZE_MB}MB.`);
+                }
+                event.target.value = ''; // Clear the input
+                return;
+            }
+
             const statusText = document.getElementById('uploadStatusText');
             if (statusText) {
                 statusText.textContent = "Processing image...";
