@@ -718,7 +718,7 @@
     <footer class="relative border-t border-gold/10 py-16 px-6" style="z-index:2">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
             <div>
-                <img src="assets/logo.png" alt="AERION" class="h-6 w-auto mb-4 object-contain">
+                <img src="assets/logo.png" alt="AERION" loading="lazy" class="h-6 w-auto mb-4 object-contain">
                 <p class="text-muted text-sm leading-relaxed">Haute horlogerie since 1847. Each piece a testament to the art of timekeeping.</p>
             </div>
             <div>
@@ -912,7 +912,7 @@
         /* ===================== SVG WATCH GENERATOR ===================== */
         function generateWatch(p, size) {
             if (p.image && p.image.trim() !== '') {
-                return `<img src="${p.image}" alt="${p.name}" class="w-full h-full object-contain p-1 transition-transform duration-500 hover:scale-105" style="aspect-ratio: 1;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=300';">`;
+                return `<img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-contain p-1 transition-transform duration-500 hover:scale-105" style="aspect-ratio: 1;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=300';">`;
             }
             size = size || 300;
             const s = size;
