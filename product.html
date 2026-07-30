@@ -1415,11 +1415,15 @@
             else showToast('Firebase integration pending local initialization.', 'error');
         }
         function handleForgotPassword() {
-            const email = document.getElementById('loginEmail').value;
+            let email = document.getElementById('loginEmail').value;
+            if (!email) {
+                email = prompt("Please enter your email address to receive password reset link:");
+                if (!email) return;
+            }
             if (window.Validator) {
                 const ev = Validator.validateEmail(email);
                 if (!ev.isValid) return showToast(ev.error, 'error');
-            } else if(!email) return showToast('Please enter your email first to reset password', 'info');
+            }
             if (window.limiter) {
                 const check = window.limiter.checkAuthLimit('forgot_password', email);
                 if (!check.allowed) {
