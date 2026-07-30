@@ -1730,7 +1730,7 @@
                 try {
                     const actionCodeSettings = {
                         url: 'https://aerionwatch.netlify.app/reset-password.html',
-                        handleCodeInApp: false
+                        handleCodeInApp: true
                     };
                     await sendPasswordResetEmail(auth, email, actionCodeSettings);
                     if (window.limiter) window.limiter.recordAuthSuccess('forgot_password', email);
