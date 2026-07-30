@@ -1,3 +1,8 @@
 [build]
   publish = "dist"
   command = "node build.js"
+
+[[redirects]]
+  from = "/__/auth/action"
+  to = "/reset-password.html"
+  status = 200
