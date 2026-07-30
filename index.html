@@ -3159,7 +3159,11 @@
             // Forgot Password function
             window.firebaseResetPassword = async (email) => {
                 try {
-                    await sendPasswordResetEmail(auth, email);
+                    const actionCodeSettings = {
+                        url: 'https://aerionwatch.netlify.app/reset-password.html',
+                        handleCodeInApp: false
+                    };
+                    await sendPasswordResetEmail(auth, email, actionCodeSettings);
                     if (window.limiter) window.limiter.recordAuthSuccess('forgot_password', email);
                     window.showToast('Password reset link sent to your email', 'success');
                 } catch (error) {
