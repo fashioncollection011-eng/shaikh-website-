@@ -1755,13 +1755,15 @@
                     window.closeAuth();
                 } catch (error) {
                     console.error("Google Sign-In error:", error);
-                    if (error.code !== 'auth/popup-closed-by-user') {
+                    if (error.code === 'auth/operation-not-allowed') {
+                        window.showToast("Google Sign-In is disabled in Firebase Console -> Authentication -> Sign-in method.", 'error');
+                    } else if (error.code === 'auth/unauthorized-domain') {
+                        window.showToast("Please add aerion-watch.vercel.app in Firebase Console -> Authentication -> Settings -> Authorized Domains.", 'error');
+                    } else if (error.code === 'auth/popup-blocked') {
+                        window.showToast("Popup blocked by browser. Please allow popups to sign in with Google.", 'info');
+                    } else if (error.code !== 'auth/popup-closed-by-user') {
                         if (window.limiter) window.limiter.recordAuthFailure('google_login', 'google');
-                        if (window.handleAppError) {
-                            window.handleAppError(error, 'Google Sign-In failed');
-                        } else {
-                            window.showToast("Google Sign-In failed. Please try again.", 'error');
-                        }
+                        window.showToast(error.message || "Google Sign-In failed. Please try again.", 'error');
                     }
                 }
             };
