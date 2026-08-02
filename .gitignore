@@ -9,3 +9,5 @@ temp-debug/
 # Secrets and build outputs
 .env
 # dist/
+
+.vercel
